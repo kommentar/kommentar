@@ -1,0 +1,37 @@
+{
+  "name": "kommentar",
+  "type": "module",
+  "scripts": {
+    "dev": "tsx watch --env-file=.env src/index.ts",
+    "start": "tsx --env-file=.env src/index.ts",
+    "lint": "eslint --fix .",
+    "format": "prettier --write .",
+    "prepare": "husky || true",
+    "test:_base": "vitest run .",
+    "test:unit": "pnpm run test:_base --config vitest.config.unit.mjs",
+    "test:integration": "pnpm run test:_base --config vitest.config.integration.mjs",
+    "test": "pnpm run test:unit && pnpm run test:integration && vitest run --coverage",
+    "test:watch": "vitest"
+  },
+  "dependencies": {
+    "@hono/node-server": "^1.13.2",
+    "hono": "^4.6.5"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^19.5.0",
+    "@commitlint/config-conventional": "^19.5.0",
+    "@eslint/js": "^9.12.0",
+    "@types/node": "^20.11.17",
+    "@vitest/coverage-v8": "^2.1.2",
+    "eslint": "^9.12.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-prettier": "^5.2.1",
+    "globals": "^15.11.0",
+    "husky": "^9.1.6",
+    "lint-staged": "^15.2.10",
+    "prettier": "3.3.3",
+    "tsx": "^4.7.1",
+    "typescript-eslint": "^8.8.1",
+    "vitest": "^2.1.2"
+  }
+}
