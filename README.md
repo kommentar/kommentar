@@ -1,8 +1,7 @@
-```
-npm install
-npm run dev
-```
+# Kommentar
 
-```
-open http://localhost:3000
-```
+A lightweight API for the Kommentar application that lets you add commenting functionality to any website.
+
+---
+
+This page will be updated once there is something to add 😁
