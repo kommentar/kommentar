@@ -1,10 +1,14 @@
 import { getApp } from "./app/index.js";
+import { getConfigStaticEnv } from "./driven-adapters/config/static-env/index.js";
 import { getDataStoreInMemory } from "./driven-adapters/data-store/in-memory/index.js";
 import { getHttpHono } from "./driver-adapters/http/hono/index.js";
 
+const config = getConfigStaticEnv();
 const dataStore = getDataStoreInMemory();
+
 const app = getApp({ dataStore });
-const hono = getHttpHono({ app });
+
+const hono = getHttpHono({ app, config: config.http });
 
 // * when running a dev server, tsx will force kill the process. (https://github.com/privatenumber/tsx/issues/586)
 const gracefulShutdown = (signal: string) => {
