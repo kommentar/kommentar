@@ -1,10 +1,16 @@
 import { getApp } from "./app/index.js";
 import { getConfigStaticEnv } from "./driven-adapters/config/static-env/index.js";
-import { getDataStoreInMemory } from "./driven-adapters/data-store/in-memory/index.js";
+import { getDataStorePostgres } from "./driven-adapters/data-store/postgres/index.js";
+import { getSecretStoreEnv } from "./driven-adapters/secrets/env/index.js";
 import { getHttpHono } from "./driver-adapters/http/hono/index.js";
 
 const config = getConfigStaticEnv();
-const dataStore = getDataStoreInMemory();
+const secretStore = getSecretStoreEnv();
+
+const dataStore = await getDataStorePostgres({
+  config: config.dataStore,
+  secretStore,
+});
 
 const app = getApp({ dataStore });
 
