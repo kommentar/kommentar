@@ -4,6 +4,7 @@ import type { EventBroker } from "./driven-ports/event-broker.js";
 import type { RandomId } from "./driven-ports/random-id.js";
 import { commandCreateComment } from "./commands/create-comment/index.js";
 import { commandUpdateComment } from "./commands/update-comment/index.js";
+import { commandDeleteComment } from "./commands/delete-comment/index.js";
 
 type GetApp = ({
   dataStore,
@@ -67,7 +68,24 @@ const getApp: GetApp = ({ dataStore, eventBroker, randomId }) => {
       return updatedComment;
     },
     deleteCommentById: async (id) => {
-      return await dataStore.deleteCommentById({ id });
+      const command = commandDeleteComment(dataStore);
+
+      await command({
+        id,
+      });
+
+      eventBroker.publish({
+        event: {
+          specversion: "1.0",
+          type: "comment.deleted",
+          source: "app",
+          datacontenttype: "application/json",
+          data: { id },
+          id: randomId.generate(),
+          subject: id,
+          time: new Date().toISOString(),
+        },
+      });
     },
   };
 };
