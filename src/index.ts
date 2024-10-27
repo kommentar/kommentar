@@ -1,18 +1,23 @@
 import { getApp } from "./app/index.js";
 import { getConfigStaticEnv } from "./driven-adapters/config/static-env/index.js";
 import { getDataStorePostgres } from "./driven-adapters/data-store/postgres/index.js";
+import { getEventBrokerInMemory } from "./driven-adapters/event-broker/in-memory.js";
+import { getRandomIdUuid } from "./driven-adapters/random-id/uuid/index.js";
 import { getSecretStoreEnv } from "./driven-adapters/secrets/env/index.js";
 import { getHttpHono } from "./driver-adapters/http/hono/index.js";
 
 const config = getConfigStaticEnv();
 const secretStore = getSecretStoreEnv();
+const eventBroker = getEventBrokerInMemory();
+const randomId = getRandomIdUuid();
 
 const dataStore = await getDataStorePostgres({
   config: config.dataStore,
   secretStore,
+  randomId,
 });
 
-const app = getApp({ dataStore });
+const app = getApp({ dataStore, eventBroker, randomId });
 
 const hono = getHttpHono({ app, config: config.http });
 

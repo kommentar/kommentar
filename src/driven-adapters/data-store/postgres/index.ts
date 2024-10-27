@@ -1,5 +1,6 @@
 import type { Config } from "../../../app/driven-ports/config.js";
 import type { DataStore } from "../../../app/driven-ports/data-store.js";
+import type { RandomId } from "../../../app/driven-ports/random-id.js";
 import type { SecretStore } from "../../../app/driven-ports/secret-store.js";
 import { migrate } from "./migrate.js";
 import { getPgPool } from "./pool.js";
@@ -13,14 +14,17 @@ import {
 type GetDataStorePostgres = ({
   config,
   secretStore,
+  randomId,
 }: {
   config: Config["dataStore"];
   secretStore: SecretStore;
+  randomId: RandomId;
 }) => Promise<DataStore>;
 
 const getDataStorePostgres: GetDataStorePostgres = async ({
   config,
   secretStore,
+  randomId,
 }) => {
   const pgPool = getPgPool({ config, secretStore });
 
@@ -41,8 +45,9 @@ const getDataStorePostgres: GetDataStorePostgres = async ({
     },
     saveCommentByHostId: async ({ hostId, content }) => {
       try {
+        const id = randomId.generate();
         const result = await pgPool.query(
-          saveCommentByHostIdQuery({ hostId, content }),
+          saveCommentByHostIdQuery({ id, hostId, content }),
         );
 
         return result.rows[0];
