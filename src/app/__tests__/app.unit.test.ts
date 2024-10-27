@@ -9,7 +9,20 @@ describe("getApp", () => {
     deleteCommentById: vi.fn(),
   };
 
-  const app = getApp({ dataStore: mockDataStore });
+  const mockEventBroker = {
+    publish: vi.fn(),
+    subscribe: vi.fn(),
+  };
+
+  const mockRandomId = {
+    generate: vi.fn(),
+  };
+
+  const app = getApp({
+    dataStore: mockDataStore,
+    eventBroker: mockEventBroker,
+    randomId: mockRandomId,
+  });
 
   it("should get comments for a host", async () => {
     const hostId = "host1";

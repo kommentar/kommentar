@@ -8,9 +8,11 @@ type GetAllCommentsByHostIdQuery = ({
   hostId: Comment["hostId"];
 }) => QueryConfig;
 type SaveCommentByHostIdQuery = ({
+  id,
   hostId,
   content,
 }: {
+  id: Comment["id"];
   hostId: Comment["hostId"];
   content: Comment["content"];
 }) => QueryConfig;
@@ -51,17 +53,18 @@ const getAllCommentsByHostIdQuery: GetAllCommentsByHostIdQuery = ({
 };
 
 const saveCommentByHostIdQuery: SaveCommentByHostIdQuery = ({
+  id,
   hostId,
   content,
 }) => {
   return {
     name: "save-comment-by-host-id",
     text: `
-        INSERT INTO comments (content, hostId)
-        VALUES ($1, $2)
+        INSERT INTO comments (id, content, hostId, createdAt, updatedAt)
+        VALUES ($1, $2, $3, NOW(), NOW())
         RETURNING *;
         `,
-    values: [content, hostId],
+    values: [id, content, hostId],
   };
 };
 
@@ -70,7 +73,7 @@ const updateCommentByIdQuery: UpdateCommentByIdQuery = ({ id, content }) => {
     name: "update-comment-by-id",
     text: `
         UPDATE comments
-        SET content = $1
+        SET content = $1, updatedAt = NOW()
         WHERE id = $2
         RETURNING *;
         `,
