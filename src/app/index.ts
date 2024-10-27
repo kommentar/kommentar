@@ -2,6 +2,7 @@ import type { DataStore } from "./driven-ports/data-store.js";
 import type { App } from "./domain/entities/app.js";
 import type { EventBroker } from "./driven-ports/event-broker.js";
 import type { RandomId } from "./driven-ports/random-id.js";
+import { commandCreateComment } from "./commands/create-comment/index.js";
 
 type GetApp = ({
   dataStore,
@@ -19,7 +20,9 @@ const getApp: GetApp = ({ dataStore, eventBroker, randomId }) => {
       return await dataStore.getAllCommentsByHostId({ hostId });
     },
     createCommentForHost: async (hostId, content) => {
-      const savedComment = await dataStore.saveCommentByHostId({
+      const command = commandCreateComment(dataStore);
+
+      const savedComment = await command({
         hostId,
         content,
       });
