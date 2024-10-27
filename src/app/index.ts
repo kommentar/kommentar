@@ -5,6 +5,7 @@ import type { RandomId } from "./driven-ports/random-id.js";
 import { commandCreateComment } from "./commands/create-comment/index.js";
 import { commandUpdateComment } from "./commands/update-comment/index.js";
 import { commandDeleteComment } from "./commands/delete-comment/index.js";
+import { queryGetCommentsForHost } from "./queries/get-comments-for-host/index.js";
 
 type GetApp = ({
   dataStore,
@@ -19,7 +20,13 @@ type GetApp = ({
 const getApp: GetApp = ({ dataStore, eventBroker, randomId }) => {
   return {
     getCommentsForHost: async (hostId) => {
-      return await dataStore.getAllCommentsByHostId({ hostId });
+      const query = queryGetCommentsForHost(dataStore);
+
+      const comments = await query({
+        hostId,
+      });
+
+      return comments;
     },
     createCommentForHost: async (hostId, content) => {
       const command = commandCreateComment(dataStore);
