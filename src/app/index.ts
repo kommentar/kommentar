@@ -3,6 +3,7 @@ import type { App } from "./domain/entities/app.js";
 import type { EventBroker } from "./driven-ports/event-broker.js";
 import type { RandomId } from "./driven-ports/random-id.js";
 import { commandCreateComment } from "./commands/create-comment/index.js";
+import { commandUpdateComment } from "./commands/update-comment/index.js";
 
 type GetApp = ({
   dataStore,
@@ -43,7 +44,27 @@ const getApp: GetApp = ({ dataStore, eventBroker, randomId }) => {
       return savedComment;
     },
     updateCommentById: async (id, content) => {
-      return await dataStore.updateCommentById({ id, content });
+      const command = commandUpdateComment(dataStore);
+
+      const updatedComment = await command({
+        id,
+        content,
+      });
+
+      eventBroker.publish({
+        event: {
+          specversion: "1.0",
+          type: "comment.updated",
+          source: "app",
+          datacontenttype: "application/json",
+          data: updatedComment,
+          id: randomId.generate(),
+          subject: id,
+          time: new Date().toISOString(),
+        },
+      });
+
+      return updatedComment;
     },
     deleteCommentById: async (id) => {
       return await dataStore.deleteCommentById({ id });
