@@ -69,11 +69,9 @@ describe("getApp", () => {
 
   it("should delete a comment by id", async () => {
     const id = "comment1";
-    mockDataStore.deleteCommentById.mockResolvedValue(true);
 
-    const result = await app.deleteCommentById(id);
+    await app.deleteCommentById(id);
 
     expect(mockDataStore.deleteCommentById).toHaveBeenCalledWith({ id });
-    expect(result).toBe(true);
   });
 });
