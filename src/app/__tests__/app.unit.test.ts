@@ -29,7 +29,7 @@ describe("getApp", () => {
     const comments = [{ id: "comment1", content: "Nice place!" }];
     mockDataStore.getAllCommentsByHostId.mockResolvedValue(comments);
 
-    const result = await app.getCommentsForHost(hostId);
+    const result = await app.getCommentsForHost({ hostId });
 
     expect(mockDataStore.getAllCommentsByHostId).toHaveBeenCalledWith({
       hostId,
@@ -43,7 +43,7 @@ describe("getApp", () => {
     const savedComment = { id: "comment2", content };
     mockDataStore.saveCommentByHostId.mockResolvedValue(savedComment);
 
-    const result = await app.createCommentForHost(hostId, content);
+    const result = await app.createCommentForHost({ hostId, content });
 
     expect(mockDataStore.saveCommentByHostId).toHaveBeenCalledWith({
       hostId,
@@ -58,7 +58,7 @@ describe("getApp", () => {
     const updatedComment = { id, content };
     mockDataStore.updateCommentById.mockResolvedValue(updatedComment);
 
-    const result = await app.updateCommentById(id, content);
+    const result = await app.updateCommentById({ id, content });
 
     expect(mockDataStore.updateCommentById).toHaveBeenCalledWith({
       id,
@@ -70,7 +70,7 @@ describe("getApp", () => {
   it("should delete a comment by id", async () => {
     const id = "comment1";
 
-    await app.deleteCommentById(id);
+    await app.deleteCommentById({ id });
 
     expect(mockDataStore.deleteCommentById).toHaveBeenCalledWith({ id });
   });
