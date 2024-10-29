@@ -19,7 +19,7 @@ type GetApp = ({
 
 const getApp: GetApp = ({ dataStore, eventBroker, randomId }) => {
   return {
-    getCommentsForHost: async (hostId) => {
+    getCommentsForHost: async ({ hostId }) => {
       const query = queryGetCommentsForHost(dataStore);
 
       const comments = await query({
@@ -28,7 +28,7 @@ const getApp: GetApp = ({ dataStore, eventBroker, randomId }) => {
 
       return comments;
     },
-    createCommentForHost: async (hostId, content) => {
+    createCommentForHost: async ({ hostId, content }) => {
       const command = commandCreateComment(dataStore);
 
       const savedComment = await command({
@@ -51,7 +51,7 @@ const getApp: GetApp = ({ dataStore, eventBroker, randomId }) => {
 
       return savedComment;
     },
-    updateCommentById: async (id, content) => {
+    updateCommentById: async ({ id, content }) => {
       const command = commandUpdateComment(dataStore);
 
       const updatedComment = await command({
@@ -74,7 +74,7 @@ const getApp: GetApp = ({ dataStore, eventBroker, randomId }) => {
 
       return updatedComment;
     },
-    deleteCommentById: async (id) => {
+    deleteCommentById: async ({ id }) => {
       const command = commandDeleteComment(dataStore);
 
       await command({
