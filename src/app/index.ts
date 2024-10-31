@@ -6,6 +6,9 @@ import { commandCreateComment } from "./commands/create-comment/index.js";
 import { commandUpdateComment } from "./commands/update-comment/index.js";
 import { commandDeleteComment } from "./commands/delete-comment/index.js";
 import { queryGetCommentsForHost } from "./queries/get-comments-for-host/index.js";
+import { toCommentCreatedEvent } from "./domain/helpers/events/comment-created.js";
+import { toCommentUpdatedEvent } from "./domain/helpers/events/comment-updated.js";
+import { toCommentDeletedEvent } from "./domain/helpers/events/comment-deleted.js";
 
 type GetApp = ({
   dataStore,
@@ -36,18 +39,14 @@ const getApp: GetApp = ({ dataStore, eventBroker, randomId }) => {
         content,
       });
 
-      eventBroker.publish({
-        event: {
-          specversion: "1.0",
-          type: "comment.created",
-          source: "app",
-          datacontenttype: "application/json",
-          data: savedComment,
-          id: randomId.generate(),
-          subject: hostId,
-          time: new Date().toISOString(),
-        },
+      const event = toCommentCreatedEvent({
+        comment: savedComment,
+        subject: hostId,
+        randomId,
+        source: "app",
       });
+
+      eventBroker.publish({ event });
 
       return savedComment;
     },
@@ -59,18 +58,14 @@ const getApp: GetApp = ({ dataStore, eventBroker, randomId }) => {
         content,
       });
 
-      eventBroker.publish({
-        event: {
-          specversion: "1.0",
-          type: "comment.updated",
-          source: "app",
-          datacontenttype: "application/json",
-          data: updatedComment,
-          id: randomId.generate(),
-          subject: id,
-          time: new Date().toISOString(),
-        },
+      const event = toCommentUpdatedEvent({
+        updatedComment,
+        subject: id,
+        randomId,
+        source: "app",
       });
+
+      eventBroker.publish({ event });
 
       return updatedComment;
     },
@@ -81,18 +76,14 @@ const getApp: GetApp = ({ dataStore, eventBroker, randomId }) => {
         id,
       });
 
-      eventBroker.publish({
-        event: {
-          specversion: "1.0",
-          type: "comment.deleted",
-          source: "app",
-          datacontenttype: "application/json",
-          data: { id },
-          id: randomId.generate(),
-          subject: id,
-          time: new Date().toISOString(),
-        },
+      const event = toCommentDeletedEvent({
+        deletedCommentId: id,
+        subject: id,
+        randomId,
+        source: "app",
       });
+
+      eventBroker.publish({ event });
     },
   };
 };
