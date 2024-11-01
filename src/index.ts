@@ -1,4 +1,8 @@
 import { getApp } from "./app/index.js";
+import { wheneverCommentCreatedInvalidateCache } from "./app/policies/whenever-comment-created-invalidate-cache.js";
+import { wheneverCommentDeletedInvalidateCache } from "./app/policies/whenever-comment-deleted-invalidate-cache.js";
+import { wheneverCommentUpdatedInvalidateCache } from "./app/policies/whenever-comment-updated-invalidate-cache.js";
+import { getCacheStoreInMemory } from "./driven-adapters/cache-store/in-memory/index.js";
 import { getConfigStaticEnv } from "./driven-adapters/config/static-env/index.js";
 import { getDataStorePostgres } from "./driven-adapters/data-store/postgres/index.js";
 import { getEventBrokerInMemory } from "./driven-adapters/event-broker/in-memory.js";
@@ -10,6 +14,7 @@ const config = getConfigStaticEnv();
 const secretStore = getSecretStoreEnv();
 const eventBroker = getEventBrokerInMemory();
 const randomId = getRandomIdUuid();
+const cacheStore = getCacheStoreInMemory();
 
 const dataStore = await getDataStorePostgres({
   config: config.dataStore,
@@ -17,7 +22,10 @@ const dataStore = await getDataStorePostgres({
   randomId,
 });
 
-const app = getApp({ dataStore, eventBroker, randomId });
+wheneverCommentCreatedInvalidateCache({ eventBroker, cacheStore });
+wheneverCommentUpdatedInvalidateCache({ eventBroker, cacheStore });
+wheneverCommentDeletedInvalidateCache({ eventBroker, cacheStore });
+const app = getApp({ dataStore, eventBroker, randomId, cacheStore });
 
 const hono = getHttpHono({ app, config: config.http });
 
