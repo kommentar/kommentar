@@ -8,6 +8,9 @@ dependencies:
   "@hono/node-server":
     specifier: ^1.13.2
     version: 1.13.2(hono@4.6.5)
+  "@hono/zod-openapi":
+    specifier: ^0.16.4
+    version: 0.16.4(hono@4.6.5)(zod@3.23.8)
   hono:
     specifier: ^4.6.5
     version: 4.6.5
@@ -17,6 +20,9 @@ dependencies:
   uuid:
     specifier: ^10.0.0
     version: 10.0.0
+  zod:
+    specifier: ^3.23.8
+    version: 3.23.8
 
 devDependencies:
   "@commitlint/cli":
@@ -82,6 +88,18 @@ packages:
       "@jridgewell/gen-mapping": 0.3.5
       "@jridgewell/trace-mapping": 0.3.25
     dev: true
+
+  /@asteasolutions/zod-to-openapi@7.2.0(zod@3.23.8):
+    resolution:
+      {
+        integrity: sha512-Va+Fq1QzKkSgmiYINSp3cASFhMsbdRH/kmCk2feijhC+yNjGoC056CRqihrVFhR8MY8HOZHdlYm2Ns2lmszCiw==,
+      }
+    peerDependencies:
+      zod: ^3.20.2
+    dependencies:
+      openapi3-ts: 4.4.0
+      zod: 3.23.8
+    dev: false
 
   /@babel/code-frame@7.25.7:
     resolution:
@@ -1029,6 +1047,35 @@ packages:
       hono: ^4
     dependencies:
       hono: 4.6.5
+    dev: false
+
+  /@hono/zod-openapi@0.16.4(hono@4.6.5)(zod@3.23.8):
+    resolution:
+      {
+        integrity: sha512-mnF6GthBaKex0D5PsY/4lYNtkaGJNE38bjeUI//EUqq7Ee4TNm2su35IUiFH4HcmJp5fWYMLyOJOpjnkClzEGw==,
+      }
+    engines: { node: ">=16.0.0" }
+    peerDependencies:
+      hono: ">=4.3.6"
+      zod: 3.*
+    dependencies:
+      "@asteasolutions/zod-to-openapi": 7.2.0(zod@3.23.8)
+      "@hono/zod-validator": 0.3.0(hono@4.6.5)(zod@3.23.8)
+      hono: 4.6.5
+      zod: 3.23.8
+    dev: false
+
+  /@hono/zod-validator@0.3.0(hono@4.6.5)(zod@3.23.8):
+    resolution:
+      {
+        integrity: sha512-7XcTk3yYyk6ldrO/VuqsroE7stvDZxHJQcpATRAyha8rUxJNBPV3+6waDrARfgEqxOVlzIadm3/6sE/dPseXgQ==,
+      }
+    peerDependencies:
+      hono: ">=3.9.0"
+      zod: ^3.19.1
+    dependencies:
+      hono: 4.6.5
+      zod: 3.23.8
     dev: false
 
   /@humanfs/core@0.19.0:
@@ -3395,6 +3442,15 @@ packages:
       mimic-function: 5.0.1
     dev: true
 
+  /openapi3-ts@4.4.0:
+    resolution:
+      {
+        integrity: sha512-9asTNB9IkKEzWMcHmVZE7Ts3kC9G7AFHfs8i7caD8HbI76gEjdkId4z/AkP83xdZsH7PLAnnbl47qZkXuxpArw==,
+      }
+    dependencies:
+      yaml: 2.5.1
+    dev: false
+
   /optionator@0.9.4:
     resolution:
       {
@@ -4517,7 +4573,6 @@ packages:
       }
     engines: { node: ">= 14" }
     hasBin: true
-    dev: true
 
   /yargs-parser@21.1.1:
     resolution:
@@ -4558,3 +4613,10 @@ packages:
       }
     engines: { node: ">=12.20" }
     dev: true
+
+  /zod@3.23.8:
+    resolution:
+      {
+        integrity: sha512-XBx9AXhXktjUqnepgTiE5flcKIYWi/rme0Eaj+5Y0lftuGBq+jyRu/md4WnuxqgP1ubdpNCsYEYPxrzVHD8d6g==,
+      }
+    dev: false
