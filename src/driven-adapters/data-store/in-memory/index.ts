@@ -1,31 +1,33 @@
-import type { Comment } from "../../../app/domain/entities/comment.js";
-import type { DataStore } from "../../../app/driven-ports/data-store.js";
+import type {
+  DataStore,
+  StoredComment,
+} from "../../../app/driven-ports/data-store.js";
 
 type GetDataStoreInMemory = () => DataStore;
 
 const getDataStoreInMemory: GetDataStoreInMemory = () => {
-  const comments = new Map<string, Comment>();
+  const comments = new Map<string, StoredComment>();
   comments.set("1", {
     id: "1",
-    hostId: "1",
+    hostid: "1",
     content: "Hello, World! This is a sample comment.",
-    createdAt: new Date(),
-    updatedAt: new Date(),
+    createdat: new Date(),
+    updatedat: new Date(),
   });
 
   return {
     async getAllCommentsByHostId({ hostId }) {
       return Array.from(comments.values()).filter(
-        (comment) => comment.hostId === hostId,
+        (comment) => comment.hostid === hostId,
       );
     },
     async saveCommentByHostId({ hostId, content }) {
-      const comment: Comment = {
+      const comment: StoredComment = {
         id: Math.random().toString(36).slice(2),
-        hostId,
+        hostid: hostId,
         content,
-        createdAt: new Date(),
-        updatedAt: new Date(),
+        createdat: new Date(),
+        updatedat: new Date(),
       };
       comments.set(comment.id, comment);
       return comment;
@@ -40,7 +42,12 @@ const getDataStoreInMemory: GetDataStoreInMemory = () => {
       return updatedComment;
     },
     async deleteCommentById({ id }) {
+      const comment = comments.get(id);
+      if (!comment) {
+        throw new Error(`Comment with id ${id} not found`);
+      }
       comments.delete(id);
+      return comment;
     },
   };
 };
