@@ -1,5 +1,13 @@
 import type { Comment } from "../domain/entities/comment.js";
 
+type StoredComment = {
+  id: Comment["id"];
+  content: Comment["content"];
+  hostid: Comment["hostId"];
+  createdat: Comment["createdAt"];
+  updatedat: Comment["updatedAt"];
+};
+
 type DataStore = {
   /**
    * Get all comments by host identifier
@@ -11,7 +19,7 @@ type DataStore = {
     hostId,
   }: {
     hostId: Comment["hostId"];
-  }) => Promise<Comment[]>;
+  }) => Promise<StoredComment[]>;
 
   /**
    * Save a new comment by host identifier
@@ -26,7 +34,7 @@ type DataStore = {
   }: {
     hostId: Comment["hostId"];
     content: Comment["content"];
-  }) => Promise<Comment>;
+  }) => Promise<StoredComment>;
 
   /**
    * Update a comment by identifier
@@ -41,14 +49,14 @@ type DataStore = {
   }: {
     id: Comment["id"];
     content: Comment["content"];
-  }) => Promise<Comment>;
+  }) => Promise<StoredComment>;
 
   /**
    * Delete a comment by identifier
    *
    * @param id - Unique identifier of the comment
    */
-  deleteCommentById: ({ id }: { id: Comment["id"] }) => Promise<void>;
+  deleteCommentById: ({ id }: { id: Comment["id"] }) => Promise<StoredComment>;
 };
 
-export type { DataStore };
+export type { DataStore, StoredComment };
