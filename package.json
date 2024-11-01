@@ -16,6 +16,7 @@
   "dependencies": {
     "@hono/node-server": "^1.13.2",
     "@hono/zod-openapi": "^0.16.4",
+    "@scalar/hono-api-reference": "^0.5.158",
     "hono": "^4.6.5",
     "pg": "^8.13.0",
     "uuid": "^10.0.0",
