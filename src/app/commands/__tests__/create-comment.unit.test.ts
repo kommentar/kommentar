@@ -1,6 +1,5 @@
 import { describe, it, expect, vi } from "vitest";
 import type { DataStore } from "../../driven-ports/data-store.js";
-import type { Comment } from "../../domain/entities/comment.js";
 import { commandCreateComment } from "../create-comment/index.js";
 
 describe("commandCreateComment", () => {
@@ -9,8 +8,10 @@ describe("commandCreateComment", () => {
       saveCommentByHostId: vi.fn().mockResolvedValue({
         id: "1",
         content: "This is a comment",
-        hostId: "host123",
-      } as Comment),
+        hostid: "host123",
+        createdat: new Date().toISOString(),
+        updatedat: new Date().toISOString(),
+      }),
       deleteCommentById: vi.fn(),
       getAllCommentsByHostId: vi.fn(),
       updateCommentById: vi.fn(),
@@ -30,6 +31,8 @@ describe("commandCreateComment", () => {
       id: "1",
       hostId: "host123",
       content: "This is a comment",
+      createdAt: expect.any(String),
+      updatedAt: expect.any(String),
     });
   });
 });

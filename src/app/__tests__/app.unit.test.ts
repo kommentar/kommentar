@@ -18,10 +18,18 @@ describe("getApp", () => {
     generate: vi.fn(),
   };
 
+  const mockCacheStore = {
+    get: vi.fn(),
+    set: vi.fn(),
+    remove: vi.fn(),
+    clear: vi.fn(),
+  };
+
   const app = getApp({
     dataStore: mockDataStore,
     eventBroker: mockEventBroker,
     randomId: mockRandomId,
+    cacheStore: mockCacheStore,
   });
 
   it("should get comments for a host", async () => {
@@ -69,7 +77,13 @@ describe("getApp", () => {
 
   it("should delete a comment by id", async () => {
     const id = "comment1";
+    const content = "Nice place!";
 
+    const savedComment = { id, content };
+    mockDataStore.saveCommentByHostId.mockResolvedValue(savedComment);
+    await app.createCommentForHost({ hostId: "host1", content });
+
+    mockDataStore.deleteCommentById.mockResolvedValue(savedComment);
     await app.deleteCommentById({ id });
 
     expect(mockDataStore.deleteCommentById).toHaveBeenCalledWith({ id });
