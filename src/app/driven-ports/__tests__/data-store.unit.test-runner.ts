@@ -46,7 +46,7 @@ const runDataStoreTests = (dataStore: DataStore) => {
 
       comments.map((comment, index) => {
         expect(comment.id).toBeTypeOf("string");
-        expect(comment.hostId).toBe(mockComments[index].hostId);
+        expect(comment.hostid).toBe(mockComments[index].hostId);
         expect(comment.content).toBe(mockComments[index].content);
       });
     });
@@ -58,7 +58,7 @@ const runDataStoreTests = (dataStore: DataStore) => {
       });
 
       expect(savedComment.id).toBeTypeOf("string");
-      expect(savedComment.hostId).toBe(mockComment.hostId);
+      expect(savedComment.hostid).toBe(mockComment.hostId);
       expect(savedComment.content).toBe(mockComment.content);
     });
 
@@ -74,14 +74,23 @@ const runDataStoreTests = (dataStore: DataStore) => {
       });
 
       expect(updatedComment.id).toBe(commentToUpdate.id);
-      expect(updatedComment.hostId).toBe(commentToUpdate.hostId);
+      expect(updatedComment.hostid).toBe(commentToUpdate.hostid);
       expect(updatedComment.content).toBe("Updated comment");
     });
 
     it("should delete a comment by identifier", async () => {
-      await expect(
-        dataStore.deleteCommentById({ id: "3" }),
-      ).resolves.toBeUndefined();
+      const commentToDelete = await dataStore.saveCommentByHostId({
+        hostId: "host2",
+        content: "New comment to delete",
+      });
+
+      const deletedComment = await dataStore.deleteCommentById({
+        id: commentToDelete.id,
+      });
+
+      expect(deletedComment.id).toBe(commentToDelete.id);
+      expect(deletedComment.hostid).toBe(commentToDelete.hostid);
+      expect(deletedComment.content).toBe(commentToDelete.content);
     });
   });
 };

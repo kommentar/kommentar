@@ -13,7 +13,18 @@ type CommandCreateComment = (
 
 const commandCreateComment: CommandCreateComment = (dataStore) => {
   return async ({ hostId, content }) => {
-    const comment = await dataStore.saveCommentByHostId({ hostId, content });
+    const savedComment = await dataStore.saveCommentByHostId({
+      hostId,
+      content,
+    });
+
+    const comment: Comment = {
+      id: savedComment.id,
+      content: savedComment.content,
+      hostId: savedComment.hostid,
+      createdAt: savedComment.createdat,
+      updatedAt: savedComment.updatedat,
+    };
 
     return comment;
   };

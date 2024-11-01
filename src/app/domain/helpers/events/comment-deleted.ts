@@ -3,19 +3,19 @@ import type { RandomId } from "../../../driven-ports/random-id.js";
 import type { Comment } from "../../entities/comment.js";
 
 type ToCommentDeletedEvent = ({
-  deletedCommentId,
+  deletedComment,
   subject,
   source,
   randomId,
 }: {
-  deletedCommentId: Comment["id"];
+  deletedComment: Comment;
   subject: string;
   source: string;
   randomId: RandomId;
 }) => CloudEvent;
 
 const toCommentDeletedEvent: ToCommentDeletedEvent = ({
-  deletedCommentId,
+  deletedComment,
   subject,
   source,
   randomId,
@@ -25,7 +25,7 @@ const toCommentDeletedEvent: ToCommentDeletedEvent = ({
     type: "kommentar.comment.deleted",
     source,
     datacontenttype: "application/json",
-    data: { id: deletedCommentId },
+    data: deletedComment,
     id: randomId.generate(),
     subject,
     time: new Date().toISOString(),

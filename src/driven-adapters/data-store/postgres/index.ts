@@ -70,7 +70,9 @@ const getDataStorePostgres: GetDataStorePostgres = async ({
     },
     deleteCommentById: async ({ id }) => {
       try {
-        await pgPool.query(deleteCommentByIdQuery({ id }));
+        const result = await pgPool.query(deleteCommentByIdQuery({ id }));
+
+        return result.rows[0];
       } catch (error) {
         console.error("Failed to delete comment by identifier", error);
         throw error;

@@ -86,7 +86,8 @@ const deleteCommentByIdQuery: DeleteCommentByIdQuery = ({ id }) => {
     name: "delete-comment-by-id",
     text: `
         DELETE FROM comments
-        WHERE id = $1;
+        WHERE id = $1
+        RETURNING *;
         `,
     values: [id],
   };
