@@ -8,7 +8,7 @@ import { getDataStorePostgres } from "./driven-adapters/data-store/postgres/inde
 import { getEventBrokerInMemory } from "./driven-adapters/event-broker/in-memory.js";
 import { getRandomIdUuid } from "./driven-adapters/random-id/uuid/index.js";
 import { getSecretStoreEnv } from "./driven-adapters/secrets/env/index.js";
-import { getHttpHono } from "./driver-adapters/http/hono/index.js";
+import { getHttpHonoZodOpenApi } from "./driver-adapters/http/hono-zod-openapi/index.js";
 
 const config = getConfigStaticEnv();
 const secretStore = getSecretStoreEnv();
@@ -27,7 +27,7 @@ wheneverCommentUpdatedInvalidateCache({ eventBroker, cacheStore });
 wheneverCommentDeletedInvalidateCache({ eventBroker, cacheStore });
 const app = getApp({ dataStore, eventBroker, randomId, cacheStore });
 
-const hono = getHttpHono({ app, config: config.http });
+const hono = getHttpHonoZodOpenApi({ app, config: config.http });
 
 // * when running a dev server, tsx will force kill the process. (https://github.com/privatenumber/tsx/issues/586)
 const gracefulShutdown = (signal: string) => {
