@@ -6,6 +6,7 @@ import {
   getCommentsForHostRoute,
   updateCommentByIdRoute,
 } from "./routes.js";
+import { apiReference } from "@scalar/hono-api-reference";
 
 type GetHttpAppHonoZodOpenApi = ({ app }: { app: App }) => OpenAPIHono;
 
@@ -46,13 +47,24 @@ const getHttpAppHonoZodOpenApi: GetHttpAppHonoZodOpenApi = ({ app }) => {
     return c.json({ message: "Comment deleted" }, 204);
   });
 
-  hono.doc("/doc", {
+  hono.doc("/spec", {
     openapi: "3.0.0",
     info: {
       version: "1.0.0",
       title: "My API",
     },
   });
+
+  hono.get(
+    "/reference",
+    apiReference({
+      // theme: "kepler",
+      pageTitle: "Kommentar | API Reference",
+      spec: {
+        url: "/spec",
+      },
+    }),
+  );
 
   return hono;
 };

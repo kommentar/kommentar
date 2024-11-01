@@ -7,6 +7,7 @@ import {
 } from "./zod-schemas.js";
 
 const getCommentsForHostRoute = createRoute({
+  summary: "Get comments for a host",
   method: "get",
   path: "/comments/{hostId}",
   request: {
@@ -23,6 +24,7 @@ const getCommentsForHostRoute = createRoute({
 });
 
 const createCommentForHostRoute = createRoute({
+  summary: "Create a comment for a host",
   method: "post",
   path: "/comments/{hostId}",
   request: {
@@ -46,6 +48,7 @@ const createCommentForHostRoute = createRoute({
 });
 
 const updateCommentByIdRoute = createRoute({
+  summary: "Update a comment by id",
   method: "put",
   path: "/comments/{id}",
   request: {
@@ -69,6 +72,7 @@ const updateCommentByIdRoute = createRoute({
 });
 
 const deleteCommentByIdRoute = createRoute({
+  summary: "Delete a comment by id",
   method: "delete",
   path: "/comments/{id}",
   request: {
