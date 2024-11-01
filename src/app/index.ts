@@ -9,20 +9,30 @@ import { queryGetCommentsForHost } from "./queries/get-comments-for-host/index.j
 import { toCommentCreatedEvent } from "./domain/helpers/events/comment-created.js";
 import { toCommentUpdatedEvent } from "./domain/helpers/events/comment-updated.js";
 import { toCommentDeletedEvent } from "./domain/helpers/events/comment-deleted.js";
+import type { CacheStore } from "./driven-ports/cache-store.js";
+import type { Comment } from "./domain/entities/comment.js";
 
 type GetApp = ({
   dataStore,
   eventBroker,
   randomId,
+  cacheStore,
 }: {
   dataStore: DataStore;
   eventBroker: EventBroker;
   randomId: RandomId;
+  cacheStore: CacheStore;
 }) => App;
 
-const getApp: GetApp = ({ dataStore, eventBroker, randomId }) => {
+const getApp: GetApp = ({ dataStore, eventBroker, randomId, cacheStore }) => {
   return {
     getCommentsForHost: async ({ hostId }) => {
+      const cachedComments = cacheStore.get(hostId) as Comment[] | undefined;
+
+      if (cachedComments) {
+        return cachedComments;
+      }
+
       const query = queryGetCommentsForHost(dataStore);
 
       const comments = await query({
@@ -72,12 +82,12 @@ const getApp: GetApp = ({ dataStore, eventBroker, randomId }) => {
     deleteCommentById: async ({ id }) => {
       const command = commandDeleteComment(dataStore);
 
-      await command({
+      const deletedComment = await command({
         id,
       });
 
       const event = toCommentDeletedEvent({
-        deletedCommentId: id,
+        deletedComment,
         subject: id,
         randomId,
         source: "app",
