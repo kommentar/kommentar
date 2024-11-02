@@ -7,6 +7,7 @@ describe("getApp", () => {
     saveCommentByHostId: vi.fn(),
     updateCommentById: vi.fn(),
     deleteCommentById: vi.fn(),
+    getCommentById: vi.fn(),
   };
 
   const mockEventBroker = {
@@ -25,11 +26,16 @@ describe("getApp", () => {
     clear: vi.fn(),
   };
 
+  const mockProfanityClient = {
+    check: vi.fn(),
+  };
+
   const app = getApp({
     dataStore: mockDataStore,
     eventBroker: mockEventBroker,
     randomId: mockRandomId,
     cacheStore: mockCacheStore,
+    profanityClient: mockProfanityClient,
   });
 
   it("should get comments for a host", async () => {
@@ -65,6 +71,7 @@ describe("getApp", () => {
     const content = "Updated content";
     const updatedComment = { id, content };
     mockDataStore.updateCommentById.mockResolvedValue(updatedComment);
+    mockDataStore.getCommentById.mockResolvedValue({ id, content });
 
     const result = await app.updateCommentById({ id, content });
 
@@ -84,6 +91,7 @@ describe("getApp", () => {
     await app.createCommentForHost({ hostId: "host1", content });
 
     mockDataStore.deleteCommentById.mockResolvedValue(savedComment);
+    mockDataStore.getCommentById.mockResolvedValue(savedComment);
     await app.deleteCommentById({ id });
 
     expect(mockDataStore.deleteCommentById).toHaveBeenCalledWith({ id });
