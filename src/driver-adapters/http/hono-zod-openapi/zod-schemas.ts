@@ -28,6 +28,27 @@ const commentSchema = z
 
 const commentsSchema = z.array(commentSchema).openapi("Comments");
 
+const genericErrorSchema = z.object({
+  message: z.string().openapi({
+    type: "string",
+    example: "Internal server error",
+  }),
+});
+
+const profaneErrorSchema = z.object({
+  message: z.string().openapi({
+    type: "string",
+    example: "Comment contains profanity",
+  }),
+});
+
+const commentNotFoundErrorSchema = z.object({
+  message: z.string().openapi({
+    type: "string",
+    example: "Comment not found",
+  }),
+});
+
 const GetCommentsByHostIdSchema = {
   pathParams: z
     .object({
@@ -73,6 +94,10 @@ const PostCommentByHostIdSchema = {
     })
     .required(),
   response: commentSchema,
+  errors: {
+    400: profaneErrorSchema,
+    500: genericErrorSchema,
+  },
 };
 
 const PutCommentByIdSchema = {
@@ -100,6 +125,11 @@ const PutCommentByIdSchema = {
     })
     .required(),
   response: commentSchema,
+  errors: {
+    400: profaneErrorSchema,
+    404: commentNotFoundErrorSchema,
+    500: genericErrorSchema,
+  },
 };
 
 const DeleteCommentByIdSchema = {
@@ -124,6 +154,10 @@ const DeleteCommentByIdSchema = {
       example: "Comment deleted",
     }),
   }),
+  errors: {
+    404: commentNotFoundErrorSchema,
+    500: genericErrorSchema,
+  },
 };
 
 export {

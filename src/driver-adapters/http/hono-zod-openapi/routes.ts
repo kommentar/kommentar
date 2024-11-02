@@ -44,6 +44,18 @@ const createCommentForHostRoute = createRoute({
       },
       description: "Create a comment for a host",
     },
+    400: {
+      content: {
+        "application/json": { schema: PostCommentByHostIdSchema.errors[400] },
+      },
+      description: "Bad request",
+    },
+    500: {
+      content: {
+        "application/json": { schema: PostCommentByHostIdSchema.errors[500] },
+      },
+      description: "Internal server error",
+    },
   },
 });
 
@@ -68,6 +80,24 @@ const updateCommentByIdRoute = createRoute({
       },
       description: "Update a comment by id",
     },
+    400: {
+      content: {
+        "application/json": { schema: PutCommentByIdSchema.errors[400] },
+      },
+      description: "Bad request",
+    },
+    404: {
+      content: {
+        "application/json": { schema: PutCommentByIdSchema.errors[404] },
+      },
+      description: "Not found",
+    },
+    500: {
+      content: {
+        "application/json": { schema: PutCommentByIdSchema.errors[500] },
+      },
+      description: "Internal server error",
+    },
   },
 });
 
@@ -84,6 +114,18 @@ const deleteCommentByIdRoute = createRoute({
         "application/json": { schema: DeleteCommentByIdSchema.response },
       },
       description: "Delete a comment by id",
+    },
+    404: {
+      content: {
+        "application/json": { schema: DeleteCommentByIdSchema.errors[404] },
+      },
+      description: "Not found",
+    },
+    500: {
+      content: {
+        "application/json": { schema: DeleteCommentByIdSchema.errors[500] },
+      },
+      description: "Internal server error",
     },
   },
 });
