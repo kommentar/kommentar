@@ -49,6 +49,13 @@ const getDataStoreInMemory: GetDataStoreInMemory = () => {
       comments.delete(id);
       return comment;
     },
+    async getCommentById({ id }) {
+      const comment = comments.get(id);
+      if (!comment) {
+        throw new Error(`Comment with id ${id} not found`);
+      }
+      return comment;
+    },
   };
 };
 
