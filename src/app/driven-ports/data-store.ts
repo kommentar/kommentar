@@ -57,6 +57,13 @@ type DataStore = {
    * @param id - Unique identifier of the comment
    */
   deleteCommentById: ({ id }: { id: Comment["id"] }) => Promise<StoredComment>;
+
+  /**
+   * Get a comment by identifier
+   *
+   * @param id - Unique identifier of the comment
+   */
+  getCommentById: ({ id }: { id: Comment["id"] }) => Promise<StoredComment>;
 };
 
 export type { DataStore, StoredComment };

@@ -7,6 +7,7 @@ import { getPgPool } from "./pool.js";
 import {
   deleteCommentByIdQuery,
   getAllCommentsByHostIdQuery,
+  getCommentByIdQuery,
   saveCommentByHostIdQuery,
   updateCommentByIdQuery,
 } from "./queries.js";
@@ -75,6 +76,16 @@ const getDataStorePostgres: GetDataStorePostgres = async ({
         return result.rows[0];
       } catch (error) {
         console.error("Failed to delete comment by identifier", error);
+        throw error;
+      }
+    },
+    getCommentById: async ({ id }) => {
+      try {
+        const result = await pgPool.query(getCommentByIdQuery({ id }));
+
+        return result.rows[0];
+      } catch (error) {
+        console.error("Failed to get comment by identifier", error);
         throw error;
       }
     },

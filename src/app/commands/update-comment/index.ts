@@ -1,4 +1,5 @@
 import type { Comment } from "../../domain/entities/comment.js";
+import { createError } from "../../domain/helpers/error/create-error.js";
 import type { DataStore } from "../../driven-ports/data-store.js";
 
 type CommandUpdateComment = (
@@ -13,6 +14,16 @@ type CommandUpdateComment = (
 
 const commandUpdateComment: CommandUpdateComment = (dataStore) => {
   return async ({ id, content }) => {
+    const commentExists = await dataStore.getCommentById({ id });
+
+    if (!commentExists) {
+      throw createError({
+        message: "Comment not found",
+        code: "COMMENT_NOT_FOUND",
+        status: 404,
+      });
+    }
+
     const updatedComment = await dataStore.updateCommentById({ id, content });
 
     const comment: Comment = {

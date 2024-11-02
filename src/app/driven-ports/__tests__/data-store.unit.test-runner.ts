@@ -92,6 +92,21 @@ const runDataStoreTests = (dataStore: DataStore) => {
       expect(deletedComment.hostid).toBe(commentToDelete.hostid);
       expect(deletedComment.content).toBe(commentToDelete.content);
     });
+
+    it("should get a comment by identifier", async () => {
+      const commentToGet = await dataStore.saveCommentByHostId({
+        hostId: "host2",
+        content: "New comment to get",
+      });
+
+      const gottenComment = await dataStore.getCommentById({
+        id: commentToGet.id,
+      });
+
+      expect(gottenComment.id).toBe(commentToGet.id);
+      expect(gottenComment.hostid).toBe(commentToGet.hostid);
+      expect(gottenComment.content).toBe(commentToGet.content);
+    });
   });
 };
 

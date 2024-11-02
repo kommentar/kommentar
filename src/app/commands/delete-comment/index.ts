@@ -1,4 +1,5 @@
 import type { Comment } from "../../domain/entities/comment.js";
+import { createError } from "../../domain/helpers/error/create-error.js";
 import type { DataStore } from "../../driven-ports/data-store.js";
 
 type CommandDeleteComment = (
@@ -7,6 +8,16 @@ type CommandDeleteComment = (
 
 const commandDeleteComment: CommandDeleteComment = (dataStore) => {
   return async ({ id }) => {
+    const commentExists = await dataStore.getCommentById({ id });
+
+    if (!commentExists) {
+      throw createError({
+        message: "Comment not found",
+        code: "COMMENT_NOT_FOUND",
+        status: 404,
+      });
+    }
+
     const deletedComment = await dataStore.deleteCommentById({ id });
 
     const comment: Comment = {

@@ -24,6 +24,7 @@ type UpdateCommentByIdQuery = ({
   content: Comment["content"];
 }) => QueryConfig;
 type DeleteCommentByIdQuery = ({ id }: { id: Comment["id"] }) => QueryConfig;
+type GetCommentByIdQuery = ({ id }: { id: Comment["id"] }) => QueryConfig;
 
 const getCreateTableCommentsQuery: GetCreateTableCommentsQuery = () => {
   return {
@@ -93,10 +94,21 @@ const deleteCommentByIdQuery: DeleteCommentByIdQuery = ({ id }) => {
   };
 };
 
+const getCommentByIdQuery: GetCommentByIdQuery = ({ id }) => {
+  return {
+    name: "get-comment-by-id",
+    text: `
+        SELECT * FROM comments WHERE id = $1;
+        `,
+    values: [id],
+  };
+};
+
 export {
   getCreateTableCommentsQuery,
   getAllCommentsByHostIdQuery,
   saveCommentByHostIdQuery,
   updateCommentByIdQuery,
   deleteCommentByIdQuery,
+  getCommentByIdQuery,
 };

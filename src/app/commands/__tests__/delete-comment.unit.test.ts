@@ -1,7 +1,7 @@
 import { describe, it, expect, vi } from "vitest";
 import type { DataStore } from "../../driven-ports/data-store.js";
-import { commandDeleteComment } from "../delete-comment/index.js";
 import type { Comment } from "../../domain/entities/comment.js";
+import { commandDeleteComment } from "../delete-comment/index.js";
 
 describe("commandDeleteComment", () => {
   it("should delete a comment by id", async () => {
@@ -21,6 +21,7 @@ describe("commandDeleteComment", () => {
         createdat: mockComment.createdAt,
         updatedat: mockComment.updatedAt,
       }),
+      getCommentById: vi.fn().mockResolvedValue(mockComment),
       getAllCommentsByHostId: vi.fn(),
       saveCommentByHostId: vi.fn(),
       updateCommentById: vi.fn(),
@@ -36,5 +37,27 @@ describe("commandDeleteComment", () => {
 
     expect(mockDataStore.deleteCommentById).toHaveBeenCalledWith(input);
     expect(result).toEqual(mockComment);
+  });
+
+  it("should throw an error if the comment does not exist", async () => {
+    const mockDataStore: DataStore = {
+      deleteCommentById: vi.fn(),
+      getCommentById: vi.fn().mockResolvedValue(null),
+      getAllCommentsByHostId: vi.fn(),
+      saveCommentByHostId: vi.fn(),
+      updateCommentById: vi.fn(),
+    };
+
+    const deleteComment = commandDeleteComment(mockDataStore);
+
+    const input = {
+      id: "1",
+    };
+
+    await expect(deleteComment(input)).rejects.toThrowError(
+      "Comment not found",
+    );
+    expect(mockDataStore.getCommentById).toHaveBeenCalledWith(input);
+    expect(mockDataStore.deleteCommentById).not.toHaveBeenCalled();
   });
 });
