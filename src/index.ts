@@ -6,6 +6,7 @@ import { getCacheStoreInMemory } from "./driven-adapters/cache-store/in-memory/i
 import { getConfigStaticEnv } from "./driven-adapters/config/static-env/index.js";
 import { getDataStorePostgres } from "./driven-adapters/data-store/postgres/index.js";
 import { getEventBrokerInMemory } from "./driven-adapters/event-broker/in-memory.js";
+import { getProfanityClientApi } from "./driven-adapters/profanity-client/profanity-api/index.js";
 import { getRandomIdUuid } from "./driven-adapters/random-id/uuid/index.js";
 import { getSecretStoreEnv } from "./driven-adapters/secrets/env/index.js";
 import { getHttpHonoZodOpenApi } from "./driver-adapters/http/hono-zod-openapi/index.js";
@@ -15,6 +16,7 @@ const secretStore = getSecretStoreEnv();
 const eventBroker = getEventBrokerInMemory();
 const randomId = getRandomIdUuid();
 const cacheStore = getCacheStoreInMemory();
+const profanityClient = getProfanityClientApi();
 
 const dataStore = await getDataStorePostgres({
   config: config.dataStore,
@@ -25,7 +27,14 @@ const dataStore = await getDataStorePostgres({
 wheneverCommentCreatedInvalidateCache({ eventBroker, cacheStore });
 wheneverCommentUpdatedInvalidateCache({ eventBroker, cacheStore });
 wheneverCommentDeletedInvalidateCache({ eventBroker, cacheStore });
-const app = getApp({ dataStore, eventBroker, randomId, cacheStore });
+
+const app = getApp({
+  dataStore,
+  eventBroker,
+  randomId,
+  cacheStore,
+  profanityClient,
+});
 
 const hono = getHttpHonoZodOpenApi({ app, config: config.http });
 

@@ -7,6 +7,7 @@ import {
   updateCommentByIdRoute,
 } from "./routes.js";
 import { apiReference } from "@scalar/hono-api-reference";
+import { HTTPException } from "hono/http-exception";
 
 type GetHttpAppHonoZodOpenApi = ({ app }: { app: App }) => OpenAPIHono;
 
@@ -64,6 +65,14 @@ const getHttpAppHonoZodOpenApi: GetHttpAppHonoZodOpenApi = ({ app }) => {
       },
     }),
   );
+
+  hono.onError((err, c) => {
+    if (err instanceof HTTPException) {
+      return err.getResponse();
+    }
+
+    return c.json({ message: "Internal server error" }, 500);
+  });
 
   return hono;
 };

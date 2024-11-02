@@ -11,20 +11,30 @@ import { toCommentUpdatedEvent } from "./domain/helpers/events/comment-updated.j
 import { toCommentDeletedEvent } from "./domain/helpers/events/comment-deleted.js";
 import type { CacheStore } from "./driven-ports/cache-store.js";
 import type { Comment } from "./domain/entities/comment.js";
+import type { ProfanityClient } from "./driven-ports/profanity-client.js";
+import { createError } from "./domain/helpers/error/create-error.js";
 
 type GetApp = ({
   dataStore,
   eventBroker,
   randomId,
   cacheStore,
+  profanityClient,
 }: {
   dataStore: DataStore;
   eventBroker: EventBroker;
   randomId: RandomId;
   cacheStore: CacheStore;
+  profanityClient: ProfanityClient;
 }) => App;
 
-const getApp: GetApp = ({ dataStore, eventBroker, randomId, cacheStore }) => {
+const getApp: GetApp = ({
+  dataStore,
+  eventBroker,
+  randomId,
+  cacheStore,
+  profanityClient,
+}) => {
   return {
     getCommentsForHost: async ({ hostId }) => {
       const cachedComments = cacheStore.get(hostId) as Comment[] | undefined;
@@ -42,6 +52,16 @@ const getApp: GetApp = ({ dataStore, eventBroker, randomId, cacheStore }) => {
       return comments;
     },
     createCommentForHost: async ({ hostId, content }) => {
+      const isProfane = await profanityClient.check(content);
+
+      if (isProfane === "PROFANE") {
+        throw createError({
+          message: "Comment contains profanity",
+          code: "PROFANE_COMMENT",
+          status: 400,
+        });
+      }
+
       const command = commandCreateComment(dataStore);
 
       const savedComment = await command({
@@ -61,6 +81,16 @@ const getApp: GetApp = ({ dataStore, eventBroker, randomId, cacheStore }) => {
       return savedComment;
     },
     updateCommentById: async ({ id, content }) => {
+      const isProfane = await profanityClient.check(content);
+
+      if (isProfane === "PROFANE") {
+        throw createError({
+          message: "Comment contains profanity",
+          code: "PROFANE_COMMENT",
+          status: 400,
+        });
+      }
+
       const command = commandUpdateComment(dataStore);
 
       const updatedComment = await command({
