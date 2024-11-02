@@ -51,14 +51,13 @@ const getHttpAppHonoZodOpenApi: GetHttpAppHonoZodOpenApi = ({ app }) => {
     openapi: "3.0.0",
     info: {
       version: "1.0.0",
-      title: "My API",
+      title: "Kommentar | OpenAPI Specification",
     },
   });
 
   hono.get(
     "/reference",
     apiReference({
-      // theme: "kepler",
       pageTitle: "Kommentar | API Reference",
       spec: {
         url: "/spec",
