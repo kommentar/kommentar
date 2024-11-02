@@ -18,6 +18,14 @@ The API exposes 4 simple endpoints:
 
 The API follows the Ports and Adapters pattern, along with Command-Query Responsibility segregation. It might seem overkill, but this helps in modifying the app to use whatever technologies you want with minimal effort.
 
+## How to run locally
+
+This application uses `pnpm`.
+- First install dependencies: `pnpm install`
+- Make sure to create a `.env` using the included `.env.sample` as a reference
+- Then run a dev server: `pnpm dev`
+- Or a production server: `pnpm start`
+
 ## Core concepts
 
 A **Host** is the parent of the comment. Consider these examples:
