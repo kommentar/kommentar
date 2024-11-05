@@ -6,6 +6,7 @@ type StoredComment = {
   hostid: Comment["hostId"];
   createdat: Comment["createdAt"];
   updatedat: Comment["updatedAt"];
+  sessionid: Comment["sessionId"];
 };
 
 type DataStore = {
@@ -31,9 +32,11 @@ type DataStore = {
   saveCommentByHostId: ({
     hostId,
     content,
+    sessionId,
   }: {
     hostId: Comment["hostId"];
     content: Comment["content"];
+    sessionId: Comment["sessionId"];
   }) => Promise<StoredComment>;
 
   /**
@@ -46,9 +49,11 @@ type DataStore = {
   updateCommentById: ({
     id,
     content,
+    sessionId,
   }: {
     id: Comment["id"];
     content: Comment["content"];
+    sessionId: Comment["sessionId"];
   }) => Promise<StoredComment>;
 
   /**
@@ -56,12 +61,20 @@ type DataStore = {
    *
    * @param id - Unique identifier of the comment
    */
-  deleteCommentById: ({ id }: { id: Comment["id"] }) => Promise<StoredComment>;
+  deleteCommentById: ({
+    id,
+    sessionId,
+  }: {
+    id: Comment["id"];
+    sessionId: Comment["sessionId"];
+  }) => Promise<StoredComment>;
 
   /**
-   * Get a comment by identifier
+   * Get a comment by identifier and session identifier
    *
    * @param id - Unique identifier of the comment
+   * @param sessionId - Unique identifier of the session
+   * @returns The comment
    */
   getCommentById: ({ id }: { id: Comment["id"] }) => Promise<StoredComment>;
 };

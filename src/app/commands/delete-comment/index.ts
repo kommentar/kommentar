@@ -1,13 +1,19 @@
-import type { Comment } from "../../domain/entities/comment.js";
+import type { Comment, PublicComment } from "../../domain/entities/comment.js";
 import { createError } from "../../domain/helpers/error/create-error.js";
 import type { DataStore } from "../../driven-ports/data-store.js";
 
 type CommandDeleteComment = (
   dataStore: DataStore,
-) => ({ id }: { id: Comment["id"] }) => Promise<Comment>;
+) => ({
+  id,
+  sessionId,
+}: {
+  id: Comment["id"];
+  sessionId: Comment["sessionId"];
+}) => Promise<PublicComment>;
 
 const commandDeleteComment: CommandDeleteComment = (dataStore) => {
-  return async ({ id }) => {
+  return async ({ id, sessionId }) => {
     const commentExists = await dataStore.getCommentById({ id });
 
     if (!commentExists) {
@@ -18,17 +24,24 @@ const commandDeleteComment: CommandDeleteComment = (dataStore) => {
       });
     }
 
-    const deletedComment = await dataStore.deleteCommentById({ id });
+    if (commentExists.sessionid !== sessionId) {
+      throw createError({
+        message: "Cannot delete comment",
+        code: "UNAUTHORIZED",
+        status: 401,
+      });
+    }
 
-    const comment: Comment = {
+    const deletedComment = await dataStore.deleteCommentById({ id, sessionId });
+
+    return {
       id: deletedComment.id,
       content: deletedComment.content,
       hostId: deletedComment.hostid,
       createdAt: deletedComment.createdat,
       updatedAt: deletedComment.updatedat,
+      sessionId: deletedComment.sessionid,
     };
-
-    return comment;
   };
 };
 

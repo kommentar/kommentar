@@ -28,6 +28,13 @@ const queries: Queries = {
       CREATE INDEX IF NOT EXISTS comments_created_at_idx ON comments (createdAt);
     `,
   },
+  addSessionIdColumn: {
+    name: "add-session-id-column",
+    text: `
+      ALTER TABLE comments
+      ADD COLUMN IF NOT EXISTS sessionId uuid NOT NULL;
+    `,
+  },
 };
 
 const migrate: Migrate = async ({ pgPool }) => {
@@ -40,6 +47,7 @@ const migrate: Migrate = async ({ pgPool }) => {
     await client.query(queries.createTableComments);
     await client.query(queries.createTableCommentsIndexHostId);
     await client.query(queries.createTableCommentsIndexCreatedAt);
+    await client.query(queries.addSessionIdColumn);
     await client.query("COMMIT");
 
     console.debug("Database migration completed");

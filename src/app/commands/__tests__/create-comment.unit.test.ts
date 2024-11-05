@@ -11,10 +11,12 @@ describe("commandCreateComment", () => {
         hostid: "host123",
         createdat: new Date().toISOString(),
         updatedat: new Date().toISOString(),
+        sessionid: "session1",
       }),
       deleteCommentById: vi.fn(),
       getAllCommentsByHostId: vi.fn(),
       updateCommentById: vi.fn(),
+      getCommentById: vi.fn(),
     };
 
     const createComment = commandCreateComment(mockDataStore);
@@ -22,6 +24,7 @@ describe("commandCreateComment", () => {
     const input = {
       hostId: "host123",
       content: "This is a comment",
+      sessionId: "session1",
     };
 
     const result = await createComment(input);

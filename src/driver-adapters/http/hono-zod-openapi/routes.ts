@@ -109,7 +109,7 @@ const deleteCommentByIdRoute = createRoute({
     params: DeleteCommentByIdSchema.pathParams,
   },
   responses: {
-    204: {
+    200: {
       content: {
         "application/json": { schema: DeleteCommentByIdSchema.response },
       },

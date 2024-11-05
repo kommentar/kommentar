@@ -49,9 +49,11 @@ const getApp: GetApp = ({
         hostId,
       });
 
+      cacheStore.set(hostId, comments);
+
       return comments;
     },
-    createCommentForHost: async ({ hostId, content }) => {
+    createCommentForHost: async ({ hostId, content, sessionId }) => {
       const isProfane = await profanityClient.check(content);
 
       if (isProfane === "PROFANE") {
@@ -67,10 +69,11 @@ const getApp: GetApp = ({
       const savedComment = await command({
         hostId,
         content,
+        sessionId,
       });
 
       const event = toCommentCreatedEvent({
-        comment: savedComment,
+        comment: { ...savedComment, sessionId },
         subject: hostId,
         randomId,
         source: "app",
@@ -80,7 +83,7 @@ const getApp: GetApp = ({
 
       return savedComment;
     },
-    updateCommentById: async ({ id, content }) => {
+    updateCommentById: async ({ id, content, sessionId }) => {
       const isProfane = await profanityClient.check(content);
 
       if (isProfane === "PROFANE") {
@@ -96,10 +99,11 @@ const getApp: GetApp = ({
       const updatedComment = await command({
         id,
         content,
+        sessionId,
       });
 
       const event = toCommentUpdatedEvent({
-        updatedComment,
+        updatedComment: { ...updatedComment, sessionId },
         subject: id,
         randomId,
         source: "app",
@@ -109,21 +113,24 @@ const getApp: GetApp = ({
 
       return updatedComment;
     },
-    deleteCommentById: async ({ id }) => {
+    deleteCommentById: async ({ id, sessionId }) => {
       const command = commandDeleteComment(dataStore);
 
       const deletedComment = await command({
         id,
+        sessionId,
       });
 
       const event = toCommentDeletedEvent({
-        deletedComment,
+        deletedComment: { ...deletedComment, sessionId },
         subject: id,
         randomId,
         source: "app",
       });
 
       eventBroker.publish({ event });
+
+      return;
     },
   };
 };

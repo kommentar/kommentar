@@ -44,11 +44,11 @@ const getDataStorePostgres: GetDataStorePostgres = async ({
         throw error;
       }
     },
-    saveCommentByHostId: async ({ hostId, content }) => {
+    saveCommentByHostId: async ({ hostId, content, sessionId }) => {
       try {
         const id = randomId.generate();
         const result = await pgPool.query(
-          saveCommentByHostIdQuery({ id, hostId, content }),
+          saveCommentByHostIdQuery({ id, hostId, content, sessionId }),
         );
 
         return result.rows[0];
@@ -57,10 +57,10 @@ const getDataStorePostgres: GetDataStorePostgres = async ({
         throw error;
       }
     },
-    updateCommentById: async ({ id, content }) => {
+    updateCommentById: async ({ id, content, sessionId }) => {
       try {
         const result = await pgPool.query(
-          updateCommentByIdQuery({ id, content }),
+          updateCommentByIdQuery({ id, content, sessionId }),
         );
 
         return result.rows[0];
@@ -69,9 +69,11 @@ const getDataStorePostgres: GetDataStorePostgres = async ({
         throw error;
       }
     },
-    deleteCommentById: async ({ id }) => {
+    deleteCommentById: async ({ id, sessionId }) => {
       try {
-        const result = await pgPool.query(deleteCommentByIdQuery({ id }));
+        const result = await pgPool.query(
+          deleteCommentByIdQuery({ id, sessionId }),
+        );
 
         return result.rows[0];
       } catch (error) {

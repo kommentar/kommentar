@@ -36,7 +36,7 @@ const app = getApp({
   profanityClient,
 });
 
-const hono = getHttpHonoZodOpenApi({ app, config: config.http });
+const hono = getHttpHonoZodOpenApi({ app, config: config.http, randomId });
 
 // * when running a dev server, tsx will force kill the process. (https://github.com/privatenumber/tsx/issues/586)
 const gracefulShutdown = (signal: string) => {
