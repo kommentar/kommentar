@@ -18,6 +18,7 @@
     "@hono/zod-openapi": "^0.16.4",
     "@scalar/hono-api-reference": "^0.5.158",
     "hono": "^4.6.5",
+    "hono-rate-limiter": "^0.4.0",
     "pg": "^8.13.0",
     "uuid": "^10.0.0",
     "zod": "^3.23.8"

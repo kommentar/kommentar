@@ -10,7 +10,7 @@ import { apiReference } from "@scalar/hono-api-reference";
 import { HTTPException } from "hono/http-exception";
 import { getCookie } from "hono/cookie";
 import type { RandomId } from "../../../app/driven-ports/random-id.js";
-import { sessionMiddleware } from "./middlewares.js";
+import { rateLimitMiddleware, sessionMiddleware } from "./middlewares.js";
 
 type GetHttpAppHonoZodOpenApi = ({
   app,
@@ -27,6 +27,7 @@ const getHttpAppHonoZodOpenApi: GetHttpAppHonoZodOpenApi = ({
   const hono = new OpenAPIHono();
 
   hono.use(sessionMiddleware(randomId));
+  hono.use(rateLimitMiddleware);
 
   hono.openapi(getCommentsForHostRoute, async (c) => {
     const { hostId } = c.req.valid("param");
