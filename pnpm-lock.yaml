@@ -17,6 +17,9 @@ dependencies:
   hono:
     specifier: ^4.6.5
     version: 4.6.5
+  hono-rate-limiter:
+    specifier: ^0.4.0
+    version: 0.4.0(hono@4.6.5)
   pg:
     specifier: ^8.13.0
     version: 8.13.0
@@ -2839,6 +2842,17 @@ packages:
       }
     engines: { node: ">=8" }
     dev: true
+
+  /hono-rate-limiter@0.4.0(hono@4.6.5):
+    resolution:
+      {
+        integrity: sha512-7RWU2HZvxPtfBrvjXKDiQ3F6ZH8k49JhxVkHquUz5UZKjauj5PrP29MvISykThtfpy4mGG6kqxFBHW1ed9wwnA==,
+      }
+    peerDependencies:
+      hono: ^4.1.1
+    dependencies:
+      hono: 4.6.5
+    dev: false
 
   /hono@4.6.5:
     resolution:
