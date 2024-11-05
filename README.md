@@ -21,6 +21,7 @@ The API follows the Ports and Adapters pattern, along with Command-Query Respons
 ## How to run locally
 
 This application uses `pnpm`.
+
 - First install dependencies: `pnpm install`
 - Make sure to create a `.env` using the included `.env.sample` as a reference
 - Then run a dev server: `pnpm dev`

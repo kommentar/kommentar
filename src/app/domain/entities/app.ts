@@ -1,22 +1,36 @@
-import type { Comment } from "./comment.js";
+import type { PublicComment } from "./comment.js";
 
 type App = {
-  getCommentsForHost: ({ hostId }: { hostId: string }) => Promise<Comment[]>;
+  getCommentsForHost: ({
+    hostId,
+  }: {
+    hostId: string;
+  }) => Promise<PublicComment[]>;
   createCommentForHost: ({
     hostId,
     content,
+    sessionId,
   }: {
     hostId: string;
     content: string;
-  }) => Promise<Comment>;
+    sessionId: string;
+  }) => Promise<PublicComment>;
   updateCommentById: ({
     id,
     content,
+    sessionId,
   }: {
     id: string;
     content: string;
-  }) => Promise<Comment>;
-  deleteCommentById: ({ id }: { id: string }) => Promise<void>;
+    sessionId: string;
+  }) => Promise<PublicComment>;
+  deleteCommentById: ({
+    id,
+    sessionId,
+  }: {
+    id: string;
+    sessionId: string;
+  }) => Promise<undefined>;
 };
 
 export type { App };

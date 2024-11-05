@@ -4,6 +4,7 @@ import type { Config } from "../../../app/driven-ports/config.js";
 import type { ServerType } from "@hono/node-server";
 import { getHttpAppHonoZodOpenApi } from "./app.js";
 import { getHonoZodOpenApiServer } from "./server.js";
+import type { RandomId } from "../../../app/driven-ports/random-id.js";
 
 type GetHttpHonoZodOpenApi = ({
   app,
@@ -11,13 +12,18 @@ type GetHttpHonoZodOpenApi = ({
 }: {
   app: App;
   config: Config["http"];
+  randomId: RandomId;
 }) => {
   app: OpenAPIHono;
   server: ServerType;
 };
 
-const getHttpHonoZodOpenApi: GetHttpHonoZodOpenApi = ({ app, config }) => {
-  const httpApp = getHttpAppHonoZodOpenApi({ app });
+const getHttpHonoZodOpenApi: GetHttpHonoZodOpenApi = ({
+  app,
+  config,
+  randomId,
+}) => {
+  const httpApp = getHttpAppHonoZodOpenApi({ app, randomId });
   const httpServer = getHonoZodOpenApiServer({
     app: httpApp,
     port: config.port,

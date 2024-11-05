@@ -9,6 +9,7 @@ const mockComments: Comment[] = [
     content: "First comment",
     createdAt: new Date(),
     updatedAt: new Date(),
+    sessionId: "session1",
   },
   {
     id: "2",
@@ -16,6 +17,7 @@ const mockComments: Comment[] = [
     content: "Second comment",
     createdAt: new Date(),
     updatedAt: new Date(),
+    sessionId: "session1",
   },
 ];
 
@@ -30,11 +32,13 @@ const runDataStoreTests = (dataStore: DataStore) => {
     await dataStore.saveCommentByHostId({
       hostId: "host1",
       content: "First comment",
+      sessionId: "session1",
     });
 
     await dataStore.saveCommentByHostId({
       hostId: "host1",
       content: "Second comment",
+      sessionId: "session1",
     });
   });
 
@@ -55,6 +59,7 @@ const runDataStoreTests = (dataStore: DataStore) => {
       const savedComment = await dataStore.saveCommentByHostId({
         hostId: "host2",
         content: "New comment",
+        sessionId: "session1",
       });
 
       expect(savedComment.id).toBeTypeOf("string");
@@ -66,11 +71,13 @@ const runDataStoreTests = (dataStore: DataStore) => {
       const commentToUpdate = await dataStore.saveCommentByHostId({
         hostId: "host2",
         content: "New comment to update",
+        sessionId: "session1",
       });
 
       const updatedComment = await dataStore.updateCommentById({
         id: commentToUpdate.id,
         content: "Updated comment",
+        sessionId: "session1",
       });
 
       expect(updatedComment.id).toBe(commentToUpdate.id);
@@ -82,10 +89,12 @@ const runDataStoreTests = (dataStore: DataStore) => {
       const commentToDelete = await dataStore.saveCommentByHostId({
         hostId: "host2",
         content: "New comment to delete",
+        sessionId: "session1",
       });
 
       const deletedComment = await dataStore.deleteCommentById({
         id: commentToDelete.id,
+        sessionId: "session1",
       });
 
       expect(deletedComment.id).toBe(commentToDelete.id);
@@ -97,6 +106,7 @@ const runDataStoreTests = (dataStore: DataStore) => {
       const commentToGet = await dataStore.saveCommentByHostId({
         hostId: "host2",
         content: "New comment to get",
+        sessionId: "session1",
       });
 
       const gottenComment = await dataStore.getCommentById({

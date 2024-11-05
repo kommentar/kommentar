@@ -1,7 +1,6 @@
 import type { QueryConfig } from "pg";
 import type { Comment } from "../../../app/domain/entities/comment.js";
 
-type GetCreateTableCommentsQuery = () => QueryConfig;
 type GetAllCommentsByHostIdQuery = ({
   hostId,
 }: {
@@ -11,35 +10,30 @@ type SaveCommentByHostIdQuery = ({
   id,
   hostId,
   content,
+  sessionId,
 }: {
   id: Comment["id"];
   hostId: Comment["hostId"];
   content: Comment["content"];
+  sessionId: Comment["sessionId"];
 }) => QueryConfig;
 type UpdateCommentByIdQuery = ({
   id,
   content,
+  sessionId,
 }: {
   id: Comment["id"];
   content: Comment["content"];
+  sessionId: Comment["sessionId"];
 }) => QueryConfig;
-type DeleteCommentByIdQuery = ({ id }: { id: Comment["id"] }) => QueryConfig;
+type DeleteCommentByIdQuery = ({
+  id,
+  sessionId,
+}: {
+  id: Comment["id"];
+  sessionId: Comment["sessionId"];
+}) => QueryConfig;
 type GetCommentByIdQuery = ({ id }: { id: Comment["id"] }) => QueryConfig;
-
-const getCreateTableCommentsQuery: GetCreateTableCommentsQuery = () => {
-  return {
-    name: "create-table-comments",
-    text: `
-        CREATE TABLE IF NOT EXISTS comments (
-            id uuid PRIMARY KEY,
-            content text NOT NULL,
-            hostId varchar(255) NOT NULL,
-            createdAt timestamp NOT NULL,
-            updatedAt timestamp NOT NULL
-        );
-        `,
-  };
-};
 
 const getAllCommentsByHostIdQuery: GetAllCommentsByHostIdQuery = ({
   hostId,
@@ -57,40 +51,45 @@ const saveCommentByHostIdQuery: SaveCommentByHostIdQuery = ({
   id,
   hostId,
   content,
+  sessionId,
 }) => {
   return {
     name: "save-comment-by-host-id",
     text: `
-        INSERT INTO comments (id, content, hostId, createdAt, updatedAt)
-        VALUES ($1, $2, $3, NOW(), NOW())
+        INSERT INTO comments (id, content, hostId, createdAt, updatedAt, sessionId)
+        VALUES ($1, $2, $3, NOW(), NOW(), $4)
         RETURNING *;
         `,
-    values: [id, content, hostId],
+    values: [id, content, hostId, sessionId],
   };
 };
 
-const updateCommentByIdQuery: UpdateCommentByIdQuery = ({ id, content }) => {
+const updateCommentByIdQuery: UpdateCommentByIdQuery = ({
+  id,
+  content,
+  sessionId,
+}) => {
   return {
     name: "update-comment-by-id",
     text: `
         UPDATE comments
         SET content = $1, updatedAt = NOW()
-        WHERE id = $2
+        WHERE id = $2 AND sessionId = $3
         RETURNING *;
         `,
-    values: [content, id],
+    values: [content, id, sessionId],
   };
 };
 
-const deleteCommentByIdQuery: DeleteCommentByIdQuery = ({ id }) => {
+const deleteCommentByIdQuery: DeleteCommentByIdQuery = ({ id, sessionId }) => {
   return {
     name: "delete-comment-by-id",
     text: `
         DELETE FROM comments
-        WHERE id = $1
+        WHERE id = $1 AND sessionId = $2
         RETURNING *;
         `,
-    values: [id],
+    values: [id, sessionId],
   };
 };
 
@@ -105,7 +104,6 @@ const getCommentByIdQuery: GetCommentByIdQuery = ({ id }) => {
 };
 
 export {
-  getCreateTableCommentsQuery,
   getAllCommentsByHostIdQuery,
   saveCommentByHostIdQuery,
   updateCommentByIdQuery,

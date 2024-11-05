@@ -8,11 +8,25 @@ import {
 } from "./routes.js";
 import { apiReference } from "@scalar/hono-api-reference";
 import { HTTPException } from "hono/http-exception";
+import { getCookie } from "hono/cookie";
+import type { RandomId } from "../../../app/driven-ports/random-id.js";
+import { sessionMiddleware } from "./middlewares.js";
 
-type GetHttpAppHonoZodOpenApi = ({ app }: { app: App }) => OpenAPIHono;
+type GetHttpAppHonoZodOpenApi = ({
+  app,
+  randomId,
+}: {
+  app: App;
+  randomId: RandomId;
+}) => OpenAPIHono;
 
-const getHttpAppHonoZodOpenApi: GetHttpAppHonoZodOpenApi = ({ app }) => {
+const getHttpAppHonoZodOpenApi: GetHttpAppHonoZodOpenApi = ({
+  app,
+  randomId,
+}) => {
   const hono = new OpenAPIHono();
+
+  hono.use(sessionMiddleware(randomId));
 
   hono.openapi(getCommentsForHostRoute, async (c) => {
     const { hostId } = c.req.valid("param");
@@ -25,8 +39,13 @@ const getHttpAppHonoZodOpenApi: GetHttpAppHonoZodOpenApi = ({ app }) => {
   hono.openapi(createCommentForHostRoute, async (c) => {
     const { hostId } = c.req.valid("param");
     const { content } = c.req.valid("json");
+    const sessionId = getCookie(c, "sessionId") as string;
 
-    const comment = await app.createCommentForHost({ hostId, content });
+    const comment = await app.createCommentForHost({
+      hostId,
+      content,
+      sessionId,
+    });
 
     return c.json(comment, 201);
   });
@@ -34,18 +53,20 @@ const getHttpAppHonoZodOpenApi: GetHttpAppHonoZodOpenApi = ({ app }) => {
   hono.openapi(updateCommentByIdRoute, async (c) => {
     const { id } = c.req.valid("param");
     const { content } = c.req.valid("json");
+    const sessionId = getCookie(c, "sessionId") as string;
 
-    const comment = await app.updateCommentById({ id, content });
+    const comment = await app.updateCommentById({ id, content, sessionId });
 
     return c.json(comment, 200);
   });
 
   hono.openapi(deleteCommentByIdRoute, async (c) => {
     const { id } = c.req.valid("param");
+    const sessionId = getCookie(c, "sessionId") as string;
 
-    await app.deleteCommentById({ id });
+    await app.deleteCommentById({ id, sessionId });
 
-    return c.json({ message: "Comment deleted" }, 204);
+    return c.json({ message: "Comment deleted" }, 200);
   });
 
   hono.doc("/spec", {

@@ -19,6 +19,12 @@ type Comment = {
    * Date when the comment was last updated
    */
   updatedAt: Date;
+  /**
+   * Unique identifier of the session
+   */
+  sessionId: string;
 };
 
-export type { Comment };
+type PublicComment = Omit<Comment, "sessionId">;
+
+export type { Comment, PublicComment };
