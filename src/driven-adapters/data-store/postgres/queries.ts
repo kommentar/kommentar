@@ -11,11 +11,13 @@ type SaveCommentByHostIdQuery = ({
   hostId,
   content,
   sessionId,
+  commenter,
 }: {
   id: Comment["id"];
   hostId: Comment["hostId"];
   content: Comment["content"];
   sessionId: Comment["sessionId"];
+  commenter: Comment["commenter"];
 }) => QueryConfig;
 type UpdateCommentByIdQuery = ({
   id,
@@ -52,15 +54,23 @@ const saveCommentByHostIdQuery: SaveCommentByHostIdQuery = ({
   hostId,
   content,
   sessionId,
+  commenter,
 }) => {
   return {
     name: "save-comment-by-host-id",
     text: `
-        INSERT INTO comments (id, content, hostId, createdAt, updatedAt, sessionId)
-        VALUES ($1, $2, $3, NOW(), NOW(), $4)
+        INSERT INTO comments (id, content, hostId, createdAt, updatedAt, sessionId, commenter_displayname, commenter_realname)
+        VALUES ($1, $2, $3, NOW(), NOW(), $4, $5, $6)
         RETURNING *;
         `,
-    values: [id, content, hostId, sessionId],
+    values: [
+      id,
+      content,
+      hostId,
+      sessionId,
+      commenter.displayName,
+      commenter.realName,
+    ],
   };
 };
 

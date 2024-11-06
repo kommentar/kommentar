@@ -35,6 +35,20 @@ const queries: Queries = {
       ADD COLUMN IF NOT EXISTS sessionId uuid NOT NULL;
     `,
   },
+  sessionIdIndex: {
+    name: "create-table-comments-index-session-id",
+    text: `
+      CREATE INDEX IF NOT EXISTS comments_session_id_idx ON comments (sessionId);
+    `,
+  },
+  addCommenterColumns: {
+    name: "add-commenter-columns",
+    text: `
+        ALTER TABLE comments
+        ADD COLUMN IF NOT EXISTS commenter_displayname text NOT NULL DEFAULT 'Anonymous',
+        ADD COLUMN IF NOT EXISTS commenter_realname text;
+      `,
+  },
 };
 
 const migrate: Migrate = async ({ pgPool }) => {
@@ -48,6 +62,8 @@ const migrate: Migrate = async ({ pgPool }) => {
     await client.query(queries.createTableCommentsIndexHostId);
     await client.query(queries.createTableCommentsIndexCreatedAt);
     await client.query(queries.addSessionIdColumn);
+    await client.query(queries.sessionIdIndex);
+    await client.query(queries.addCommenterColumns);
     await client.query("COMMIT");
 
     console.debug("Database migration completed");

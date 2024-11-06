@@ -7,6 +7,8 @@ type StoredComment = {
   createdat: Comment["createdAt"];
   updatedat: Comment["updatedAt"];
   sessionid: Comment["sessionId"];
+  commenter_displayname: Comment["commenter"]["displayName"];
+  commenter_realname?: Comment["commenter"]["realName"];
 };
 
 type DataStore = {
@@ -27,16 +29,20 @@ type DataStore = {
    *
    * @param hostId - Unique identifier of the host, where the comment is placed
    * @param content - Content of the comment
+   * @param sessionId - Unique identifier of the session
+   * @param commenter - Commenter information
    * @returns The saved comment
    */
   saveCommentByHostId: ({
     hostId,
     content,
     sessionId,
+    commenter,
   }: {
     hostId: Comment["hostId"];
     content: Comment["content"];
     sessionId: Comment["sessionId"];
+    commenter: Comment["commenter"];
   }) => Promise<StoredComment>;
 
   /**

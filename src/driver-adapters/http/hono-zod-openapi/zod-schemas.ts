@@ -23,6 +23,20 @@ const commentSchema = z
       description: "Date when the comment was last updated",
       example: "2024-11-01T12:00:00.000Z",
     }),
+    commenter: z
+      .object({
+        displayName: z.string().openapi({
+          description: "Display name of the commenter",
+          example: "safwanyp",
+        }),
+        realName: z.string().optional().openapi({
+          description: "Real name of the commenter",
+          example: "Safwan Parkar",
+        }),
+      })
+      .openapi({
+        description: "Information about the commenter",
+      }),
   })
   .openapi("Comment");
 
@@ -91,6 +105,21 @@ const PostCommentByHostIdSchema = {
       content: z.string().openapi({
         example: "This is a comment",
       }),
+      commenter: z
+        .object({
+          displayName: z.string().openapi({
+            example: "safwanyp",
+          }),
+          realName: z.string().optional().openapi({
+            example: "Safwan Parkar",
+          }),
+        })
+        .openapi({
+          example: {
+            displayName: "safwanyp",
+            realName: "Safwan Parkar",
+          },
+        }),
     })
     .required(),
   response: commentSchema,
