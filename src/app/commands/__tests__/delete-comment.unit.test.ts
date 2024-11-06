@@ -9,9 +9,12 @@ describe("commandDeleteComment", () => {
       id: "1",
       content: "Test comment",
       hostId: "host1",
-      createdAt: new Date(),
-      updatedAt: new Date(),
+      createdAt: new Date("2021-01-01"),
+      updatedAt: new Date("2021-01-01"),
       sessionId: "session1",
+      commenter: {
+        displayName: "John Doe",
+      },
     };
 
     const mockDataStore: DataStore = {
@@ -22,6 +25,7 @@ describe("commandDeleteComment", () => {
         createdat: mockComment.createdAt,
         updatedat: mockComment.updatedAt,
         sessionid: mockComment.sessionId,
+        commenter_displayname: mockComment.commenter.displayName,
       }),
       getCommentById: vi.fn().mockResolvedValue({
         id: mockComment.id,
@@ -30,6 +34,7 @@ describe("commandDeleteComment", () => {
         createdat: mockComment.createdAt,
         updatedat: mockComment.updatedAt,
         sessionid: mockComment.sessionId,
+        commenter_displayname: mockComment.commenter.displayName,
       }),
       getAllCommentsByHostId: vi.fn(),
       saveCommentByHostId: vi.fn(),
@@ -80,6 +85,9 @@ describe("commandDeleteComment", () => {
       createdAt: new Date(),
       updatedAt: new Date(),
       sessionId: "session1",
+      commenter: {
+        displayName: "John Doe",
+      },
     };
 
     const mockDataStore: DataStore = {

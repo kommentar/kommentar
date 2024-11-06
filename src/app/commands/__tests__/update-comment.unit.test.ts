@@ -9,14 +9,19 @@ describe("commandUpdateComment", () => {
         id: "1",
         content: "Updated content",
         sessionid: "session1",
+        hostid: "host1",
+        createdat: new Date("2021-01-01"),
+        updatedat: new Date("2021-01-01"),
+        commenter_displayname: "John Doe",
       }),
       getCommentById: vi.fn().mockResolvedValue({
         id: "1",
         content: "Test comment",
         hostId: "host1",
-        createdAt: new Date(),
-        updatedAt: new Date(),
+        createdAt: new Date("2021-01-01"),
+        updatedAt: new Date("2021-01-01"),
         sessionid: "session1",
+        commenter_displayname: "John Doe",
       }),
       deleteCommentById: vi.fn(),
       getAllCommentsByHostId: vi.fn(),
@@ -37,6 +42,12 @@ describe("commandUpdateComment", () => {
     expect(result).toEqual({
       id: "1",
       content: "Updated content",
+      hostId: "host1",
+      createdAt: new Date("2021-01-01"),
+      updatedAt: new Date("2021-01-01"),
+      commenter: {
+        displayName: "John Doe",
+      },
     });
   });
 
