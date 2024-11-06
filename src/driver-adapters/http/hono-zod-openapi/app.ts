@@ -20,10 +20,27 @@ type GetHttpAppHonoZodOpenApi = ({
   randomId: RandomId;
 }) => OpenAPIHono;
 
+const apiClientservers = [
+  {
+    url: "http://localhost:3000",
+    description: "Local development server",
+  },
+];
+
 const getHttpAppHonoZodOpenApi: GetHttpAppHonoZodOpenApi = ({
   app,
   randomId,
 }) => {
+  if (
+    process.env.NODE_ENV === "production" &&
+    process.env.PRODUCTION_API_SERVER_URL
+  ) {
+    apiClientservers.push({
+      url: String(process.env.PRODUCTION_API_SERVER_URL),
+      description: "Production server",
+    });
+  }
+
   const hono = new OpenAPIHono();
 
   hono.use(sessionMiddleware(randomId));
@@ -83,6 +100,7 @@ const getHttpAppHonoZodOpenApi: GetHttpAppHonoZodOpenApi = ({
     "/reference",
     apiReference({
       pageTitle: "Kommentar | API Reference",
+      servers: apiClientservers,
       spec: {
         url: "/spec",
       },
