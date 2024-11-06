@@ -13,6 +13,8 @@ const getDataStoreInMemory: GetDataStoreInMemory = () => {
     content: "Hello, World! This is a sample comment.",
     createdat: new Date(),
     updatedat: new Date(),
+    sessionid: "1",
+    commenter_displayname: "John Doe",
   });
 
   return {
@@ -28,6 +30,8 @@ const getDataStoreInMemory: GetDataStoreInMemory = () => {
         content,
         createdat: new Date(),
         updatedat: new Date(),
+        sessionid: "1",
+        commenter_displayname: "John Doe",
       };
       comments.set(comment.id, comment);
       return comment;
@@ -55,6 +59,9 @@ const getDataStoreInMemory: GetDataStoreInMemory = () => {
         throw new Error(`Comment with id ${id} not found`);
       }
       return comment;
+    },
+    async stop() {
+      // Nothing to do here
     },
   };
 };

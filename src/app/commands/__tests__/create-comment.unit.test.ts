@@ -18,6 +18,7 @@ describe("commandCreateComment", () => {
       getAllCommentsByHostId: vi.fn(),
       updateCommentById: vi.fn(),
       getCommentById: vi.fn(),
+      stop: vi.fn(),
     };
 
     const createComment = commandCreateComment(mockDataStore);

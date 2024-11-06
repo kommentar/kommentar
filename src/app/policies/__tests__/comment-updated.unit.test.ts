@@ -9,6 +9,7 @@ describe("wheneverCommentUpdatedInvalidateCache", () => {
     const mockEventBroker: EventBroker = {
       subscribe: vi.fn(),
       publish: vi.fn(),
+      stop: vi.fn(),
     };
     const mockCacheStore: CacheStore = {
       get: vi.fn().mockReturnValue(undefined),
@@ -30,6 +31,10 @@ describe("wheneverCommentUpdatedInvalidateCache", () => {
       hostId: "1",
       createdAt: new Date("2021-01-01"),
       updatedAt: new Date("2021-01-01"),
+      sessionId: "session1",
+      commenter: {
+        displayName: "Commenter 1",
+      },
     };
     const event = { subject: "comment-1", data: updatedComment };
 
@@ -46,6 +51,10 @@ describe("wheneverCommentUpdatedInvalidateCache", () => {
         hostId: "1",
         createdAt: new Date("2021-01-01"),
         updatedAt: new Date("2021-01-01"),
+        sessionId: "session1",
+        commenter: {
+          displayName: "Commenter 1",
+        },
       },
       {
         id: "2",
@@ -53,12 +62,17 @@ describe("wheneverCommentUpdatedInvalidateCache", () => {
         hostId: "1",
         createdAt: new Date("2021-01-01"),
         updatedAt: new Date("2021-01-01"),
+        sessionId: "session1",
+        commenter: {
+          displayName: "Commenter 2",
+        },
       },
     ];
 
     const mockEventBroker: EventBroker = {
       subscribe: vi.fn(),
       publish: vi.fn(),
+      stop: vi.fn(),
     };
     const mockCacheStore: CacheStore = {
       get: vi.fn().mockReturnValue(existingComments),
@@ -80,6 +94,10 @@ describe("wheneverCommentUpdatedInvalidateCache", () => {
       hostId: "1",
       createdAt: new Date("2021-01-01"),
       updatedAt: new Date("2021-01-01"),
+      sessionId: "session1",
+      commenter: {
+        displayName: "Commenter 1",
+      },
     };
     const event = { subject: "comment-1", data: updatedComment };
 
@@ -93,6 +111,10 @@ describe("wheneverCommentUpdatedInvalidateCache", () => {
         hostId: "1",
         createdAt: new Date("2021-01-01"),
         updatedAt: new Date("2021-01-01"),
+        sessionId: "session1",
+        commenter: {
+          displayName: "Commenter 2",
+        },
       },
     ]);
   });

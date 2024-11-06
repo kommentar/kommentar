@@ -10,6 +10,9 @@ const mockComments: Comment[] = [
     createdAt: new Date(),
     updatedAt: new Date(),
     sessionId: "session1",
+    commenter: {
+      displayName: "Commenter 1",
+    },
   },
   {
     id: "2",
@@ -18,6 +21,9 @@ const mockComments: Comment[] = [
     createdAt: new Date(),
     updatedAt: new Date(),
     sessionId: "session1",
+    commenter: {
+      displayName: "Commenter 2",
+    },
   },
 ];
 
@@ -33,12 +39,18 @@ const runDataStoreTests = (dataStore: DataStore) => {
       hostId: "host1",
       content: "First comment",
       sessionId: "session1",
+      commenter: {
+        displayName: "Commenter 1",
+      },
     });
 
     await dataStore.saveCommentByHostId({
       hostId: "host1",
       content: "Second comment",
       sessionId: "session1",
+      commenter: {
+        displayName: "Commenter 2",
+      },
     });
   });
 
@@ -60,6 +72,9 @@ const runDataStoreTests = (dataStore: DataStore) => {
         hostId: "host2",
         content: "New comment",
         sessionId: "session1",
+        commenter: {
+          displayName: "Commenter 3",
+        },
       });
 
       expect(savedComment.id).toBeTypeOf("string");
@@ -72,6 +87,9 @@ const runDataStoreTests = (dataStore: DataStore) => {
         hostId: "host2",
         content: "New comment to update",
         sessionId: "session1",
+        commenter: {
+          displayName: "Commenter 4",
+        },
       });
 
       const updatedComment = await dataStore.updateCommentById({
@@ -90,6 +108,9 @@ const runDataStoreTests = (dataStore: DataStore) => {
         hostId: "host2",
         content: "New comment to delete",
         sessionId: "session1",
+        commenter: {
+          displayName: "Commenter 5",
+        },
       });
 
       const deletedComment = await dataStore.deleteCommentById({
@@ -107,6 +128,9 @@ const runDataStoreTests = (dataStore: DataStore) => {
         hostId: "host2",
         content: "New comment to get",
         sessionId: "session1",
+        commenter: {
+          displayName: "Commenter 6",
+        },
       });
 
       const gottenComment = await dataStore.getCommentById({

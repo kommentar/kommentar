@@ -9,6 +9,7 @@ describe("wheneverCommentCreatedInvalidateCache", () => {
     const mockEventBroker: EventBroker = {
       subscribe: vi.fn(),
       publish: vi.fn(),
+      stop: vi.fn(),
     };
     const mockCacheStore: CacheStore = {
       get: vi.fn().mockReturnValue(undefined),
@@ -30,6 +31,10 @@ describe("wheneverCommentCreatedInvalidateCache", () => {
       hostId: "1",
       createdAt: new Date("2021-01-01"),
       updatedAt: new Date("2021-01-01"),
+      sessionId: "session1",
+      commenter: {
+        displayName: "Commenter 1",
+      },
     };
     const event = { subject: "comment-1", data: newComment };
 
@@ -46,12 +51,17 @@ describe("wheneverCommentCreatedInvalidateCache", () => {
         hostId: "1",
         createdAt: new Date("2021-01-01"),
         updatedAt: new Date("2021-01-01"),
+        sessionId: "session1",
+        commenter: {
+          displayName: "Commenter 1",
+        },
       },
     ];
 
     const mockEventBroker: EventBroker = {
       subscribe: vi.fn(),
       publish: vi.fn(),
+      stop: vi.fn(),
     };
     const mockCacheStore: CacheStore = {
       get: vi.fn().mockReturnValue(existingComments),
@@ -73,6 +83,10 @@ describe("wheneverCommentCreatedInvalidateCache", () => {
       hostId: "1",
       createdAt: new Date("2021-01-01"),
       updatedAt: new Date("2021-01-01"),
+      sessionId: "session1",
+      commenter: {
+        displayName: "Commenter 2",
+      },
     };
     const event = { subject: "comment-1", data: newComment };
 

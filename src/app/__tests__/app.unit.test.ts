@@ -9,11 +9,13 @@ describe("getApp", () => {
     updateCommentById: vi.fn(),
     deleteCommentById: vi.fn(),
     getCommentById: vi.fn(),
+    stop: vi.fn(),
   };
 
   const mockEventBroker = {
     publish: vi.fn(),
     subscribe: vi.fn(),
+    stop: vi.fn(),
   };
 
   const mockRandomId = {
@@ -29,6 +31,7 @@ describe("getApp", () => {
 
   const mockProfanityClient = {
     check: vi.fn(),
+    stop: vi.fn(),
   };
 
   const app = getApp({
