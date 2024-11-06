@@ -13,6 +13,9 @@ const getEventBrokerInMemory: GetEventBrokerInMemory = () => {
     subscribe: ({ type, handler }) => {
       eventEmitter.on(type, handler);
     },
+    stop: () => {
+      eventEmitter.removeAllListeners();
+    },
   };
 };
 
