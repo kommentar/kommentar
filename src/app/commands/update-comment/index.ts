@@ -46,6 +46,10 @@ const commandUpdateComment: CommandUpdateComment = (dataStore) => {
       hostId: updatedComment.hostid,
       createdAt: updatedComment.createdat,
       updatedAt: updatedComment.updatedat,
+      commenter: {
+        displayName: updatedComment.commenter_displayname,
+        realName: updatedComment.commenter_realname,
+      },
     };
   };
 };

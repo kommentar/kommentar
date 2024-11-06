@@ -1,3 +1,17 @@
+type Commenter = {
+  /**
+   * Display name of the commenter
+   * @example "safwanyp"
+   */
+  displayName: string;
+  /**
+   *
+   * Real name of the commenter
+   * @example "Safwan Parkar"
+   */
+  realName?: string;
+};
+
 type Comment = {
   /**
    * Unique identifier of the comment
@@ -23,6 +37,10 @@ type Comment = {
    * Unique identifier of the session
    */
   sessionId: string;
+  /**
+   * Commenter details
+   */
+  commenter: Commenter;
 };
 
 type PublicComment = Omit<Comment, "sessionId">;

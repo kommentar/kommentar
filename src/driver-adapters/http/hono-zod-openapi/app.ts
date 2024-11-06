@@ -39,13 +39,14 @@ const getHttpAppHonoZodOpenApi: GetHttpAppHonoZodOpenApi = ({
 
   hono.openapi(createCommentForHostRoute, async (c) => {
     const { hostId } = c.req.valid("param");
-    const { content } = c.req.valid("json");
+    const { content, commenter } = c.req.valid("json");
     const sessionId = getCookie(c, "sessionId") as string;
 
     const comment = await app.createCommentForHost({
       hostId,
       content,
       sessionId,
+      commenter,
     });
 
     return c.json(comment, 201);

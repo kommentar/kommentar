@@ -15,6 +15,10 @@ const queryGetCommentsForHost: QueryGetCommentsForHost = (dataStore) => {
       hostId: comment.hostid,
       createdAt: comment.createdat,
       updatedAt: comment.updatedat,
+      commenter: {
+        displayName: comment.commenter_displayname,
+        realName: comment.commenter_realname,
+      },
     }));
   };
 };

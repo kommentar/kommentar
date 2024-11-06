@@ -53,7 +53,7 @@ const getApp: GetApp = ({
 
       return comments;
     },
-    createCommentForHost: async ({ hostId, content, sessionId }) => {
+    createCommentForHost: async ({ hostId, content, sessionId, commenter }) => {
       const isProfane = await profanityClient.check(content);
 
       if (isProfane === "PROFANE") {
@@ -70,6 +70,7 @@ const getApp: GetApp = ({
         hostId,
         content,
         sessionId,
+        commenter,
       });
 
       const event = toCommentCreatedEvent({

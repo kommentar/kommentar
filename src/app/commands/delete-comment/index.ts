@@ -41,6 +41,10 @@ const commandDeleteComment: CommandDeleteComment = (dataStore) => {
       createdAt: deletedComment.createdat,
       updatedAt: deletedComment.updatedat,
       sessionId: deletedComment.sessionid,
+      commenter: {
+        displayName: deletedComment.commenter_displayname,
+        realName: deletedComment.commenter_realname,
+      },
     };
   };
 };

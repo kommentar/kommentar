@@ -44,11 +44,17 @@ const getDataStorePostgres: GetDataStorePostgres = async ({
         throw error;
       }
     },
-    saveCommentByHostId: async ({ hostId, content, sessionId }) => {
+    saveCommentByHostId: async ({ hostId, content, sessionId, commenter }) => {
       try {
         const id = randomId.generate();
         const result = await pgPool.query(
-          saveCommentByHostIdQuery({ id, hostId, content, sessionId }),
+          saveCommentByHostIdQuery({
+            id,
+            hostId,
+            content,
+            sessionId,
+            commenter,
+          }),
         );
 
         return result.rows[0];

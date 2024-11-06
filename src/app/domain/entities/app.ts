@@ -10,10 +10,15 @@ type App = {
     hostId,
     content,
     sessionId,
+    commenter,
   }: {
     hostId: string;
     content: string;
     sessionId: string;
+    commenter: {
+      displayName: string;
+      realName?: string;
+    };
   }) => Promise<PublicComment>;
   updateCommentById: ({
     id,
