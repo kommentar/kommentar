@@ -55,7 +55,7 @@ const migrate: Migrate = async ({ pgPool }) => {
   const client = await pgPool.connect();
 
   try {
-    console.debug("Starting database migration", queries);
+    console.debug("Starting database migration");
 
     await client.query("BEGIN");
     await client.query(queries.createTableComments);
