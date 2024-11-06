@@ -10,6 +10,7 @@ describe("queryGetCommentsForHost", () => {
       saveCommentByHostId: vi.fn(),
       updateCommentById: vi.fn(),
       getCommentById: vi.fn(),
+      stop: vi.fn(),
     };
 
     const getCommentsForHost = queryGetCommentsForHost(mockDataStore);
@@ -47,6 +48,7 @@ describe("queryGetCommentsForHost", () => {
       saveCommentByHostId: vi.fn(),
       updateCommentById: vi.fn(),
       getCommentById: vi.fn(),
+      stop: vi.fn(),
     };
 
     const getCommentsForHost = queryGetCommentsForHost(mockDataStore);

@@ -26,6 +26,7 @@ describe("commandUpdateComment", () => {
       deleteCommentById: vi.fn(),
       getAllCommentsByHostId: vi.fn(),
       saveCommentByHostId: vi.fn(),
+      stop: vi.fn(),
     };
 
     const updateComment = commandUpdateComment(mockDataStore);
@@ -58,6 +59,7 @@ describe("commandUpdateComment", () => {
       deleteCommentById: vi.fn(),
       getAllCommentsByHostId: vi.fn(),
       saveCommentByHostId: vi.fn(),
+      stop: vi.fn(),
     };
 
     const updateComment = commandUpdateComment(mockDataStore);
@@ -91,6 +93,7 @@ describe("commandUpdateComment", () => {
       deleteCommentById: vi.fn(),
       getAllCommentsByHostId: vi.fn(),
       saveCommentByHostId: vi.fn(),
+      stop: vi.fn(),
     };
 
     const updateComment = commandUpdateComment(mockDataStore);
