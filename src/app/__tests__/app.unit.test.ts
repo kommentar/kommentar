@@ -45,8 +45,31 @@ describe("getApp", () => {
 
   it("should get comments for a host", async () => {
     const hostId = "host1";
-    const comments = [{ id: "comment1", content: "Nice place!" }];
-    mockDataStore.getAllCommentsByHostId.mockResolvedValue(comments);
+    const storedComments = [
+      {
+        id: "comment1",
+        content: "Nice place!",
+        hostid: hostId,
+        sessionid: "session1",
+        createdat: new Date("2021-01-01"),
+        updatedat: new Date("2021-01-01"),
+        commenter_displayname: "John Doe",
+      },
+    ];
+    const comments = [
+      {
+        id: "comment1",
+        content: "Nice place!",
+        hostId: hostId,
+        createdAt: new Date("2021-01-01"),
+        updatedAt: new Date("2021-01-01"),
+        commenter: {
+          displayName: "John Doe",
+        },
+      },
+    ];
+
+    mockDataStore.getAllCommentsByHostId.mockResolvedValue(storedComments);
 
     const result = await app.getCommentsForHost({ hostId });
 
@@ -58,34 +81,68 @@ describe("getApp", () => {
 
   it("should get comments for a host from cache", async () => {
     const hostId = "host1";
-    const comments = [{ id: "comment1", content: "Nice place!" }];
-    mockCacheStore.get.mockReturnValue(comments);
+    const cachedComments = [
+      {
+        id: "comment1",
+        content: "Nice place!",
+        hostId: hostId,
+        createdAt: new Date("2021-01-01"),
+        updatedAt: new Date("2021-01-01"),
+        commenter: {
+          displayName: "John Doe",
+        },
+      },
+    ];
+
+    mockCacheStore.get.mockReturnValue(cachedComments);
 
     const result = await app.getCommentsForHost({ hostId });
 
     expect(mockDataStore.getAllCommentsByHostId).not.toHaveBeenCalled();
-    expect(result).toEqual(comments);
+    expect(result).toEqual(cachedComments);
   });
 
   it("should create a comment for a host", async () => {
-    const hostId = "host1";
-    const content = "Great stay!";
-    const savedComment = { id: "comment2", content };
-    const sessionId = "session1";
+    const savedComment = {
+      id: "comment1",
+      content: "Nice place!",
+      hostid: "host1",
+      sessionid: "session1",
+      createdat: new Date("2021-01-01"),
+      updatedat: new Date("2021-01-01"),
+      commenter_displayname: "John Doe",
+    };
+    const comment = {
+      id: "comment1",
+      content: "Nice place!",
+      hostId: "host1",
+      createdAt: new Date("2021-01-01"),
+      updatedAt: new Date("2021-01-01"),
+      commenter: {
+        displayName: "John Doe",
+      },
+    };
+
     mockDataStore.saveCommentByHostId.mockResolvedValue(savedComment);
 
     const result = await app.createCommentForHost({
-      hostId,
-      content,
-      sessionId,
+      hostId: "host1",
+      content: "Nice place!",
+      sessionId: "session1",
+      commenter: {
+        displayName: "John Doe",
+      },
     });
 
     expect(mockDataStore.saveCommentByHostId).toHaveBeenCalledWith({
-      hostId,
-      content,
-      sessionId,
+      hostId: "host1",
+      content: "Nice place!",
+      sessionId: "session1",
+      commenter: {
+        displayName: "John Doe",
+      },
     });
-    expect(result).toEqual(savedComment);
+    expect(result).toEqual(comment);
   });
 
   it("should throw an error when creating a comment with profanity", async () => {
@@ -98,6 +155,9 @@ describe("getApp", () => {
         hostId,
         content,
         sessionId: "session1",
+        commenter: {
+          displayName: "John Doe",
+        },
       });
     } catch (error) {
       const e = error as HTTPException;
@@ -107,26 +167,39 @@ describe("getApp", () => {
   });
 
   it("should update a comment by id when session is valid", async () => {
-    const id = "comment1";
-    const content = "Updated content";
-    const sessionId = "session1";
-    const updatedComment = { id, content, sessionid: sessionId };
+    const updatedComment = {
+      id: "comment1",
+      content: "Updated content",
+      hostid: "host1",
+      sessionid: "session1",
+      createdat: new Date("2021-01-01"),
+      updatedat: new Date("2021-01-01"),
+      commenter_displayname: "John Doe",
+    };
+
     mockDataStore.updateCommentById.mockResolvedValue(updatedComment);
     mockDataStore.getCommentById.mockResolvedValue(updatedComment);
 
-    const result = await app.updateCommentById({ id, content, sessionId });
+    const result = await app.updateCommentById({
+      id: "comment1",
+      content: "Updated content",
+      sessionId: "session1",
+    });
 
     expect(mockDataStore.updateCommentById).toHaveBeenCalledWith({
-      id,
-      content,
-      sessionId,
+      id: "comment1",
+      content: "Updated content",
+      sessionId: "session1",
     });
     expect(result).toEqual({
       id: updatedComment.id,
       content: updatedComment.content,
-      hostId: undefined,
-      updatedAt: undefined,
-      createdAt: undefined,
+      hostId: updatedComment.hostid,
+      updatedAt: updatedComment.updatedat,
+      createdAt: updatedComment.createdat,
+      commenter: {
+        displayName: updatedComment.commenter_displayname,
+      },
     });
   });
 
@@ -164,21 +237,32 @@ describe("getApp", () => {
   });
 
   it("should delete a comment by id when session is valid", async () => {
-    const id = "comment1";
-    const content = "just something";
-    const sessionId = "session1";
-
-    const savedComment = { id, content, sessionid: sessionId };
+    const savedComment = {
+      id: "comment1",
+      content: "Nice place!",
+      hostid: "host1",
+      sessionid: "session1",
+      createdat: new Date("2021-01-01"),
+      updatedat: new Date("2021-01-01"),
+      commenter_displayname: "John Doe",
+    };
     mockDataStore.saveCommentByHostId.mockResolvedValue(savedComment);
-    await app.createCommentForHost({ hostId: "host1", content, sessionId });
+    await app.createCommentForHost({
+      hostId: "host1",
+      content: "Nice place!",
+      sessionId: "session1",
+      commenter: {
+        displayName: "John Doe",
+      },
+    });
 
     mockDataStore.deleteCommentById.mockResolvedValue(savedComment);
     mockDataStore.getCommentById.mockResolvedValue(savedComment);
-    await app.deleteCommentById({ id, sessionId });
+    await app.deleteCommentById({ id: "comment1", sessionId: "session1" });
 
     expect(mockDataStore.deleteCommentById).toHaveBeenCalledWith({
-      id,
-      sessionId,
+      id: "comment1",
+      sessionId: "session1",
     });
   });
 
@@ -188,7 +272,12 @@ describe("getApp", () => {
     const content = "Nice place!";
     const savedComment = { id, content, sessionid: sessionId };
     mockDataStore.saveCommentByHostId.mockResolvedValue(savedComment);
-    await app.createCommentForHost({ hostId: "host1", content, sessionId });
+    await app.createCommentForHost({
+      hostId: "host1",
+      content,
+      sessionId,
+      commenter: { displayName: "John Doe" },
+    });
 
     try {
       mockDataStore.getCommentById.mockResolvedValue(savedComment);

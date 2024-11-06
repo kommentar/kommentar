@@ -9,9 +9,10 @@ describe("commandCreateComment", () => {
         id: "1",
         content: "This is a comment",
         hostid: "host123",
-        createdat: new Date().toISOString(),
-        updatedat: new Date().toISOString(),
+        createdat: new Date("2021-01-01").toISOString(),
+        updatedat: new Date("2021-01-01").toISOString(),
         sessionid: "session1",
+        commenter_displayname: "John Doe",
       }),
       deleteCommentById: vi.fn(),
       getAllCommentsByHostId: vi.fn(),
@@ -25,6 +26,9 @@ describe("commandCreateComment", () => {
       hostId: "host123",
       content: "This is a comment",
       sessionId: "session1",
+      commenter: {
+        displayName: "John Doe",
+      },
     };
 
     const result = await createComment(input);
@@ -34,8 +38,11 @@ describe("commandCreateComment", () => {
       id: "1",
       hostId: "host123",
       content: "This is a comment",
-      createdAt: expect.any(String),
-      updatedAt: expect.any(String),
+      createdAt: "2021-01-01T00:00:00.000Z",
+      updatedAt: "2021-01-01T00:00:00.000Z",
+      commenter: {
+        displayName: "John Doe",
+      },
     });
   });
 });

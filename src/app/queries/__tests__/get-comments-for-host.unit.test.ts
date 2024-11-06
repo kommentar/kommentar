@@ -9,6 +9,7 @@ describe("queryGetCommentsForHost", () => {
       deleteCommentById: vi.fn(),
       saveCommentByHostId: vi.fn(),
       updateCommentById: vi.fn(),
+      getCommentById: vi.fn(),
     };
 
     const getCommentsForHost = queryGetCommentsForHost(mockDataStore);
@@ -28,6 +29,7 @@ describe("queryGetCommentsForHost", () => {
         hostid: "1",
         createdat: new Date("2021-01-01"),
         updatedat: new Date("2021-01-01"),
+        commenter_displayname: "John Doe",
       },
       {
         id: "2",
@@ -35,6 +37,7 @@ describe("queryGetCommentsForHost", () => {
         hostid: "1",
         createdat: new Date("2021-01-02"),
         updatedat: new Date("2021-01-02"),
+        commenter_displayname: "Jane Doe",
       },
     ];
 
@@ -43,6 +46,7 @@ describe("queryGetCommentsForHost", () => {
       deleteCommentById: vi.fn(),
       saveCommentByHostId: vi.fn(),
       updateCommentById: vi.fn(),
+      getCommentById: vi.fn(),
     };
 
     const getCommentsForHost = queryGetCommentsForHost(mockDataStore);
@@ -55,6 +59,9 @@ describe("queryGetCommentsForHost", () => {
         hostId: "1",
         createdAt: new Date("2021-01-01"),
         updatedAt: new Date("2021-01-01"),
+        commenter: {
+          displayName: "John Doe",
+        },
       },
       {
         id: "2",
@@ -62,6 +69,9 @@ describe("queryGetCommentsForHost", () => {
         hostId: "1",
         createdAt: new Date("2021-01-02"),
         updatedAt: new Date("2021-01-02"),
+        commenter: {
+          displayName: "Jane Doe",
+        },
       },
     ]);
     expect(mockDataStore.getAllCommentsByHostId).toHaveBeenCalledWith({
