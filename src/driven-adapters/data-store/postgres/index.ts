@@ -97,6 +97,15 @@ const getDataStorePostgres: GetDataStorePostgres = async ({
         throw error;
       }
     },
+    stop: async () => {
+      /**
+       * This will wait for all the clients to finish their operations and then
+       * close the pool.
+       *
+       * Reference: https://node-postgres.com/features/pooling#shutdown
+       */
+      await pgPool.end();
+    },
   };
 };
 

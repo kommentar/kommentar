@@ -22,6 +22,7 @@ type SubscribeToEvent = ({
 type EventBroker = {
   publish: PublishEvent;
   subscribe: SubscribeToEvent;
+  stop: () => void;
 };
 
 export type { CloudEvent, EventBroker, PublishEvent, SubscribeToEvent };

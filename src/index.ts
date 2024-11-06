@@ -39,31 +39,33 @@ const app = getApp({
 const hono = getHttpHonoZodOpenApi({ app, config: config.http, randomId });
 
 // * when running a dev server, tsx will force kill the process. (https://github.com/privatenumber/tsx/issues/586)
-const gracefulShutdown = (signal: string) => {
+const gracefulShutdown = async (signal: string) => {
   console.log(`Received ${signal}. Shutting down gracefully...`);
+  eventBroker.stop();
+  await dataStore.stop();
+  profanityClient.stop();
   hono.server.close(() => {
-    console.log("Closed out remaining connections.");
+    console.log("Http server closed");
     process.exit(0);
   });
 
-  // If after 10 seconds, forcefully shut down
   setTimeout(() => {
     console.error(
       "Could not close connections in time, forcefully shutting down",
     );
     process.exit(1);
-  }, 10000);
+  }, 9500);
 };
 
 process.on("SIGINT", () => gracefulShutdown("SIGINT"));
 process.on("SIGTERM", () => gracefulShutdown("SIGTERM"));
 
-process.on("uncaughtException", (err) => {
+process.on("uncaughtException", async (err) => {
   console.error("Uncaught Exception:", err);
-  gracefulShutdown("uncaughtException");
+  await gracefulShutdown("uncaughtException");
 });
 
-process.on("unhandledRejection", (reason, promise) => {
+process.on("unhandledRejection", async (reason, promise) => {
   console.error("Unhandled Rejection at:", promise, "reason:", reason);
-  gracefulShutdown("unhandledRejection");
+  await gracefulShutdown("unhandledRejection");
 });

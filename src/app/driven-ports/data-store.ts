@@ -83,6 +83,14 @@ type DataStore = {
    * @returns The comment
    */
   getCommentById: ({ id }: { id: Comment["id"] }) => Promise<StoredComment>;
+
+  /**
+   * Close the data store connection
+   * @returns Promise that resolves when the connection is closed
+   * @throws Error if the connection cannot be closed
+   * @remarks This method should be called when the application is shutting down
+   */
+  stop: () => Promise<void>;
 };
 
 export type { DataStore, StoredComment };

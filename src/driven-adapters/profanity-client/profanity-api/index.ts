@@ -10,6 +10,10 @@ const getProfanityClientApi: GetProfanityClientApi = () => {
 
       return response.isProfanity ? "PROFANE" : "CLEAN";
     },
+    stop: () => {
+      // No need to do anything here
+      return;
+    },
   };
 };
 
