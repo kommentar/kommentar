@@ -12,7 +12,7 @@ const getAllCommentsByHostIdQuery: GetAllCommentsByHostIdQuery = ({
   return {
     name: "get-all-comments-by-host-id",
     text: `
-        SELECT * FROM comments WHERE hostId = $1;
+        SELECT * FROM kommentar.comments WHERE hostId = $1;
         `,
     values: [hostId],
   };
@@ -28,7 +28,7 @@ const saveCommentByHostIdQuery: SaveCommentByHostIdQuery = ({
   return {
     name: "save-comment-by-host-id",
     text: `
-        INSERT INTO comments (id, content, hostId, createdAt, updatedAt, sessionId, commenter_displayname, commenter_realname)
+        INSERT INTO kommentar.comments (id, content, hostId, createdAt, updatedAt, sessionId, commenter_displayname, commenter_realname)
         VALUES ($1, $2, $3, NOW(), NOW(), $4, $5, $6)
         RETURNING *;
         `,
@@ -51,7 +51,7 @@ const updateCommentByIdQuery: UpdateCommentByIdQuery = ({
   return {
     name: "update-comment-by-id",
     text: `
-        UPDATE comments
+        UPDATE kommentar.comments
         SET content = $1, updatedAt = NOW()
         WHERE id = $2 AND sessionId = $3
         RETURNING *;
@@ -64,7 +64,7 @@ const deleteCommentByIdQuery: DeleteCommentByIdQuery = ({ id, sessionId }) => {
   return {
     name: "delete-comment-by-id",
     text: `
-        DELETE FROM comments
+        DELETE FROM kommentar.comments
         WHERE id = $1 AND sessionId = $2
         RETURNING *;
         `,
@@ -76,7 +76,7 @@ const getCommentByIdQuery: GetCommentByIdQuery = ({ id }) => {
   return {
     name: "get-comment-by-id",
     text: `
-        SELECT * FROM comments WHERE id = $1;
+        SELECT * FROM kommentar.comments WHERE id = $1;
         `,
     values: [id],
   };
