@@ -1,5 +1,5 @@
-import type { Comment, PublicComment } from "../../domain/entities/comment.js";
-import type { DataStore } from "../../driven-ports/data-store.js";
+import type { Comment, PublicComment } from "../../entities/comment.js";
+import type { DataStore } from "../../../driven-ports/data-store.js";
 
 type CommandCreateComment = (
   dataStore: DataStore,

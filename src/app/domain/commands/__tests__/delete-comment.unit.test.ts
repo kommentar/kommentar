@@ -1,6 +1,6 @@
 import { describe, it, expect, vi } from "vitest";
-import type { DataStore } from "../../driven-ports/data-store.js";
-import type { Comment } from "../../domain/entities/comment.js";
+import type { DataStore } from "../../../driven-ports/data-store.js";
+import type { Comment } from "../../entities/comment.js";
 import { commandDeleteComment } from "../delete-comment/index.js";
 
 describe("commandDeleteComment", () => {
@@ -40,6 +40,8 @@ describe("commandDeleteComment", () => {
       saveCommentByHostId: vi.fn(),
       updateCommentById: vi.fn(),
       stop: vi.fn(),
+      migrateAll: vi.fn(),
+      rollbackAll: vi.fn(),
     };
 
     const deleteComment = commandDeleteComment(mockDataStore);
@@ -63,6 +65,8 @@ describe("commandDeleteComment", () => {
       saveCommentByHostId: vi.fn(),
       updateCommentById: vi.fn(),
       stop: vi.fn(),
+      migrateAll: vi.fn(),
+      rollbackAll: vi.fn(),
     };
 
     const deleteComment = commandDeleteComment(mockDataStore);
@@ -99,6 +103,8 @@ describe("commandDeleteComment", () => {
       saveCommentByHostId: vi.fn(),
       updateCommentById: vi.fn(),
       stop: vi.fn(),
+      migrateAll: vi.fn(),
+      rollbackAll: vi.fn(),
     };
 
     const deleteComment = commandDeleteComment(mockDataStore);

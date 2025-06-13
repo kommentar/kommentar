@@ -10,6 +10,8 @@ describe("getApp", () => {
     deleteCommentById: vi.fn(),
     getCommentById: vi.fn(),
     stop: vi.fn(),
+    migrateAll: vi.fn(),
+    rollbackAll: vi.fn(),
   };
 
   const mockEventBroker = {

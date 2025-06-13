@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from "vitest";
-import type { DataStore } from "../../driven-ports/data-store.js";
+import type { DataStore } from "../../../driven-ports/data-store.js";
 import { queryGetCommentsForHost } from "../get-comments-for-host/index.js";
 
 describe("queryGetCommentsForHost", () => {
@@ -11,6 +11,8 @@ describe("queryGetCommentsForHost", () => {
       updateCommentById: vi.fn(),
       getCommentById: vi.fn(),
       stop: vi.fn(),
+      migrateAll: vi.fn(),
+      rollbackAll: vi.fn(),
     };
 
     const getCommentsForHost = queryGetCommentsForHost(mockDataStore);
@@ -49,6 +51,8 @@ describe("queryGetCommentsForHost", () => {
       updateCommentById: vi.fn(),
       getCommentById: vi.fn(),
       stop: vi.fn(),
+      migrateAll: vi.fn(),
+      rollbackAll: vi.fn(),
     };
 
     const getCommentsForHost = queryGetCommentsForHost(mockDataStore);

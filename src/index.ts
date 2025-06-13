@@ -1,7 +1,7 @@
 import { getApp } from "./app/index.js";
-import { wheneverCommentCreatedInvalidateCache } from "./app/policies/whenever-comment-created-invalidate-cache.js";
-import { wheneverCommentDeletedInvalidateCache } from "./app/policies/whenever-comment-deleted-invalidate-cache.js";
-import { wheneverCommentUpdatedInvalidateCache } from "./app/policies/whenever-comment-updated-invalidate-cache.js";
+import { wheneverCommentCreatedInvalidateCache } from "./app/domain/policies/whenever-comment-created-invalidate-cache.js";
+import { wheneverCommentDeletedInvalidateCache } from "./app/domain/policies/whenever-comment-deleted-invalidate-cache.js";
+import { wheneverCommentUpdatedInvalidateCache } from "./app/domain/policies/whenever-comment-updated-invalidate-cache.js";
 import { getCacheStoreInMemory } from "./driven-adapters/cache-store/in-memory/index.js";
 import { getConfigStaticEnv } from "./driven-adapters/config/static-env/index.js";
 import { getDataStorePostgres } from "./driven-adapters/data-store/postgres/index.js";

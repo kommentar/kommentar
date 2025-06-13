@@ -1,11 +1,11 @@
 import { describe, it, expect, vi, type Mock } from "vitest";
-import type { EventBroker } from "../../driven-ports/event-broker.js";
-import type { CacheStore } from "../../driven-ports/cache-store.js";
-import { wheneverCommentDeletedInvalidateCache } from "../whenever-comment-deleted-invalidate-cache.js";
-import type { Comment } from "../../domain/entities/comment.js";
+import type { EventBroker } from "../../../driven-ports/event-broker.js";
+import type { CacheStore } from "../../../driven-ports/cache-store.js";
+import { wheneverCommentCreatedInvalidateCache } from "../whenever-comment-created-invalidate-cache.js";
+import type { Comment } from "../../entities/comment.js";
 
-describe("wheneverCommentDeletedInvalidateCache", () => {
-  it("should do nothing when there are no cached comments", () => {
+describe("wheneverCommentCreatedInvalidateCache", () => {
+  it("should add a new comment to the cache when there are no cached comments", () => {
     const mockEventBroker: EventBroker = {
       subscribe: vi.fn(),
       publish: vi.fn(),
@@ -18,16 +18,16 @@ describe("wheneverCommentDeletedInvalidateCache", () => {
       remove: vi.fn(),
     };
 
-    wheneverCommentDeletedInvalidateCache({
+    wheneverCommentCreatedInvalidateCache({
       eventBroker: mockEventBroker,
       cacheStore: mockCacheStore,
     });
 
     const eventHandler = (mockEventBroker.subscribe as Mock).mock.calls[0][0]
       .handler;
-    const deletedComment: Comment = {
+    const newComment: Comment = {
       id: "1",
-      content: "Deleted comment",
+      content: "New comment",
       hostId: "1",
       createdAt: new Date("2021-01-01"),
       updatedAt: new Date("2021-01-01"),
@@ -36,14 +36,14 @@ describe("wheneverCommentDeletedInvalidateCache", () => {
         displayName: "Commenter 1",
       },
     };
-    const event = { subject: "comment-1", data: deletedComment };
+    const event = { subject: "comment-1", data: newComment };
 
     eventHandler(event);
 
-    expect(mockCacheStore.set).not.toHaveBeenCalled();
+    expect(mockCacheStore.set).toHaveBeenCalledWith("comment-1", [newComment]);
   });
 
-  it("should remove the deleted comment from the existing cached comments", () => {
+  it("should add a new comment to the existing cached comments", () => {
     const existingComments: Comment[] = [
       {
         id: "1",
@@ -54,17 +54,6 @@ describe("wheneverCommentDeletedInvalidateCache", () => {
         sessionId: "session1",
         commenter: {
           displayName: "Commenter 1",
-        },
-      },
-      {
-        id: "2",
-        content: "Another comment",
-        hostId: "1",
-        createdAt: new Date("2021-01-01"),
-        updatedAt: new Date("2021-01-01"),
-        sessionId: "session1",
-        commenter: {
-          displayName: "Commenter 2",
         },
       },
     ];
@@ -81,40 +70,31 @@ describe("wheneverCommentDeletedInvalidateCache", () => {
       remove: vi.fn(),
     };
 
-    wheneverCommentDeletedInvalidateCache({
+    wheneverCommentCreatedInvalidateCache({
       eventBroker: mockEventBroker,
       cacheStore: mockCacheStore,
     });
 
     const eventHandler = (mockEventBroker.subscribe as Mock).mock.calls[0][0]
       .handler;
-    const deletedComment: Comment = {
-      id: "1",
-      content: "Deleted comment",
+    const newComment: Comment = {
+      id: "2",
+      content: "New comment",
       hostId: "1",
       createdAt: new Date("2021-01-01"),
       updatedAt: new Date("2021-01-01"),
       sessionId: "session1",
       commenter: {
-        displayName: "Commenter 1",
+        displayName: "Commenter 2",
       },
     };
-    const event = { subject: "comment-1", data: deletedComment };
+    const event = { subject: "comment-1", data: newComment };
 
     eventHandler(event);
 
-    expect(mockCacheStore.set).toHaveBeenCalledWith("1", [
-      {
-        id: "2",
-        content: "Another comment",
-        hostId: "1",
-        createdAt: new Date("2021-01-01"),
-        updatedAt: new Date("2021-01-01"),
-        sessionId: "session1",
-        commenter: {
-          displayName: "Commenter 2",
-        },
-      },
+    expect(mockCacheStore.set).toHaveBeenCalledWith("comment-1", [
+      ...existingComments,
+      newComment,
     ]);
   });
 });
