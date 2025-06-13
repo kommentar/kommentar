@@ -63,6 +63,14 @@ const getDataStoreInMemory: GetDataStoreInMemory = () => {
     async stop() {
       // Nothing to do here
     },
+    migrateAll: async () => {
+      // No migration needed for in-memory store
+      return;
+    },
+    rollbackAll: async () => {
+      // No rollback needed for in-memory store
+      return;
+    },
   };
 };
 

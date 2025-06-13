@@ -2,7 +2,7 @@ import type { Config } from "../../../app/driven-ports/config.js";
 import type { DataStore } from "../../../app/driven-ports/data-store.js";
 import type { RandomId } from "../../../app/driven-ports/random-id.js";
 import type { SecretStore } from "../../../app/driven-ports/secret-store.js";
-import { migrate } from "./migrate.js";
+import { migrate, rollback } from "./migrate/index.js";
 import { getPgPool } from "./pool.js";
 import {
   deleteCommentByIdQuery,
@@ -16,20 +16,25 @@ type GetDataStorePostgres = ({
   config,
   secretStore,
   randomId,
+  shouldMigrate,
 }: {
   config: Config["dataStore"];
   secretStore: SecretStore;
   randomId: RandomId;
+  shouldMigrate: boolean;
 }) => Promise<DataStore>;
 
 const getDataStorePostgres: GetDataStorePostgres = async ({
   config,
   secretStore,
   randomId,
+  shouldMigrate = true,
 }) => {
   const pgPool = getPgPool({ config, secretStore });
 
-  await migrate({ pgPool });
+  if (shouldMigrate) {
+    await migrate({ pgPool });
+  }
 
   return {
     getAllCommentsByHostId: async ({ hostId }) => {
@@ -105,6 +110,12 @@ const getDataStorePostgres: GetDataStorePostgres = async ({
        * Reference: https://node-postgres.com/features/pooling#shutdown
        */
       await pgPool.end();
+    },
+    migrateAll: async () => {
+      await migrate({ pgPool });
+    },
+    rollbackAll: async () => {
+      await rollback({ pgPool, targetMigration: "0" });
     },
   };
 };

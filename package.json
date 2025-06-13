@@ -5,6 +5,8 @@
     "dev": "tsx watch --env-file=.env src/index.ts",
     "build": "tsc",
     "start": "tsx --env-file=.env src/index.ts",
+    "migrate:up": "tsx --env-file=.env src/index.ts --migrate up",
+    "migrate:down": "tsx --env-file=.env src/index.ts --migrate down",
     "lint": "eslint --fix .",
     "format": "prettier --write .",
     "prepare": "husky || true",
