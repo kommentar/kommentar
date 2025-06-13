@@ -1,41 +1,10 @@
-import type { QueryConfig } from "pg";
-import type { Comment } from "../../../app/domain/entities/comment.js";
-
-type GetAllCommentsByHostIdQuery = ({
-  hostId,
-}: {
-  hostId: Comment["hostId"];
-}) => QueryConfig;
-type SaveCommentByHostIdQuery = ({
-  id,
-  hostId,
-  content,
-  sessionId,
-  commenter,
-}: {
-  id: Comment["id"];
-  hostId: Comment["hostId"];
-  content: Comment["content"];
-  sessionId: Comment["sessionId"];
-  commenter: Comment["commenter"];
-}) => QueryConfig;
-type UpdateCommentByIdQuery = ({
-  id,
-  content,
-  sessionId,
-}: {
-  id: Comment["id"];
-  content: Comment["content"];
-  sessionId: Comment["sessionId"];
-}) => QueryConfig;
-type DeleteCommentByIdQuery = ({
-  id,
-  sessionId,
-}: {
-  id: Comment["id"];
-  sessionId: Comment["sessionId"];
-}) => QueryConfig;
-type GetCommentByIdQuery = ({ id }: { id: Comment["id"] }) => QueryConfig;
+import type {
+  DeleteCommentByIdQuery,
+  GetAllCommentsByHostIdQuery,
+  GetCommentByIdQuery,
+  SaveCommentByHostIdQuery,
+  UpdateCommentByIdQuery,
+} from "./types.js";
 
 const getAllCommentsByHostIdQuery: GetAllCommentsByHostIdQuery = ({
   hostId,
