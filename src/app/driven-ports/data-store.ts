@@ -91,6 +91,9 @@ type DataStore = {
    * @remarks This method should be called when the application is shutting down
    */
   stop: () => Promise<void>;
+
+  migrateAll: () => Promise<void>;
+  rollbackAll: () => Promise<void>;
 };
 
 export type { DataStore, StoredComment };

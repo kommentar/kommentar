@@ -10,6 +10,7 @@ import { getProfanityClientApi } from "./driven-adapters/profanity-client/profan
 import { getRandomIdUuid } from "./driven-adapters/random-id/uuid/index.js";
 import { getSecretStoreEnv } from "./driven-adapters/secrets/env/index.js";
 import { getHttpHonoZodOpenApi } from "./driver-adapters/http/hono-zod-openapi/index.js";
+import { getNodeArgv } from "./utils/node.js";
 
 const config = getConfigStaticEnv();
 const secretStore = getSecretStoreEnv();
@@ -18,11 +19,23 @@ const randomId = getRandomIdUuid();
 const cacheStore = getCacheStoreInMemory();
 const profanityClient = getProfanityClientApi();
 
+const shouldMigrate = getNodeArgv("--migrate") ? false : true;
 const dataStore = await getDataStorePostgres({
   config: config.dataStore,
   secretStore,
   randomId,
+  shouldMigrate,
 });
+
+if (getNodeArgv("--migrate") === "up") {
+  console.log("Running migrations...");
+  await dataStore.migrateAll();
+  process.exit(0);
+} else if (getNodeArgv("--migrate") === "down") {
+  console.log("Rolling back migrations...");
+  await dataStore.rollbackAll();
+  process.exit(0);
+}
 
 wheneverCommentCreatedInvalidateCache({ eventBroker, cacheStore });
 wheneverCommentUpdatedInvalidateCache({ eventBroker, cacheStore });
