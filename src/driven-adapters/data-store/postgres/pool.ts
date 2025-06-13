@@ -1,16 +1,7 @@
-import type { Config } from "../../../app/driven-ports/config.js";
-import type { SecretStore } from "../../../app/driven-ports/secret-store.js";
 import pg from "pg";
+import type { GetPgPool } from "./types.js";
 
 const { Pool } = pg;
-
-type GetPgPool = ({
-  config,
-  secretStore,
-}: {
-  config: Config["dataStore"];
-  secretStore: SecretStore;
-}) => pg.Pool;
 
 const getPgPool: GetPgPool = ({ config, secretStore }) => {
   const pgPool = new Pool({
