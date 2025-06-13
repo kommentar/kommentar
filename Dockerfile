@@ -6,11 +6,11 @@ RUN apk add --no-cache gcompat
 WORKDIR /app
 
 # Install pnpm
-RUN npm install -g pnpm
+RUN npm install -g pnpm@8
 
-COPY package*json tsconfig.json src ./
+COPY package*json pnpm-lock.yaml tsconfig.json src ./
 
-RUN pnpm install && \
+RUN pnpm install --frozen-lockfile && \
     pnpm run build && \
     pnpm prune --prod
 
