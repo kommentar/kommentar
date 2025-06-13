@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from "vitest";
-import type { DataStore } from "../../driven-ports/data-store.js";
+import type { DataStore } from "../../../driven-ports/data-store.js";
 import { commandCreateComment } from "../create-comment/index.js";
 
 describe("commandCreateComment", () => {
@@ -19,6 +19,8 @@ describe("commandCreateComment", () => {
       updateCommentById: vi.fn(),
       getCommentById: vi.fn(),
       stop: vi.fn(),
+      migrateAll: vi.fn(),
+      rollbackAll: vi.fn(),
     };
 
     const createComment = commandCreateComment(mockDataStore);

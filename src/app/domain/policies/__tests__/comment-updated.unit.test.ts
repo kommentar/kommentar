@@ -1,11 +1,11 @@
 import { describe, it, expect, vi, type Mock } from "vitest";
-import type { EventBroker } from "../../driven-ports/event-broker.js";
-import type { CacheStore } from "../../driven-ports/cache-store.js";
-import { wheneverCommentCreatedInvalidateCache } from "../whenever-comment-created-invalidate-cache.js";
-import type { Comment } from "../../domain/entities/comment.js";
+import type { EventBroker } from "../../../driven-ports/event-broker.js";
+import type { CacheStore } from "../../../driven-ports/cache-store.js";
+import { wheneverCommentUpdatedInvalidateCache } from "../whenever-comment-updated-invalidate-cache.js";
+import type { Comment } from "../../entities/comment.js";
 
-describe("wheneverCommentCreatedInvalidateCache", () => {
-  it("should add a new comment to the cache when there are no cached comments", () => {
+describe("wheneverCommentUpdatedInvalidateCache", () => {
+  it("should add the updated comment to the cache when there are no cached comments", () => {
     const mockEventBroker: EventBroker = {
       subscribe: vi.fn(),
       publish: vi.fn(),
@@ -18,16 +18,16 @@ describe("wheneverCommentCreatedInvalidateCache", () => {
       remove: vi.fn(),
     };
 
-    wheneverCommentCreatedInvalidateCache({
+    wheneverCommentUpdatedInvalidateCache({
       eventBroker: mockEventBroker,
       cacheStore: mockCacheStore,
     });
 
     const eventHandler = (mockEventBroker.subscribe as Mock).mock.calls[0][0]
       .handler;
-    const newComment: Comment = {
+    const updatedComment: Comment = {
       id: "1",
-      content: "New comment",
+      content: "Updated comment",
       hostId: "1",
       createdAt: new Date("2021-01-01"),
       updatedAt: new Date("2021-01-01"),
@@ -36,14 +36,14 @@ describe("wheneverCommentCreatedInvalidateCache", () => {
         displayName: "Commenter 1",
       },
     };
-    const event = { subject: "comment-1", data: newComment };
+    const event = { subject: "comment-1", data: updatedComment };
 
     eventHandler(event);
 
-    expect(mockCacheStore.set).toHaveBeenCalledWith("comment-1", [newComment]);
+    expect(mockCacheStore.set).toHaveBeenCalledWith("1", [updatedComment]);
   });
 
-  it("should add a new comment to the existing cached comments", () => {
+  it("should update the existing cached comment", () => {
     const existingComments: Comment[] = [
       {
         id: "1",
@@ -54,6 +54,17 @@ describe("wheneverCommentCreatedInvalidateCache", () => {
         sessionId: "session1",
         commenter: {
           displayName: "Commenter 1",
+        },
+      },
+      {
+        id: "2",
+        content: "Another comment",
+        hostId: "1",
+        createdAt: new Date("2021-01-01"),
+        updatedAt: new Date("2021-01-01"),
+        sessionId: "session1",
+        commenter: {
+          displayName: "Commenter 2",
         },
       },
     ];
@@ -70,31 +81,41 @@ describe("wheneverCommentCreatedInvalidateCache", () => {
       remove: vi.fn(),
     };
 
-    wheneverCommentCreatedInvalidateCache({
+    wheneverCommentUpdatedInvalidateCache({
       eventBroker: mockEventBroker,
       cacheStore: mockCacheStore,
     });
 
     const eventHandler = (mockEventBroker.subscribe as Mock).mock.calls[0][0]
       .handler;
-    const newComment: Comment = {
-      id: "2",
-      content: "New comment",
+    const updatedComment: Comment = {
+      id: "1",
+      content: "Updated comment",
       hostId: "1",
       createdAt: new Date("2021-01-01"),
       updatedAt: new Date("2021-01-01"),
       sessionId: "session1",
       commenter: {
-        displayName: "Commenter 2",
+        displayName: "Commenter 1",
       },
     };
-    const event = { subject: "comment-1", data: newComment };
+    const event = { subject: "comment-1", data: updatedComment };
 
     eventHandler(event);
 
-    expect(mockCacheStore.set).toHaveBeenCalledWith("comment-1", [
-      ...existingComments,
-      newComment,
+    expect(mockCacheStore.set).toHaveBeenCalledWith("1", [
+      updatedComment,
+      {
+        id: "2",
+        content: "Another comment",
+        hostId: "1",
+        createdAt: new Date("2021-01-01"),
+        updatedAt: new Date("2021-01-01"),
+        sessionId: "session1",
+        commenter: {
+          displayName: "Commenter 2",
+        },
+      },
     ]);
   });
 });

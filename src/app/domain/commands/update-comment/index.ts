@@ -1,6 +1,6 @@
-import type { Comment, PublicComment } from "../../domain/entities/comment.js";
-import { createError } from "../../domain/helpers/error/create-error.js";
-import type { DataStore } from "../../driven-ports/data-store.js";
+import type { Comment, PublicComment } from "../../entities/comment.js";
+import { createError } from "../../helpers/error/create-error.js";
+import type { DataStore } from "../../../driven-ports/data-store.js";
 
 type CommandUpdateComment = (
   dataStore: DataStore,

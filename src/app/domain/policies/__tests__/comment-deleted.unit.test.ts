@@ -1,11 +1,11 @@
 import { describe, it, expect, vi, type Mock } from "vitest";
-import type { EventBroker } from "../../driven-ports/event-broker.js";
-import type { CacheStore } from "../../driven-ports/cache-store.js";
-import { wheneverCommentUpdatedInvalidateCache } from "../whenever-comment-updated-invalidate-cache.js";
-import type { Comment } from "../../domain/entities/comment.js";
+import type { EventBroker } from "../../../driven-ports/event-broker.js";
+import type { CacheStore } from "../../../driven-ports/cache-store.js";
+import { wheneverCommentDeletedInvalidateCache } from "../whenever-comment-deleted-invalidate-cache.js";
+import type { Comment } from "../../entities/comment.js";
 
-describe("wheneverCommentUpdatedInvalidateCache", () => {
-  it("should add the updated comment to the cache when there are no cached comments", () => {
+describe("wheneverCommentDeletedInvalidateCache", () => {
+  it("should do nothing when there are no cached comments", () => {
     const mockEventBroker: EventBroker = {
       subscribe: vi.fn(),
       publish: vi.fn(),
@@ -18,16 +18,16 @@ describe("wheneverCommentUpdatedInvalidateCache", () => {
       remove: vi.fn(),
     };
 
-    wheneverCommentUpdatedInvalidateCache({
+    wheneverCommentDeletedInvalidateCache({
       eventBroker: mockEventBroker,
       cacheStore: mockCacheStore,
     });
 
     const eventHandler = (mockEventBroker.subscribe as Mock).mock.calls[0][0]
       .handler;
-    const updatedComment: Comment = {
+    const deletedComment: Comment = {
       id: "1",
-      content: "Updated comment",
+      content: "Deleted comment",
       hostId: "1",
       createdAt: new Date("2021-01-01"),
       updatedAt: new Date("2021-01-01"),
@@ -36,14 +36,14 @@ describe("wheneverCommentUpdatedInvalidateCache", () => {
         displayName: "Commenter 1",
       },
     };
-    const event = { subject: "comment-1", data: updatedComment };
+    const event = { subject: "comment-1", data: deletedComment };
 
     eventHandler(event);
 
-    expect(mockCacheStore.set).toHaveBeenCalledWith("1", [updatedComment]);
+    expect(mockCacheStore.set).not.toHaveBeenCalled();
   });
 
-  it("should update the existing cached comment", () => {
+  it("should remove the deleted comment from the existing cached comments", () => {
     const existingComments: Comment[] = [
       {
         id: "1",
@@ -81,16 +81,16 @@ describe("wheneverCommentUpdatedInvalidateCache", () => {
       remove: vi.fn(),
     };
 
-    wheneverCommentUpdatedInvalidateCache({
+    wheneverCommentDeletedInvalidateCache({
       eventBroker: mockEventBroker,
       cacheStore: mockCacheStore,
     });
 
     const eventHandler = (mockEventBroker.subscribe as Mock).mock.calls[0][0]
       .handler;
-    const updatedComment: Comment = {
+    const deletedComment: Comment = {
       id: "1",
-      content: "Updated comment",
+      content: "Deleted comment",
       hostId: "1",
       createdAt: new Date("2021-01-01"),
       updatedAt: new Date("2021-01-01"),
@@ -99,12 +99,11 @@ describe("wheneverCommentUpdatedInvalidateCache", () => {
         displayName: "Commenter 1",
       },
     };
-    const event = { subject: "comment-1", data: updatedComment };
+    const event = { subject: "comment-1", data: deletedComment };
 
     eventHandler(event);
 
     expect(mockCacheStore.set).toHaveBeenCalledWith("1", [
-      updatedComment,
       {
         id: "2",
         content: "Another comment",
