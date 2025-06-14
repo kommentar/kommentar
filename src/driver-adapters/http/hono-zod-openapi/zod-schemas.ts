@@ -1,5 +1,20 @@
 import { z } from "@hono/zod-openapi";
 
+const commenterSchema = z
+  .object({
+    displayName: z.string().openapi({
+      description: "Display name of the commenter",
+      example: "safwanyp",
+    }),
+    realName: z.string().optional().openapi({
+      description: "Real name of the commenter",
+      example: "Safwan Parkar",
+    }),
+  })
+  .openapi("Commenter", {
+    description: "Information about the commenter",
+  });
+
 const commentSchema = z
   .object({
     id: z.string().openapi({
@@ -23,20 +38,7 @@ const commentSchema = z
       description: "Date when the comment was last updated",
       example: "2024-11-01T12:00:00.000Z",
     }),
-    commenter: z
-      .object({
-        displayName: z.string().openapi({
-          description: "Display name of the commenter",
-          example: "safwanyp",
-        }),
-        realName: z.string().optional().openapi({
-          description: "Real name of the commenter",
-          example: "Safwan Parkar",
-        }),
-      })
-      .openapi({
-        description: "Information about the commenter",
-      }),
+    commenter: commenterSchema,
   })
   .openapi("Comment");
 
