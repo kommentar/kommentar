@@ -6,10 +6,14 @@ import { migrate, rollback } from "./migrate/index.js";
 import { getPgPool } from "./pool.js";
 import {
   deleteCommentByIdQuery,
+  deleteConsumerQuery,
   getAllCommentsByHostIdQuery,
   getCommentByIdQuery,
+  getConsumerByIdQuery,
   saveCommentByHostIdQuery,
+  saveConsumerQuery,
   updateCommentByIdQuery,
+  updateConsumerQuery,
 } from "./queries.js";
 
 type GetDataStorePostgres = ({
@@ -101,6 +105,68 @@ const getDataStorePostgres: GetDataStorePostgres = async ({
         console.error("Failed to get comment by identifier", error);
         throw error;
       }
+    },
+    consumer: {
+      getById: async ({ consumerId }) => {
+        try {
+          const result = await pgPool.query(
+            getConsumerByIdQuery({ consumerId }),
+          );
+
+          return result.rows[0];
+        } catch (error) {
+          console.error("Failed to get consumer by identifier", error);
+          throw error;
+        }
+      },
+      save: async ({ consumer }) => {
+        try {
+          const result = await pgPool.query(saveConsumerQuery({ consumer }));
+
+          return result.rows[0];
+        } catch (error) {
+          console.error("Failed to save consumer", error);
+          throw error;
+        }
+      },
+      update: async ({ consumer }) => {
+        try {
+          const existingConsumer = await pgPool.query(
+            getConsumerByIdQuery({ consumerId: consumer.id }),
+          );
+
+          if (existingConsumer.rows.length === 0) {
+            throw new Error(`Consumer not found`);
+          }
+
+          const result = await pgPool.query(updateConsumerQuery({ consumer }));
+
+          return result.rows[0];
+        } catch (error) {
+          console.error("Failed to update consumer", error);
+          throw error;
+        }
+      },
+      deleteById: async ({ consumerId }) => {
+        try {
+          const existingConsumer = await pgPool.query(
+            getConsumerByIdQuery({ consumerId }),
+          );
+
+          if (existingConsumer.rows.length === 0) {
+            throw new Error(`Consumer not found`);
+          }
+
+          const result = await pgPool.query(
+            deleteConsumerQuery({ consumerId }),
+          );
+
+          return result.rows[0];
+        } catch (error) {
+          console.error("Failed to delete consumer", error);
+          throw error;
+        }
+      },
     },
     stop: async () => {
       /**

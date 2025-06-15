@@ -2,6 +2,7 @@ import type { Pool, PoolClient, QueryConfig } from "pg";
 import type { Comment } from "../../../app/domain/entities/comment.js";
 import type { Config } from "../../../app/driven-ports/config.js";
 import type { SecretStore } from "../../../app/driven-ports/secret-store.js";
+import type { Consumer } from "../../../app/domain/entities/consumer.js";
 
 type InnerRunInTransaction = (
   fn: (client: PoolClient) => Promise<unknown>,
@@ -78,6 +79,23 @@ type DeleteCommentByIdQuery = ({
 }) => QueryConfig;
 type GetCommentByIdQuery = ({ id }: { id: Comment["id"] }) => QueryConfig;
 
+type GetConsumerByIdQuery = ({
+  consumerId,
+}: {
+  consumerId: string;
+}) => QueryConfig;
+type SaveConsumerQuery = ({ consumer }: { consumer: Consumer }) => QueryConfig;
+type UpdateConsumerQuery = ({
+  consumer,
+}: {
+  consumer: Consumer;
+}) => QueryConfig;
+type DeleteConsumerQuery = ({
+  consumerId,
+}: {
+  consumerId: string;
+}) => QueryConfig;
+
 export type {
   RunInTransaction,
   MigrateFn,
@@ -89,4 +107,8 @@ export type {
   UpdateCommentByIdQuery,
   DeleteCommentByIdQuery,
   GetCommentByIdQuery,
+  GetConsumerByIdQuery,
+  SaveConsumerQuery,
+  UpdateConsumerQuery,
+  DeleteConsumerQuery,
 };

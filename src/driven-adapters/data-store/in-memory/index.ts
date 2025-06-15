@@ -1,12 +1,15 @@
 import type {
   DataStore,
   StoredComment,
+  StoredConsumer,
 } from "../../../app/driven-ports/data-store.js";
 
 type GetDataStoreInMemory = () => DataStore;
 
 const getDataStoreInMemory: GetDataStoreInMemory = () => {
   const comments = new Map<string, StoredComment>();
+  const consumers = new Map<string, StoredConsumer>();
+
   comments.set("1", {
     id: "1",
     hostid: "1",
@@ -15,6 +18,14 @@ const getDataStoreInMemory: GetDataStoreInMemory = () => {
     updatedat: new Date(),
     sessionid: "1",
     commenter_displayname: "John Doe",
+  });
+
+  consumers.set("1", {
+    id: "1",
+    name: "Sample Consumer",
+    description: "This is a sample consumer.",
+    createdat: new Date(),
+    updatedat: new Date(),
   });
 
   return {
@@ -59,6 +70,48 @@ const getDataStoreInMemory: GetDataStoreInMemory = () => {
         throw new Error(`Comment with id ${id} not found`);
       }
       return comment;
+    },
+    consumer: {
+      getById: async ({ consumerId }) => {
+        const consumer = consumers.get(consumerId);
+        if (!consumer) {
+          throw new Error(`Consumer with id ${consumerId} not found`);
+        }
+        return consumer;
+      },
+      save: async ({ consumer }) => {
+        const newConsumer: StoredConsumer = {
+          id: consumer.id,
+          name: consumer.name,
+          description: consumer.description,
+          createdat: new Date(),
+          updatedat: new Date(),
+        };
+        consumers.set(newConsumer.id, newConsumer);
+        return newConsumer;
+      },
+      update: async ({ consumer }) => {
+        const existingConsumer = consumers.get(consumer.id);
+        if (!existingConsumer) {
+          throw new Error(`Consumer with id ${consumer.id} not found`);
+        }
+        const updatedConsumer: StoredConsumer = {
+          ...existingConsumer,
+          name: consumer.name,
+          description: consumer.description,
+          updatedat: new Date(),
+        };
+        consumers.set(updatedConsumer.id, updatedConsumer);
+        return updatedConsumer;
+      },
+      deleteById: async ({ consumerId }) => {
+        const consumer = consumers.get(consumerId);
+        if (!consumer) {
+          throw new Error(`Consumer with id ${consumerId} not found`);
+        }
+        consumers.delete(consumerId);
+        return consumer;
+      },
     },
     async stop() {
       // Nothing to do here

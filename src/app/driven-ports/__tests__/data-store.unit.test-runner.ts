@@ -1,6 +1,7 @@
 import { beforeAll, describe, expect, it } from "vitest";
 import type { Comment } from "../../domain/entities/comment.js";
 import type { DataStore } from "../data-store.js";
+import type { Consumer } from "../../domain/entities/consumer.js";
 
 const mockComments: Comment[] = [
   {
@@ -140,6 +141,82 @@ const runDataStoreTests = (dataStore: DataStore) => {
       expect(gottenComment.id).toBe(commentToGet.id);
       expect(gottenComment.hostid).toBe(commentToGet.hostid);
       expect(gottenComment.content).toBe(commentToGet.content);
+    });
+
+    describe(".consumer", async () => {
+      const mockStoredConsumers: Consumer[] = [
+        {
+          id: "1",
+          name: "Consumer 1",
+          description: "Description for Consumer 1",
+        },
+        {
+          id: "2",
+          name: "Consumer 2",
+          description: "Description for Consumer 2",
+        },
+      ];
+
+      beforeAll(async () => {
+        await dataStore.consumer.save({ consumer: mockStoredConsumers[0] });
+        await dataStore.consumer.save({ consumer: mockStoredConsumers[1] });
+      });
+
+      it("should get consumer details by consumer identifier", async () => {
+        const consumer = await dataStore.consumer.getById({
+          consumerId: "1",
+        });
+
+        expect(consumer.id).toBe(mockStoredConsumers[0].id);
+        expect(consumer.name).toBe(mockStoredConsumers[0].name);
+        expect(consumer.description).toBe(mockStoredConsumers[0].description);
+      });
+
+      it("should save a new consumer", async () => {
+        const newConsumer: Consumer = {
+          id: "3",
+          name: "Consumer 3",
+          description: "Description for Consumer 3",
+        };
+
+        const savedConsumer = await dataStore.consumer.save({
+          consumer: newConsumer,
+        });
+
+        expect(savedConsumer.id).toBe(newConsumer.id);
+        expect(savedConsumer.name).toBe(newConsumer.name);
+        expect(savedConsumer.description).toBe(newConsumer.description);
+      });
+
+      it("should update an existing consumer", async () => {
+        const updatedConsumer: Consumer = {
+          id: "1",
+          name: "Updated Consumer 1",
+          description: "Updated description for Consumer 1",
+        };
+
+        const savedConsumer = await dataStore.consumer.save({
+          consumer: updatedConsumer,
+        });
+
+        expect(savedConsumer.id).toBe(updatedConsumer.id);
+        expect(savedConsumer.name).toBe(updatedConsumer.name);
+        expect(savedConsumer.description).toBe(updatedConsumer.description);
+      });
+
+      it("should delete a consumer by identifier", async () => {
+        const consumerToDelete = await dataStore.consumer.getById({
+          consumerId: "2",
+        });
+
+        const deletedConsumer = await dataStore.consumer.deleteById({
+          consumerId: consumerToDelete.id,
+        });
+
+        expect(deletedConsumer.id).toBe(consumerToDelete.id);
+        expect(deletedConsumer.name).toBe(consumerToDelete.name);
+        expect(deletedConsumer.description).toBe(consumerToDelete.description);
+      });
     });
   });
 };
