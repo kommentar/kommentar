@@ -5,14 +5,18 @@ import {
   GetConsumerByIdSchema,
   PostCommentByHostIdSchema,
   PutCommentByIdSchema,
+  PostConsumerSchema,
 } from "./zod-schemas.js";
 
 const getCommentsForHostRoute = createRoute({
   summary: "Get comments for a host",
+  description:
+    "Retrieve all comments for a specific host. Requires API key and secret authentication.",
   method: "get",
-  path: "/comments/{hostId}",
+  path: "/hosts/{hostId}/comments",
   request: {
     params: GetCommentsByHostIdSchema.pathParams,
+    headers: GetCommentsByHostIdSchema.headers,
   },
   responses: {
     200: {
@@ -21,15 +25,30 @@ const getCommentsForHostRoute = createRoute({
       },
       description: "Get comments for a host",
     },
+    401: {
+      content: {
+        "application/json": { schema: GetCommentsByHostIdSchema.errors[401] },
+      },
+      description: "Unauthorized - Invalid or missing API credentials",
+    },
+    403: {
+      content: {
+        "application/json": { schema: GetCommentsByHostIdSchema.errors[403] },
+      },
+      description: "Forbidden - Consumer not allowed to access this host",
+    },
   },
 });
 
 const createCommentForHostRoute = createRoute({
   summary: "Create a comment for a host",
+  description:
+    "Create a new comment for a specific host. Requires API key and secret authentication.",
   method: "post",
-  path: "/comments/{hostId}",
+  path: "/hosts/{hostId}/comments",
   request: {
     params: PostCommentByHostIdSchema.pathParams,
+    headers: PostCommentByHostIdSchema.headers,
     body: {
       content: {
         "application/json": {
@@ -49,7 +68,19 @@ const createCommentForHostRoute = createRoute({
       content: {
         "application/json": { schema: PostCommentByHostIdSchema.errors[400] },
       },
-      description: "Bad request",
+      description: "Bad request - Invalid input or profanity detected",
+    },
+    401: {
+      content: {
+        "application/json": { schema: PostCommentByHostIdSchema.errors[401] },
+      },
+      description: "Unauthorized - Invalid or missing API credentials",
+    },
+    403: {
+      content: {
+        "application/json": { schema: PostCommentByHostIdSchema.errors[403] },
+      },
+      description: "Forbidden - Consumer not allowed to access this host",
     },
     500: {
       content: {
@@ -62,10 +93,13 @@ const createCommentForHostRoute = createRoute({
 
 const updateCommentByIdRoute = createRoute({
   summary: "Update a comment by id",
+  description:
+    "Update an existing comment. Requires API key and secret authentication.",
   method: "put",
-  path: "/comments/{id}",
+  path: "/hosts/{hostId}/comments/{id}",
   request: {
     params: PutCommentByIdSchema.pathParams,
+    headers: PutCommentByIdSchema.headers,
     body: {
       content: {
         "application/json": {
@@ -85,7 +119,19 @@ const updateCommentByIdRoute = createRoute({
       content: {
         "application/json": { schema: PutCommentByIdSchema.errors[400] },
       },
-      description: "Bad request",
+      description: "Bad request - Invalid input or profanity detected",
+    },
+    401: {
+      content: {
+        "application/json": { schema: PutCommentByIdSchema.errors[401] },
+      },
+      description: "Unauthorized - Invalid or missing API credentials",
+    },
+    403: {
+      content: {
+        "application/json": { schema: PutCommentByIdSchema.errors[403] },
+      },
+      description: "Forbidden - Consumer not allowed to access this host",
     },
     404: {
       content: {
@@ -104,10 +150,13 @@ const updateCommentByIdRoute = createRoute({
 
 const deleteCommentByIdRoute = createRoute({
   summary: "Delete a comment by id",
+  description:
+    "Delete an existing comment. Requires API key and secret authentication.",
   method: "delete",
-  path: "/comments/{id}",
+  path: "/hosts/{hostId}/comments/{id}",
   request: {
     params: DeleteCommentByIdSchema.pathParams,
+    headers: DeleteCommentByIdSchema.headers,
   },
   responses: {
     200: {
@@ -115,6 +164,18 @@ const deleteCommentByIdRoute = createRoute({
         "application/json": { schema: DeleteCommentByIdSchema.response },
       },
       description: "Delete a comment by id",
+    },
+    401: {
+      content: {
+        "application/json": { schema: DeleteCommentByIdSchema.errors[401] },
+      },
+      description: "Unauthorized - Invalid or missing API credentials",
+    },
+    403: {
+      content: {
+        "application/json": { schema: DeleteCommentByIdSchema.errors[403] },
+      },
+      description: "Forbidden - Consumer not allowed to access this host",
     },
     404: {
       content: {
@@ -133,10 +194,13 @@ const deleteCommentByIdRoute = createRoute({
 
 const getConsumerByIdRoute = createRoute({
   summary: "Get a consumer by id",
+  description:
+    "Retrieve consumer information by ID. Requires API key and secret authentication.",
   method: "get",
   path: "/consumers/{id}",
   request: {
     params: GetConsumerByIdSchema.pathParams,
+    headers: GetConsumerByIdSchema.headers,
   },
   responses: {
     200: {
@@ -145,11 +209,11 @@ const getConsumerByIdRoute = createRoute({
       },
       description: "Get a consumer by id",
     },
-    400: {
+    401: {
       content: {
-        "application/json": { schema: GetConsumerByIdSchema.errors[400] },
+        "application/json": { schema: GetConsumerByIdSchema.errors[401] },
       },
-      description: "Bad request",
+      description: "Unauthorized - Invalid or missing API credentials",
     },
     404: {
       content: {
@@ -166,10 +230,55 @@ const getConsumerByIdRoute = createRoute({
   },
 });
 
+const createConsumerRoute = createRoute({
+  summary: "Create a new consumer",
+  description:
+    "Create a new API consumer with generated credentials. Requires API key and secret authentication.",
+  method: "post",
+  path: "/consumers",
+  request: {
+    headers: PostConsumerSchema.headers,
+    body: {
+      content: {
+        "application/json": {
+          schema: PostConsumerSchema.body,
+        },
+      },
+    },
+  },
+  responses: {
+    201: {
+      content: {
+        "application/json": { schema: PostConsumerSchema.response },
+      },
+      description: "Consumer created successfully",
+    },
+    400: {
+      content: {
+        "application/json": { schema: PostConsumerSchema.errors[400] },
+      },
+      description: "Bad request - Invalid input",
+    },
+    401: {
+      content: {
+        "application/json": { schema: PostConsumerSchema.errors[401] },
+      },
+      description: "Unauthorized - Invalid or missing API credentials",
+    },
+    500: {
+      content: {
+        "application/json": { schema: PostConsumerSchema.errors[500] },
+      },
+      description: "Internal server error",
+    },
+  },
+});
+
 export {
   getCommentsForHostRoute,
   createCommentForHostRoute,
   updateCommentByIdRoute,
   deleteCommentByIdRoute,
   getConsumerByIdRoute,
+  createConsumerRoute,
 };

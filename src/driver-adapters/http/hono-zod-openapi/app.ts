@@ -13,6 +13,7 @@ import { getCookie } from "hono/cookie";
 import type { RandomId } from "../../../app/driven-ports/random-id.js";
 import {
   consumerAuthMiddleware,
+  consumerRateLimitMiddleware,
   rateLimitMiddleware,
   sessionMiddleware,
 } from "./middlewares.js";
@@ -54,8 +55,13 @@ const getHttpAppHonoZodOpenApi: GetHttpAppHonoZodOpenApi = ({
 
   hono.use(sessionMiddleware(randomId));
   hono.use(rateLimitMiddleware);
-  hono.use(consumerAuthMiddleware(dataStore));
 
+  hono.use("/hosts/*", consumerAuthMiddleware(dataStore));
+  hono.use("/hosts/*", consumerRateLimitMiddleware());
+
+  hono.use("/consumers/*", consumerAuthMiddleware(dataStore));
+
+  // Comment routes
   hono.openapi(getCommentsForHostRoute, async (c) => {
     const { hostId } = c.req.valid("param");
 
@@ -98,6 +104,7 @@ const getHttpAppHonoZodOpenApi: GetHttpAppHonoZodOpenApi = ({
     return c.json({ message: "Comment deleted" }, 200);
   });
 
+  // Consumer info route (read-only for self-inspection)
   hono.openapi(getConsumerByIdRoute, async (c) => {
     const { id } = c.req.valid("param");
 
@@ -110,6 +117,7 @@ const getHttpAppHonoZodOpenApi: GetHttpAppHonoZodOpenApi = ({
     return c.json(consumer, 200);
   });
 
+  // Documentation
   hono.doc("/spec", {
     openapi: "3.0.0",
     info: {
@@ -134,6 +142,7 @@ const getHttpAppHonoZodOpenApi: GetHttpAppHonoZodOpenApi = ({
       return err.getResponse();
     }
 
+    console.error("Unhandled error:", err);
     return c.json({ message: "Internal server error" }, 500);
   });
 

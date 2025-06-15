@@ -15,7 +15,13 @@ describe("commandCreateConsumer", () => {
           id: "1",
           name: "Test Consumer",
           description: "This is a test consumer",
+          apiKey: "test-api-key",
+          apiSecret: "test-api-secret",
+          allowedHosts: JSON.stringify(["host1", "host2"]),
+          isActive: true,
         }),
+        getAll: vi.fn(),
+        getByApiKey: vi.fn(),
         getById: vi.fn(),
         deleteById: vi.fn(),
         update: vi.fn(),
@@ -32,16 +38,28 @@ describe("commandCreateConsumer", () => {
         id: "1",
         name: "Test Consumer",
         description: "This is a test consumer",
+        apiKey: "test-api-key",
+        apiSecret: "test-api-secret",
+        allowedHosts: ["host1", "host2"],
+        isActive: true,
       },
     };
 
     const result = await createConsumer(input);
 
-    expect(mockDataStore.consumer.save).toHaveBeenCalledWith(input);
-    expect(result).toEqual({
-      id: "1",
-      name: "Test Consumer",
-      description: "This is a test consumer",
+    expect(mockDataStore.consumer.save).toHaveBeenCalledWith({
+      consumer: {
+        ...input.consumer,
+        apiKey: expect.any(String),
+        apiSecret: expect.any(String), // Should be hashed in the actual implementation
+      },
     });
+    expect(result).toEqual(
+      expect.objectContaining({
+        id: "1",
+        name: "Test Consumer",
+        description: "This is a test consumer",
+      }),
+    );
   });
 });
