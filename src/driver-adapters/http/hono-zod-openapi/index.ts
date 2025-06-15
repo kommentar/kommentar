@@ -5,14 +5,18 @@ import type { ServerType } from "@hono/node-server";
 import { getHttpAppHonoZodOpenApi } from "./app.js";
 import { getHonoZodOpenApiServer } from "./server.js";
 import type { RandomId } from "../../../app/driven-ports/random-id.js";
+import type { DataStore } from "../../../app/driven-ports/data-store.js";
 
 type GetHttpHonoZodOpenApi = ({
   app,
   config,
+  randomId,
+  dataStore,
 }: {
   app: App;
   config: Config["http"];
   randomId: RandomId;
+  dataStore: DataStore;
 }) => {
   app: OpenAPIHono;
   server: ServerType;
@@ -22,8 +26,9 @@ const getHttpHonoZodOpenApi: GetHttpHonoZodOpenApi = ({
   app,
   config,
   randomId,
+  dataStore,
 }) => {
-  const httpApp = getHttpAppHonoZodOpenApi({ app, randomId });
+  const httpApp = getHttpAppHonoZodOpenApi({ app, randomId, dataStore });
   const httpServer = getHonoZodOpenApiServer({
     app: httpApp,
     port: config.port,
