@@ -1,4 +1,5 @@
 import type { PublicComment } from "./comment.js";
+import type { Consumer } from "./consumer.js";
 
 type App = {
   getCommentsForHost: ({
@@ -36,6 +37,11 @@ type App = {
     id: string;
     sessionId: string;
   }) => Promise<undefined>;
+
+  createConsumer: ({ consumer }: { consumer: Consumer }) => Promise<Consumer>;
+  deleteConsumer: ({ id }: { id: string }) => Promise<Consumer>;
+  getConsumerById: ({ id }: { id: string }) => Promise<Consumer | undefined>;
+  updateConsumer: ({ consumer }: { consumer: Consumer }) => Promise<Consumer>;
 };
 
 export type { App };

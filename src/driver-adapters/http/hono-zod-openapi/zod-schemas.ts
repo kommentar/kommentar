@@ -42,6 +42,23 @@ const commentSchema = z
   })
   .openapi("Comment");
 
+const consumerSchema = z
+  .object({
+    id: z.string().openapi({
+      description: "Unique identifier of the consumer",
+      example: "e3251fe5-9401-4ee0-a15e-9b3a72ef4904",
+    }),
+    name: z.string().openapi({
+      description: "Name of the consumer",
+      example: "Safwan Parkar",
+    }),
+    description: z.string().optional().openapi({
+      description: "Description of the consumer",
+      example: "A consumer of the comment system",
+    }),
+  })
+  .openapi("Consumer");
+
 const commentsSchema = z.array(commentSchema).openapi("Comments");
 
 const genericErrorSchema = z.object({
@@ -62,6 +79,13 @@ const commentNotFoundErrorSchema = z.object({
   message: z.string().openapi({
     type: "string",
     example: "Comment not found",
+  }),
+});
+
+const consumerNotFoundErrorSchema = z.object({
+  message: z.string().openapi({
+    type: "string",
+    example: "Consumer not found",
   }),
 });
 
@@ -191,9 +215,34 @@ const DeleteCommentByIdSchema = {
   },
 };
 
+const GetConsumerByIdSchema = {
+  pathParams: z
+    .object({
+      id: z
+        .string()
+        .uuid()
+        .openapi({
+          param: {
+            name: "id",
+            in: "path",
+            required: true,
+            description: "Unique identifier of the consumer",
+          },
+          example: "e3251fe5-9401-4ee0-a15e-9b3a72ef4904",
+        }),
+    })
+    .required(),
+  response: consumerSchema,
+  errors: {
+    404: consumerNotFoundErrorSchema,
+    500: genericErrorSchema,
+  },
+};
+
 export {
   GetCommentsByHostIdSchema,
   PostCommentByHostIdSchema,
   PutCommentByIdSchema,
   DeleteCommentByIdSchema,
+  GetConsumerByIdSchema,
 };
