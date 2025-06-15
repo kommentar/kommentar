@@ -57,6 +57,7 @@ const getApp: GetApp = ({
 
       return comments;
     },
+
     createCommentForHost: async ({ hostId, content, sessionId, commenter }) => {
       const isProfane = await profanityClient.check(content);
 
@@ -88,6 +89,7 @@ const getApp: GetApp = ({
 
       return savedComment;
     },
+
     updateCommentById: async ({ id, content, sessionId }) => {
       const isProfane = await profanityClient.check(content);
 
@@ -118,6 +120,7 @@ const getApp: GetApp = ({
 
       return updatedComment;
     },
+
     deleteCommentById: async ({ id, sessionId }) => {
       const command = commandDeleteComment(dataStore);
 
@@ -137,6 +140,7 @@ const getApp: GetApp = ({
 
       return;
     },
+
     createConsumer: async ({ consumer }) => {
       const command = commandCreateConsumer(dataStore);
 
@@ -144,6 +148,7 @@ const getApp: GetApp = ({
 
       return savedConsumer;
     },
+
     deleteConsumer: async ({ id }) => {
       const command = commandDeleteConsumer(dataStore);
 
@@ -151,6 +156,7 @@ const getApp: GetApp = ({
 
       return deletedConsumer;
     },
+
     updateConsumer: async ({ consumer }) => {
       const command = commandUpdateConsumer(dataStore);
 
@@ -166,6 +172,7 @@ const getApp: GetApp = ({
 
       return updatedConsumer;
     },
+
     getConsumerById: async ({ id }) => {
       const query = queryGetConsumer(dataStore);
 
