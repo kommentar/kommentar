@@ -1,4 +1,5 @@
 import type { Comment } from "../domain/entities/comment.js";
+import type { Consumer } from "../domain/entities/consumer.js";
 
 type StoredComment = {
   id: Comment["id"];
@@ -9,6 +10,14 @@ type StoredComment = {
   sessionid: Comment["sessionId"];
   commenter_displayname: Comment["commenter"]["displayName"];
   commenter_realname?: Comment["commenter"]["realName"];
+};
+
+type StoredConsumer = {
+  id: Consumer["id"];
+  name: Consumer["name"];
+  description?: Consumer["description"];
+  createdat: Date;
+  updatedat: Date;
 };
 
 type DataStore = {
@@ -84,6 +93,48 @@ type DataStore = {
    */
   getCommentById: ({ id }: { id: Comment["id"] }) => Promise<StoredComment>;
 
+  consumer: {
+    /**
+     * Get consumer details by consumer identifier
+     *
+     * @param consumerId - Unique identifier of the consumer
+     * @returns Consumer details
+     */
+    getById: ({
+      consumerId,
+    }: {
+      consumerId: string;
+    }) => Promise<StoredConsumer>;
+
+    /**
+     * Save a new consumer
+     *
+     * @param consumer - Consumer details to save
+     * @returns The saved consumer
+     */
+    save: ({ consumer }: { consumer: Consumer }) => Promise<StoredConsumer>;
+
+    /**
+     * Update an existing consumer
+     *
+     * @param consumer - Consumer details to update
+     * @returns The updated consumer
+     */
+    update: ({ consumer }: { consumer: Consumer }) => Promise<StoredConsumer>;
+
+    /**
+     * Delete a consumer by identifier
+     *
+     * @param consumerId - Unique identifier of the consumer
+     * @returns The deleted consumer
+     */
+    deleteById: ({
+      consumerId,
+    }: {
+      consumerId: string;
+    }) => Promise<StoredConsumer>;
+  };
+
   /**
    * Close the data store connection
    * @returns Promise that resolves when the connection is closed
@@ -96,4 +147,4 @@ type DataStore = {
   rollbackAll: () => Promise<void>;
 };
 
-export type { DataStore, StoredComment };
+export type { DataStore, StoredComment, StoredConsumer };

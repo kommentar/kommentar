@@ -18,6 +18,12 @@ describe("commandCreateComment", () => {
       getAllCommentsByHostId: vi.fn(),
       updateCommentById: vi.fn(),
       getCommentById: vi.fn(),
+      consumer: {
+        getById: vi.fn(),
+        deleteById: vi.fn(),
+        update: vi.fn(),
+        save: vi.fn(),
+      },
       stop: vi.fn(),
       migrateAll: vi.fn(),
       rollbackAll: vi.fn(),

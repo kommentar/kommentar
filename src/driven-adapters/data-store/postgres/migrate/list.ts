@@ -120,6 +120,42 @@ const migrations: Array<Migration> = [
       `,
     },
   },
+  {
+    id: "008",
+    name: "create-consumer-table",
+    up: {
+      name: "create-consumer-table",
+      text: `
+        CREATE TABLE IF NOT EXISTS kommentar.consumer (
+          id uuid PRIMARY KEY,
+          name varchar(255) NOT NULL,
+          description text,
+          createdAt timestamp NOT NULL,
+          updatedAt timestamp NOT NULL
+        );
+      `,
+    },
+    down: {
+      name: "drop-consumer-table",
+      text: "DROP TABLE IF EXISTS kommentar.consumer;",
+    },
+  },
+  {
+    id: "009",
+    name: "create-consumer-index-id",
+    up: {
+      name: "create-consumer-index-id",
+      text: `
+        CREATE INDEX IF NOT EXISTS consumer_id_idx ON kommentar.consumer (id);
+      `,
+    },
+    down: {
+      name: "drop-consumer-index-id",
+      text: `
+        DROP INDEX IF EXISTS consumer_id_idx;
+      `,
+    },
+  },
 ];
 
 export { migrations };
