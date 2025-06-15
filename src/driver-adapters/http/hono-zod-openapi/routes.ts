@@ -2,6 +2,7 @@ import { createRoute } from "@hono/zod-openapi";
 import {
   DeleteCommentByIdSchema,
   GetCommentsByHostIdSchema,
+  GetConsumerByIdSchema,
   PostCommentByHostIdSchema,
   PutCommentByIdSchema,
 } from "./zod-schemas.js";
@@ -130,9 +131,39 @@ const deleteCommentByIdRoute = createRoute({
   },
 });
 
+const getConsumerByIdRoute = createRoute({
+  summary: "Get a consumer by id",
+  method: "get",
+  path: "/consumers/{id}",
+  request: {
+    params: GetConsumerByIdSchema.pathParams,
+  },
+  responses: {
+    200: {
+      content: {
+        "application/json": { schema: GetConsumerByIdSchema.response },
+      },
+      description: "Get a consumer by id",
+    },
+    404: {
+      content: {
+        "application/json": { schema: GetConsumerByIdSchema.errors[404] },
+      },
+      description: "Not found",
+    },
+    500: {
+      content: {
+        "application/json": { schema: GetConsumerByIdSchema.errors[500] },
+      },
+      description: "Internal server error",
+    },
+  },
+});
+
 export {
   getCommentsForHostRoute,
   createCommentForHostRoute,
   updateCommentByIdRoute,
   deleteCommentByIdRoute,
+  getConsumerByIdRoute,
 };

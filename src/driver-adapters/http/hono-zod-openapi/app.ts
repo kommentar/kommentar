@@ -4,6 +4,7 @@ import {
   createCommentForHostRoute,
   deleteCommentByIdRoute,
   getCommentsForHostRoute,
+  getConsumerByIdRoute,
   updateCommentByIdRoute,
 } from "./routes.js";
 import { apiReference } from "@scalar/hono-api-reference";
@@ -86,6 +87,18 @@ const getHttpAppHonoZodOpenApi: GetHttpAppHonoZodOpenApi = ({
     await app.deleteCommentById({ id, sessionId });
 
     return c.json({ message: "Comment deleted" }, 200);
+  });
+
+  hono.openapi(getConsumerByIdRoute, async (c) => {
+    const { id } = c.req.valid("param");
+
+    const consumer = await app.getConsumerById({ id });
+
+    if (!consumer) {
+      return c.json({ message: "Consumer not found" }, 404);
+    }
+
+    return c.json(consumer, 200);
   });
 
   hono.doc("/spec", {

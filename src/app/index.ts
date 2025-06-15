@@ -13,6 +13,10 @@ import type { CacheStore } from "./driven-ports/cache-store.js";
 import type { Comment } from "./domain/entities/comment.js";
 import type { ProfanityClient } from "./driven-ports/profanity-client.js";
 import { createError } from "./domain/helpers/error/create-error.js";
+import { commandCreateConsumer } from "./domain/commands/create-consumer/index.js";
+import { commandDeleteConsumer } from "./domain/commands/delete-consumer/index.js";
+import { commandUpdateConsumer } from "./domain/commands/update-consumer/index.js";
+import { queryGetConsumer } from "./domain/queries/get-consumer/index.js";
 
 type GetApp = ({
   dataStore,
@@ -132,6 +136,46 @@ const getApp: GetApp = ({
       eventBroker.publish({ event });
 
       return;
+    },
+    createConsumer: async ({ consumer }) => {
+      const command = commandCreateConsumer(dataStore);
+
+      const savedConsumer = await command({ consumer });
+
+      return savedConsumer;
+    },
+    deleteConsumer: async ({ id }) => {
+      const command = commandDeleteConsumer(dataStore);
+
+      const deletedConsumer = await command({ id });
+
+      return deletedConsumer;
+    },
+    updateConsumer: async ({ consumer }) => {
+      const command = commandUpdateConsumer(dataStore);
+
+      if (!command) {
+        throw createError({
+          message: "Update consumer command not found",
+          code: "COMMAND_NOT_FOUND",
+          status: 500,
+        });
+      }
+
+      const updatedConsumer = await command({ consumer });
+
+      return updatedConsumer;
+    },
+    getConsumerById: async ({ id }) => {
+      const query = queryGetConsumer(dataStore);
+
+      const savedConsumer = await query({ id });
+
+      if (!savedConsumer) {
+        return undefined;
+      }
+
+      return savedConsumer;
     },
   };
 };
