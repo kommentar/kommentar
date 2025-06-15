@@ -48,6 +48,7 @@ type GetAllCommentsByHostIdQuery = ({
 }: {
   hostId: Comment["hostId"];
 }) => QueryConfig;
+
 type SaveCommentByHostIdQuery = ({
   id,
   hostId,
@@ -61,6 +62,7 @@ type SaveCommentByHostIdQuery = ({
   sessionId: Comment["sessionId"];
   commenter: Comment["commenter"];
 }) => QueryConfig;
+
 type UpdateCommentByIdQuery = ({
   id,
   content,
@@ -70,6 +72,7 @@ type UpdateCommentByIdQuery = ({
   content: Comment["content"];
   sessionId: Comment["sessionId"];
 }) => QueryConfig;
+
 type DeleteCommentByIdQuery = ({
   id,
   sessionId,
@@ -77,6 +80,7 @@ type DeleteCommentByIdQuery = ({
   id: Comment["id"];
   sessionId: Comment["sessionId"];
 }) => QueryConfig;
+
 type GetCommentByIdQuery = ({ id }: { id: Comment["id"] }) => QueryConfig;
 
 type GetConsumerByIdQuery = ({
@@ -84,12 +88,17 @@ type GetConsumerByIdQuery = ({
 }: {
   consumerId: string;
 }) => QueryConfig;
+
+type GetConsumerByApiKeyQuery = ({ apiKey }: { apiKey: string }) => QueryConfig;
+
 type SaveConsumerQuery = ({ consumer }: { consumer: Consumer }) => QueryConfig;
+
 type UpdateConsumerQuery = ({
   consumer,
 }: {
   consumer: Consumer;
 }) => QueryConfig;
+
 type DeleteConsumerQuery = ({
   consumerId,
 }: {
@@ -108,6 +117,7 @@ export type {
   DeleteCommentByIdQuery,
   GetCommentByIdQuery,
   GetConsumerByIdQuery,
+  GetConsumerByApiKeyQuery,
   SaveConsumerQuery,
   UpdateConsumerQuery,
   DeleteConsumerQuery,

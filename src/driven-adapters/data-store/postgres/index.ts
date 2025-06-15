@@ -10,6 +10,7 @@ import {
   getAllCommentsByHostIdQuery,
   getCommentByIdQuery,
   getConsumerByIdQuery,
+  getConsumerByApiKeyQuery,
   saveCommentByHostIdQuery,
   saveConsumerQuery,
   updateCommentByIdQuery,
@@ -116,6 +117,27 @@ const getDataStorePostgres: GetDataStorePostgres = async ({
           return result.rows[0];
         } catch (error) {
           console.error("Failed to get consumer by identifier", error);
+          throw error;
+        }
+      },
+      getAll: async () => {
+        try {
+          const result = await pgPool.query("SELECT * FROM kommentar.consumer");
+          return result.rows;
+        } catch (error) {
+          console.error("Failed to get all consumers", error);
+          throw error;
+        }
+      },
+      getByApiKey: async ({ apiKey }) => {
+        try {
+          const result = await pgPool.query(
+            getConsumerByApiKeyQuery({ apiKey }),
+          );
+
+          return result.rows[0] || null;
+        } catch (error) {
+          console.error("Failed to get consumer by API key", error);
           throw error;
         }
       },

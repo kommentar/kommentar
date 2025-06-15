@@ -16,6 +16,11 @@ type StoredConsumer = {
   id: Consumer["id"];
   name: Consumer["name"];
   description?: Consumer["description"];
+  apikey: Consumer["apiKey"];
+  apisecret: Consumer["apiSecret"];
+  allowedhosts?: string; // JSON string of array
+  isactive: Consumer["isActive"];
+  ratelimit?: Consumer["rateLimit"];
   createdat: Date;
   updatedat: Date;
 };
@@ -105,6 +110,22 @@ type DataStore = {
     }: {
       consumerId: string;
     }) => Promise<StoredConsumer>;
+
+    /**
+     * Get all consumers
+     *
+     * @returns List of all consumers
+     */
+    getAll: () => Promise<StoredConsumer[]>;
+
+    /**
+     * Get consumer by API key
+     */
+    getByApiKey: ({
+      apiKey,
+    }: {
+      apiKey: string;
+    }) => Promise<StoredConsumer | undefined>;
 
     /**
      * Save a new consumer
