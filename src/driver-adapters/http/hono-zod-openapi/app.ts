@@ -7,7 +7,7 @@ import {
   getConsumerByIdRoute,
   updateCommentByIdRoute,
 } from "./routes.js";
-import { apiReference } from "@scalar/hono-api-reference";
+import { Scalar } from "@scalar/hono-api-reference";
 import { HTTPException } from "hono/http-exception";
 import { getCookie } from "hono/cookie";
 import type { RandomId } from "../../../app/driven-ports/random-id.js";
@@ -128,12 +128,11 @@ const getHttpAppHonoZodOpenApi: GetHttpAppHonoZodOpenApi = ({
 
   hono.get(
     "/reference",
-    apiReference({
+    Scalar({
       pageTitle: "Kommentar | API Reference",
       servers: apiClientservers,
-      spec: {
-        url: "/spec",
-      },
+      url: "/spec",
+      defaultOpenAllTags: true,
     }),
   );
 
