@@ -1,0 +1,76 @@
+import { describe, expect, it, vi } from "vitest";
+import type {
+  DataStore,
+  StoredConsumer,
+} from "../../../driven-ports/data-store.js";
+import { queryGetConsumer } from "../get-consumer/index.js";
+
+describe("queryGetConsumer", () => {
+  it("should return undefined when there is no consumer with the given id", async () => {
+    const mockDataStore: DataStore = {
+      getAllCommentsByHostId: vi.fn(),
+      deleteCommentById: vi.fn(),
+      saveCommentByHostId: vi.fn(),
+      updateCommentById: vi.fn(),
+      getCommentById: vi.fn(),
+      consumer: {
+        save: vi.fn(),
+        getById: vi.fn().mockResolvedValue(undefined),
+        deleteById: vi.fn(),
+        update: vi.fn(),
+      },
+      stop: vi.fn(),
+      migrateAll: vi.fn(),
+      rollbackAll: vi.fn(),
+    };
+
+    const getCommentsForHost = queryGetConsumer(mockDataStore);
+    const comments = await getCommentsForHost({ id: "1" });
+
+    expect(comments).toEqual(undefined);
+    expect(mockDataStore.consumer.getById).toHaveBeenCalledWith({
+      consumerId: "1",
+    });
+  });
+
+  it("should return a consumer", async () => {
+    const savedConsumer: StoredConsumer = {
+      id: "1",
+      name: "Test Consumer",
+      description: "This is a test consumer",
+      createdat: new Date("2021-01-01"),
+      updatedat: new Date("2021-01-01"),
+    };
+
+    const mockDataStore: DataStore = {
+      getAllCommentsByHostId: vi.fn(),
+      deleteCommentById: vi.fn(),
+      saveCommentByHostId: vi.fn(),
+      updateCommentById: vi.fn(),
+      getCommentById: vi.fn(),
+      consumer: {
+        save: vi.fn(),
+        getById: vi.fn().mockResolvedValue(savedConsumer),
+        deleteById: vi.fn(),
+        update: vi.fn(),
+      },
+      stop: vi.fn(),
+      migrateAll: vi.fn(),
+      rollbackAll: vi.fn(),
+    };
+
+    const getConsumer = queryGetConsumer(mockDataStore);
+    const consumer = await getConsumer({ id: "1" });
+
+    expect(consumer).toEqual(
+      expect.objectContaining({
+        id: "1",
+        name: "Test Consumer",
+        description: "This is a test consumer",
+      }),
+    );
+    expect(mockDataStore.consumer.getById).toHaveBeenCalledWith({
+      consumerId: "1",
+    });
+  });
+});
