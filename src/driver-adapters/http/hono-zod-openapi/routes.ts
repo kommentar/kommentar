@@ -9,6 +9,7 @@ import {
 } from "./zod-schemas.js";
 
 const getCommentsForHostRoute = createRoute({
+  tags: ["Comments"],
   summary: "Get comments for a host",
   description:
     "Retrieve all comments for a specific host. Requires API key and secret authentication.",
@@ -41,6 +42,7 @@ const getCommentsForHostRoute = createRoute({
 });
 
 const createCommentForHostRoute = createRoute({
+  tags: ["Comments"],
   summary: "Create a comment for a host",
   description:
     "Create a new comment for a specific host. Requires API key and secret authentication.",
@@ -92,6 +94,7 @@ const createCommentForHostRoute = createRoute({
 });
 
 const updateCommentByIdRoute = createRoute({
+  tags: ["Comments"],
   summary: "Update a comment by id",
   description:
     "Update an existing comment. Requires API key and secret authentication.",
@@ -149,6 +152,7 @@ const updateCommentByIdRoute = createRoute({
 });
 
 const deleteCommentByIdRoute = createRoute({
+  tags: ["Comments"],
   summary: "Delete a comment by id",
   description:
     "Delete an existing comment. Requires API key and secret authentication.",
@@ -193,6 +197,7 @@ const deleteCommentByIdRoute = createRoute({
 });
 
 const getConsumerByIdRoute = createRoute({
+  tags: ["Consumers"],
   summary: "Get a consumer by id",
   description:
     "Retrieve consumer information by ID. Requires API key and secret authentication.",
@@ -231,6 +236,7 @@ const getConsumerByIdRoute = createRoute({
 });
 
 const createConsumerRoute = createRoute({
+  tags: ["Consumers"],
   summary: "Create a new consumer",
   description:
     "Create a new API consumer with generated credentials. Requires API key and secret authentication.",
