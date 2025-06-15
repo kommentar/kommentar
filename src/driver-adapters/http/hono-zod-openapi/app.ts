@@ -11,14 +11,21 @@ import { apiReference } from "@scalar/hono-api-reference";
 import { HTTPException } from "hono/http-exception";
 import { getCookie } from "hono/cookie";
 import type { RandomId } from "../../../app/driven-ports/random-id.js";
-import { rateLimitMiddleware, sessionMiddleware } from "./middlewares.js";
+import {
+  consumerAuthMiddleware,
+  rateLimitMiddleware,
+  sessionMiddleware,
+} from "./middlewares.js";
+import type { DataStore } from "../../../app/driven-ports/data-store.js";
 
 type GetHttpAppHonoZodOpenApi = ({
   app,
   randomId,
+  dataStore,
 }: {
   app: App;
   randomId: RandomId;
+  dataStore: DataStore;
 }) => OpenAPIHono;
 
 const apiClientservers = [
@@ -31,6 +38,7 @@ const apiClientservers = [
 const getHttpAppHonoZodOpenApi: GetHttpAppHonoZodOpenApi = ({
   app,
   randomId,
+  dataStore,
 }) => {
   if (
     process.env.NODE_ENV === "production" &&
@@ -46,6 +54,7 @@ const getHttpAppHonoZodOpenApi: GetHttpAppHonoZodOpenApi = ({
 
   hono.use(sessionMiddleware(randomId));
   hono.use(rateLimitMiddleware);
+  hono.use(consumerAuthMiddleware(dataStore));
 
   hono.openapi(getCommentsForHostRoute, async (c) => {
     const { hostId } = c.req.valid("param");

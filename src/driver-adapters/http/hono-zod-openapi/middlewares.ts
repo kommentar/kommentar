@@ -4,8 +4,10 @@ import type { RandomId } from "../../../app/driven-ports/random-id.js";
 import { getCookie, setCookie } from "hono/cookie";
 import { rateLimiter } from "hono-rate-limiter";
 import { getConnInfo } from "@hono/node-server/conninfo";
+import type { DataStore } from "../../../app/driven-ports/data-store.js";
 
 type SessionMiddleware = (randomId: RandomId) => MiddlewareHandler;
+type ConsumerAuthMiddleware = (dataStore: DataStore) => MiddlewareHandler;
 
 const sessionMiddleware: SessionMiddleware = (randomId) =>
   createMiddleware(async (c, next) => {
@@ -37,4 +39,21 @@ const rateLimitMiddleware = rateLimiter({
   },
 });
 
-export { sessionMiddleware, rateLimitMiddleware };
+const consumerAuthMiddleware: ConsumerAuthMiddleware = (dataStore) =>
+  createMiddleware(async (c, next) => {
+    const consumerId = c.req.header("X-Consumer-ID");
+
+    if (!consumerId) {
+      return c.json({ error: "Consumer ID is required" }, 400);
+    }
+
+    const consumer = await dataStore.consumer.getById({ consumerId });
+
+    if (!consumer) {
+      return c.json({ error: "Consumer not found" }, 404);
+    }
+
+    await next();
+  });
+
+export { sessionMiddleware, rateLimitMiddleware, consumerAuthMiddleware };

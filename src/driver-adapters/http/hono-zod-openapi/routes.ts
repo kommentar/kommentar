@@ -145,6 +145,12 @@ const getConsumerByIdRoute = createRoute({
       },
       description: "Get a consumer by id",
     },
+    400: {
+      content: {
+        "application/json": { schema: GetConsumerByIdSchema.errors[400] },
+      },
+      description: "Bad request",
+    },
     404: {
       content: {
         "application/json": { schema: GetConsumerByIdSchema.errors[404] },

@@ -89,6 +89,13 @@ const consumerNotFoundErrorSchema = z.object({
   }),
 });
 
+const consumerIdRequiredErrorSchema = z.object({
+  message: z.string().openapi({
+    type: "string",
+    example: "Consumer ID is required",
+  }),
+});
+
 const GetCommentsByHostIdSchema = {
   pathParams: z
     .object({
@@ -234,6 +241,7 @@ const GetConsumerByIdSchema = {
     .required(),
   response: consumerSchema,
   errors: {
+    400: consumerIdRequiredErrorSchema,
     404: consumerNotFoundErrorSchema,
     500: genericErrorSchema,
   },
