@@ -156,6 +156,64 @@ const migrations: Array<Migration> = [
       `,
     },
   },
+  {
+    id: "010",
+    name: "add-consumer-api-columns",
+    up: {
+      name: "add-consumer-api-columns",
+      text: `
+        ALTER TABLE kommentar.consumer
+        ADD COLUMN IF NOT EXISTS apiKey varchar(255) NOT NULL DEFAULT '',
+        ADD COLUMN IF NOT EXISTS apiSecret varchar(255) NOT NULL DEFAULT '',
+        ADD COLUMN IF NOT EXISTS allowedHosts text,
+        ADD COLUMN IF NOT EXISTS isActive boolean NOT NULL DEFAULT true,
+        ADD COLUMN IF NOT EXISTS rateLimit integer;
+      `,
+    },
+    down: {
+      name: "remove-consumer-api-columns",
+      text: `
+        ALTER TABLE kommentar.consumer
+        DROP COLUMN IF EXISTS apiKey,
+        DROP COLUMN IF EXISTS apiSecret,
+        DROP COLUMN IF EXISTS allowedHosts,
+        DROP COLUMN IF EXISTS isActive,
+        DROP COLUMN IF EXISTS rateLimit;
+      `,
+    },
+  },
+  {
+    id: "011",
+    name: "add-consumer-api-indexes",
+    up: {
+      name: "add-consumer-api-indexes",
+      text: `
+        CREATE UNIQUE INDEX IF NOT EXISTS consumer_api_key_idx ON kommentar.consumer (apiKey);
+      `,
+    },
+    down: {
+      name: "remove-consumer-api-indexes",
+      text: `
+        DROP INDEX IF EXISTS consumer_api_key_idx;
+      `,
+    },
+  },
+  {
+    id: "012",
+    name: "add-consumer-active-index",
+    up: {
+      name: "add-consumer-active-index",
+      text: `
+        CREATE INDEX IF NOT EXISTS consumer_active_idx ON kommentar.consumer (isActive);
+      `,
+    },
+    down: {
+      name: "remove-consumer-active-index",
+      text: `
+        DROP INDEX IF EXISTS consumer_active_idx;
+      `,
+    },
+  },
 ];
 
 export { migrations };

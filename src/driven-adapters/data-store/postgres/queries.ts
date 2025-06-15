@@ -3,6 +3,7 @@ import type {
   DeleteConsumerQuery,
   GetAllCommentsByHostIdQuery,
   GetCommentByIdQuery,
+  GetConsumerByApiKeyQuery,
   GetConsumerByIdQuery,
   SaveCommentByHostIdQuery,
   SaveConsumerQuery,
@@ -96,15 +97,36 @@ const getConsumerByIdQuery: GetConsumerByIdQuery = ({ consumerId }) => {
   };
 };
 
+const getConsumerByApiKeyQuery: GetConsumerByApiKeyQuery = ({ apiKey }) => {
+  return {
+    name: "get-consumer-by-api-key",
+    text: `
+        SELECT * FROM kommentar.consumer WHERE apiKey = $1 AND isActive = true LIMIT 1;
+        `,
+    values: [apiKey],
+  };
+};
+
 const saveConsumerQuery: SaveConsumerQuery = ({ consumer }) => {
   return {
     name: "save-consumer",
     text: `
-        INSERT INTO kommentar.consumer (id, name, description, createdAt, updatedAt)
-        VALUES ($1, $2, $3, NOW(), NOW())
+        INSERT INTO kommentar.consumer (
+          id, name, description, apiKey, apiSecret, allowedHosts, isActive, rateLimit, createdAt, updatedAt
+        )
+        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, NOW(), NOW())
         RETURNING *;
         `,
-    values: [consumer.id, consumer.name, consumer.description],
+    values: [
+      consumer.id,
+      consumer.name,
+      consumer.description,
+      consumer.apiKey,
+      consumer.apiSecret,
+      consumer.allowedHosts ? JSON.stringify(consumer.allowedHosts) : null,
+      consumer.isActive,
+      consumer.rateLimit,
+    ],
   };
 };
 
@@ -113,11 +135,21 @@ const updateConsumerQuery: UpdateConsumerQuery = ({ consumer }) => {
     name: "update-consumer",
     text: `
         UPDATE kommentar.consumer
-        SET name = $1, description = $2, updatedAt = NOW()
-        WHERE id = $3
+        SET name = $1, description = $2, apiKey = $3, apiSecret = $4,
+            allowedHosts = $5, isActive = $6, rateLimit = $7, updatedAt = NOW()
+        WHERE id = $8
         RETURNING *;
         `,
-    values: [consumer.name, consumer.description, consumer.id],
+    values: [
+      consumer.name,
+      consumer.description,
+      consumer.apiKey,
+      consumer.apiSecret,
+      consumer.allowedHosts ? JSON.stringify(consumer.allowedHosts) : null,
+      consumer.isActive,
+      consumer.rateLimit,
+      consumer.id,
+    ],
   };
 };
 
@@ -140,6 +172,7 @@ export {
   deleteCommentByIdQuery,
   getCommentByIdQuery,
   getConsumerByIdQuery,
+  getConsumerByApiKeyQuery,
   saveConsumerQuery,
   updateConsumerQuery,
   deleteConsumerQuery,
