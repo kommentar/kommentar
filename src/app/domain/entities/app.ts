@@ -7,6 +7,7 @@ type App = {
   }: {
     hostId: string;
   }) => Promise<PublicComment[]>;
+
   createCommentForHost: ({
     hostId,
     content,
@@ -21,6 +22,7 @@ type App = {
       realName?: string;
     };
   }) => Promise<PublicComment>;
+
   updateCommentById: ({
     id,
     content,
@@ -30,6 +32,7 @@ type App = {
     content: string;
     sessionId: string;
   }) => Promise<PublicComment>;
+
   deleteCommentById: ({
     id,
     sessionId,
