@@ -13,6 +13,8 @@ describe("queryGetCommentsForHost", () => {
       consumer: {
         save: vi.fn(),
         getById: vi.fn(),
+        getAll: vi.fn(),
+        getByApiKey: vi.fn(),
         deleteById: vi.fn(),
         update: vi.fn(),
       },
@@ -59,6 +61,8 @@ describe("queryGetCommentsForHost", () => {
       consumer: {
         save: vi.fn(),
         getById: vi.fn(),
+        getAll: vi.fn(),
+        getByApiKey: vi.fn(),
         deleteById: vi.fn(),
         update: vi.fn(),
       },

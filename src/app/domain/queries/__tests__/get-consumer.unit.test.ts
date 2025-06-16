@@ -16,6 +16,8 @@ describe("queryGetConsumer", () => {
       consumer: {
         save: vi.fn(),
         getById: vi.fn().mockResolvedValue(undefined),
+        getAll: vi.fn(),
+        getByApiKey: vi.fn(),
         deleteById: vi.fn(),
         update: vi.fn(),
       },
@@ -38,6 +40,9 @@ describe("queryGetConsumer", () => {
       id: "1",
       name: "Test Consumer",
       description: "This is a test consumer",
+      apikey: "f2ef9606-6e10-4530-a15c-594c2e3fcd73",
+      apisecret: "b5fe46d6-1efe-4988-bf2b-d5b0a90fbaaf",
+      isactive: true,
       createdat: new Date("2021-01-01"),
       updatedat: new Date("2021-01-01"),
     };
@@ -51,6 +56,8 @@ describe("queryGetConsumer", () => {
       consumer: {
         save: vi.fn(),
         getById: vi.fn().mockResolvedValue(savedConsumer),
+        getAll: vi.fn(),
+        getByApiKey: vi.fn(),
         deleteById: vi.fn(),
         update: vi.fn(),
       },

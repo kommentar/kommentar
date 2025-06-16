@@ -132,9 +132,7 @@ async function createConsumer(dataStore: DataStore, randomId: RandomId) {
   const rateLimitArg = getArgValue("--rate-limit");
   const isInactive = hasArg("--inactive");
 
-  const allowedHosts = hostsArg
-    ? hostsArg.split(",").map((h) => h.trim())
-    : undefined;
+  const allowedHosts = hostsArg ? hostsArg.split(",").map((h) => h.trim()) : [];
   const rateLimit = rateLimitArg ? parseInt(rateLimitArg, 10) : undefined;
 
   if (rateLimitArg && isNaN(rateLimit!)) {

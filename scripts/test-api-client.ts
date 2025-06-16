@@ -277,7 +277,11 @@ async function runTests() {
     if (commentId) {
       const test6Passed = await runTest("Delete the comment", async () => {
         console.log("6️⃣ Deleting the comment...");
-        const result = await deleteComment(options, testHostId, commentId);
+        const result = await deleteComment(
+          options,
+          testHostId,
+          String(commentId),
+        );
 
         if (!result.response.ok) {
           throw new Error(`Expected 200, got ${result.response.status}`);

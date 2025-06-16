@@ -20,6 +20,8 @@ describe("commandCreateComment", () => {
       getCommentById: vi.fn(),
       consumer: {
         getById: vi.fn(),
+        getAll: vi.fn(),
+        getByApiKey: vi.fn(),
         deleteById: vi.fn(),
         update: vi.fn(),
         save: vi.fn(),

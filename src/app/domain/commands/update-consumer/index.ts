@@ -23,6 +23,13 @@ const commandUpdateConsumer: CommandUpdateConsumer = (dataStore) => {
       id: updatedConsumer.id,
       name: updatedConsumer.name,
       description: updatedConsumer.description,
+      apiKey: updatedConsumer.apikey,
+      apiSecret: updatedConsumer.apisecret,
+      isActive: updatedConsumer.isactive,
+      allowedHosts: JSON.parse(String(updatedConsumer.allowedhosts)) || [],
+      rateLimit: updatedConsumer.ratelimit,
+      createdAt: updatedConsumer.createdat,
+      updatedAt: updatedConsumer.updatedat,
     };
   };
 };

@@ -149,11 +149,21 @@ const runDataStoreTests = (dataStore: DataStore) => {
           id: "1",
           name: "Consumer 1",
           description: "Description for Consumer 1",
+          apiKey: "f2ef9606-6e10-4530-a15c-594c2e3fcd73",
+          apiSecret: "b5fe46d6-1efe-4988-bf2b-d5b0a90fbaaf",
+          isActive: true,
+          rateLimit: 100,
+          allowedHosts: ["host1", "host2"],
         },
         {
           id: "2",
           name: "Consumer 2",
           description: "Description for Consumer 2",
+          apiKey: "36a60d7f-cc80-4381-9f17-11dc96709233",
+          apiSecret: "b5fe46d6-1efe-4988-bf2b-d5b0a90fbaaf",
+          isActive: true,
+          rateLimit: 100,
+          allowedHosts: ["host3", "host4"],
         },
       ];
 
@@ -177,6 +187,11 @@ const runDataStoreTests = (dataStore: DataStore) => {
           id: "3",
           name: "Consumer 3",
           description: "Description for Consumer 3",
+          apiKey: "f2ef9606-6e10-4530-a15c-594c2e3fcd73",
+          apiSecret: "b5fe46d6-1efe-4988-bf2b-d5b0a90fbaaf",
+          isActive: true,
+          rateLimit: 100,
+          allowedHosts: ["host1", "host2"],
         };
 
         const savedConsumer = await dataStore.consumer.save({
@@ -193,6 +208,11 @@ const runDataStoreTests = (dataStore: DataStore) => {
           id: "1",
           name: "Updated Consumer 1",
           description: "Updated description for Consumer 1",
+          apiKey: "36a60d7f-cc80-4381-9f17-11dc96709233",
+          apiSecret: "b5fe46d6-1efe-4988-bf2b-d5b0a90fbaaf",
+          isActive: true,
+          rateLimit: 100,
+          allowedHosts: ["host1", "host2"],
         };
 
         const savedConsumer = await dataStore.consumer.save({

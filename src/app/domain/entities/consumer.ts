@@ -9,4 +9,6 @@ type Consumer = {
   rateLimit?: number; // requests per minute, defaults to global limit
 };
 
-export type { Consumer };
+type PublicConsumer = Omit<Consumer, "apiSecret" | "allowedHosts">;
+
+export type { Consumer, PublicConsumer };

@@ -17,6 +17,8 @@ describe("commandDeleteConsumer", () => {
           name: "Test Consumer",
           description: "This is a test consumer",
         }),
+        getAll: vi.fn(),
+        getByApiKey: vi.fn(),
         deleteById: vi.fn().mockResolvedValue({
           id: "1",
           name: "Test Consumer",
