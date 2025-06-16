@@ -3,6 +3,7 @@ import type { GetMigrationStatusFn, MigrateFn, RollbackFn } from "../types.js";
 import { runInTransaction } from "../utils.js";
 import type { Migration, MigrationRecord } from "./types.js";
 import { migrations } from "./list.js";
+import { errors } from "../../../../app/domain/entities/error.js";
 
 const createMigrationsTableIfNotPresent = async (client: PoolClient) => {
   await client.query(`
@@ -103,7 +104,7 @@ const rollback: RollbackFn = async ({ pgPool, targetMigration }) => {
 
     for (const migration of migrationsToApply) {
       if (!migration.down) {
-        throw new Error(`Migration ${migration.id} has no rollback defined`);
+        throw errors.dependency.dataStoreError;
       }
 
       console.debug(

@@ -18,6 +18,11 @@ import {
   sessionMiddleware,
 } from "./middlewares.js";
 import type { DataStore } from "../../../app/driven-ports/data-store.js";
+import { createHttpError } from "./helpers.js";
+import {
+  errors,
+  type CustomError,
+} from "../../../app/domain/entities/error.js";
 
 type GetHttpAppHonoZodOpenApi = ({
   app,
@@ -63,58 +68,78 @@ const getHttpAppHonoZodOpenApi: GetHttpAppHonoZodOpenApi = ({
 
   // Comment routes
   hono.openapi(getCommentsForHostRoute, async (c) => {
-    const { hostId } = c.req.valid("param");
+    try {
+      const { hostId } = c.req.valid("param");
 
-    const comments = await app.getCommentsForHost({ hostId });
+      const comments = await app.getCommentsForHost({ hostId });
 
-    return c.json(comments, 200);
+      return c.json(comments, 200);
+    } catch (err) {
+      throw createHttpError(err as unknown as CustomError);
+    }
   });
 
   hono.openapi(createCommentForHostRoute, async (c) => {
-    const { hostId } = c.req.valid("param");
-    const { content, commenter } = c.req.valid("json");
-    const sessionId = getCookie(c, "sessionId") as string;
+    try {
+      const { hostId } = c.req.valid("param");
+      const { content, commenter } = c.req.valid("json");
+      const sessionId = getCookie(c, "sessionId") as string;
 
-    const comment = await app.createCommentForHost({
-      hostId,
-      content,
-      sessionId,
-      commenter,
-    });
+      const comment = await app.createCommentForHost({
+        hostId,
+        content,
+        sessionId,
+        commenter,
+      });
 
-    return c.json(comment, 201);
+      return c.json(comment, 201);
+    } catch (err) {
+      throw createHttpError(err as unknown as CustomError);
+    }
   });
 
   hono.openapi(updateCommentByIdRoute, async (c) => {
-    const { id } = c.req.valid("param");
-    const { content } = c.req.valid("json");
-    const sessionId = getCookie(c, "sessionId") as string;
+    try {
+      const { id } = c.req.valid("param");
+      const { content } = c.req.valid("json");
+      const sessionId = getCookie(c, "sessionId") as string;
 
-    const comment = await app.updateCommentById({ id, content, sessionId });
+      const comment = await app.updateCommentById({ id, content, sessionId });
 
-    return c.json(comment, 200);
+      return c.json(comment, 200);
+    } catch (err) {
+      throw createHttpError(err as unknown as CustomError);
+    }
   });
 
   hono.openapi(deleteCommentByIdRoute, async (c) => {
-    const { id } = c.req.valid("param");
-    const sessionId = getCookie(c, "sessionId") as string;
+    try {
+      const { id } = c.req.valid("param");
+      const sessionId = getCookie(c, "sessionId") as string;
 
-    await app.deleteCommentById({ id, sessionId });
+      await app.deleteCommentById({ id, sessionId });
 
-    return c.json({ message: "Comment deleted" }, 200);
+      return c.json({ message: "Comment deleted" }, 200);
+    } catch (err) {
+      throw createHttpError(err as unknown as CustomError);
+    }
   });
 
   // Consumer info route (read-only for self-inspection)
   hono.openapi(getConsumerByIdRoute, async (c) => {
-    const { id } = c.req.valid("param");
+    try {
+      const { id } = c.req.valid("param");
 
-    const consumer = await app.getConsumerById({ id });
+      const consumer = await app.getConsumerById({ id });
 
-    if (!consumer) {
-      return c.json({ message: "Consumer not found" }, 404);
+      if (!consumer) {
+        throw errors.domain.consumerNotFound;
+      }
+
+      return c.json(consumer, 200);
+    } catch (err) {
+      throw createHttpError(err as unknown as CustomError);
     }
-
-    return c.json(consumer, 200);
   });
 
   // Documentation
@@ -138,6 +163,7 @@ const getHttpAppHonoZodOpenApi: GetHttpAppHonoZodOpenApi = ({
 
   hono.onError((err, c) => {
     if (err instanceof HTTPException) {
+      console.log("HTTP Exception:", err);
       return err.getResponse();
     }
 

@@ -1,3 +1,5 @@
+import { errors } from "../../../app/domain/entities/error.js";
+
 type ProfanityResponse = {
   isProfanity: boolean;
   score: number;
@@ -17,7 +19,7 @@ const checkProfanityRequest: CheckProfanityRequest = async (text) => {
   const response = await fetch(request);
 
   if (!response.ok) {
-    throw new Error("Failed to check profanity");
+    throw errors.dependency.profanityCheckError;
   }
 
   const data = await response.json();

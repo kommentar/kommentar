@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, afterEach } from "vitest";
 import { getApp } from "../index.js";
-import type { HTTPException } from "hono/http-exception";
+import type { CustomError } from "../domain/entities/error.js";
 
 describe("getApp", () => {
   const mockDataStore = {
@@ -173,9 +173,12 @@ describe("getApp", () => {
         },
       });
     } catch (error) {
-      const e = error as HTTPException;
-      expect(e.message).toBe("Comment contains profanity");
-      expect(e.status).toBe(400);
+      const e = error as CustomError;
+      expect(e.message).toBe(
+        "Comment contains profane content. Please revise your comment.",
+      );
+      expect(e.type).toBe("PROFANE_COMMENT");
+      expect(e.code).toBe("InvalidInput");
     }
   });
 
@@ -227,9 +230,10 @@ describe("getApp", () => {
     try {
       await app.updateCommentById({ id, content, sessionId: "invalid" });
     } catch (error) {
-      const e = error as HTTPException;
-      expect(e.message).toBe("Cannot update comment");
-      expect(e.status).toBe(401);
+      const e = error as CustomError;
+      expect(e.message).toBe("Unauthorized access");
+      expect(e.type).toBe("UNAUTHORIZED");
+      expect(e.code).toBe("Unauthorized");
     }
   });
 
@@ -243,9 +247,12 @@ describe("getApp", () => {
     try {
       await app.updateCommentById({ id, content, sessionId });
     } catch (error) {
-      const e = error as HTTPException;
-      expect(e.message).toBe("Comment contains profanity");
-      expect(e.status).toBe(400);
+      const e = error as CustomError;
+      expect(e.message).toBe(
+        "Comment contains profane content. Please revise your comment.",
+      );
+      expect(e.type).toBe("PROFANE_COMMENT");
+      expect(e.code).toBe("InvalidInput");
     }
   });
 
@@ -296,9 +303,10 @@ describe("getApp", () => {
       mockDataStore.getCommentById.mockResolvedValue(savedComment);
       await app.deleteCommentById({ id, sessionId: "invalid" });
     } catch (error) {
-      const e = error as HTTPException;
-      expect(e.message).toBe("Cannot delete comment");
-      expect(e.status).toBe(401);
+      const e = error as CustomError;
+      expect(e.message).toBe("Unauthorized access");
+      expect(e.type).toBe("UNAUTHORIZED");
+      expect(e.code).toBe("Unauthorized");
     }
   });
 });

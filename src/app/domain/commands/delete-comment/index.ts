@@ -1,6 +1,6 @@
 import type { Comment, PublicComment } from "../../entities/comment.js";
-import { createError } from "../../helpers/error/create-error.js";
 import type { DataStore } from "../../../driven-ports/data-store.js";
+import { errors } from "../../entities/error.js";
 
 type CommandDeleteComment = (
   dataStore: DataStore,
@@ -17,19 +17,11 @@ const commandDeleteComment: CommandDeleteComment = (dataStore) => {
     const commentExists = await dataStore.getCommentById({ id });
 
     if (!commentExists) {
-      throw createError({
-        message: "Comment not found",
-        code: "COMMENT_NOT_FOUND",
-        status: 404,
-      });
+      throw errors.domain.commentNotFound;
     }
 
     if (commentExists.sessionid !== sessionId) {
-      throw createError({
-        message: "Cannot delete comment",
-        code: "UNAUTHORIZED",
-        status: 401,
-      });
+      throw errors.domain.unauthorized;
     }
 
     const deletedComment = await dataStore.deleteCommentById({ id, sessionId });

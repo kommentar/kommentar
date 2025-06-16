@@ -12,11 +12,11 @@ import { toCommentDeletedEvent } from "./domain/helpers/events/comment-deleted.j
 import type { CacheStore } from "./driven-ports/cache-store.js";
 import type { Comment } from "./domain/entities/comment.js";
 import type { ProfanityClient } from "./driven-ports/profanity-client.js";
-import { createError } from "./domain/helpers/error/create-error.js";
 import { commandCreateConsumer } from "./domain/commands/create-consumer/index.js";
 import { commandDeleteConsumer } from "./domain/commands/delete-consumer/index.js";
 import { commandUpdateConsumer } from "./domain/commands/update-consumer/index.js";
 import { queryGetConsumer } from "./domain/queries/get-consumer/index.js";
+import { errors } from "./domain/entities/error.js";
 
 type GetApp = ({
   dataStore,
@@ -62,11 +62,7 @@ const getApp: GetApp = ({
       const isProfane = await profanityClient.check(content);
 
       if (isProfane === "PROFANE") {
-        throw createError({
-          message: "Comment contains profanity",
-          code: "PROFANE_COMMENT",
-          status: 400,
-        });
+        throw errors.domain.profaneComment;
       }
 
       const command = commandCreateComment(dataStore);
@@ -94,11 +90,7 @@ const getApp: GetApp = ({
       const isProfane = await profanityClient.check(content);
 
       if (isProfane === "PROFANE") {
-        throw createError({
-          message: "Comment contains profanity",
-          code: "PROFANE_COMMENT",
-          status: 400,
-        });
+        throw errors.domain.profaneComment;
       }
 
       const command = commandUpdateComment(dataStore);
@@ -159,14 +151,6 @@ const getApp: GetApp = ({
 
     updateConsumer: async ({ consumer }) => {
       const command = commandUpdateConsumer(dataStore);
-
-      if (!command) {
-        throw createError({
-          message: "Update consumer command not found",
-          code: "COMMAND_NOT_FOUND",
-          status: 500,
-        });
-      }
 
       const updatedConsumer = await command({ consumer });
 

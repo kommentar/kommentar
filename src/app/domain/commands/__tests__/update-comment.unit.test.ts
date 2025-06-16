@@ -135,7 +135,7 @@ describe("commandUpdateComment", () => {
     };
 
     await expect(updateComment(input)).rejects.toThrowError(
-      "Cannot update comment",
+      "Unauthorized access",
     );
     expect(mockDataStore.getCommentById).toHaveBeenCalledWith({ id: input.id });
     expect(mockDataStore.updateCommentById).not.toHaveBeenCalled();

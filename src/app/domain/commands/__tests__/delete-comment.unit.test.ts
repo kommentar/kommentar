@@ -139,7 +139,7 @@ describe("commandDeleteComment", () => {
     };
 
     await expect(deleteComment(input)).rejects.toThrowError(
-      "Cannot delete comment",
+      "Unauthorized access",
     );
     expect(mockDataStore.getCommentById).toHaveBeenCalledWith({ id: input.id });
     expect(mockDataStore.deleteCommentById).not.toHaveBeenCalled();

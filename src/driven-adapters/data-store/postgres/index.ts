@@ -1,3 +1,4 @@
+import { errors } from "../../../app/domain/entities/error.js";
 import type { Config } from "../../../app/driven-ports/config.js";
 import type { DataStore } from "../../../app/driven-ports/data-store.js";
 import type { RandomId } from "../../../app/driven-ports/random-id.js";
@@ -51,7 +52,7 @@ const getDataStorePostgres: GetDataStorePostgres = async ({
         return result.rows;
       } catch (error) {
         console.error("Failed to get comments by host identifier", error);
-        throw error;
+        throw errors.dependency.dataStoreError;
       }
     },
     saveCommentByHostId: async ({ hostId, content, sessionId, commenter }) => {
@@ -70,7 +71,7 @@ const getDataStorePostgres: GetDataStorePostgres = async ({
         return result.rows[0];
       } catch (error) {
         console.error("Failed to save comment by host identifier", error);
-        throw error;
+        throw errors.dependency.dataStoreError;
       }
     },
     updateCommentById: async ({ id, content, sessionId }) => {
@@ -82,7 +83,7 @@ const getDataStorePostgres: GetDataStorePostgres = async ({
         return result.rows[0];
       } catch (error) {
         console.error("Failed to update comment by identifier", error);
-        throw error;
+        throw errors.dependency.dataStoreError;
       }
     },
     deleteCommentById: async ({ id, sessionId }) => {
@@ -94,7 +95,7 @@ const getDataStorePostgres: GetDataStorePostgres = async ({
         return result.rows[0];
       } catch (error) {
         console.error("Failed to delete comment by identifier", error);
-        throw error;
+        throw errors.dependency.dataStoreError;
       }
     },
     getCommentById: async ({ id }) => {
@@ -104,7 +105,7 @@ const getDataStorePostgres: GetDataStorePostgres = async ({
         return result.rows[0];
       } catch (error) {
         console.error("Failed to get comment by identifier", error);
-        throw error;
+        throw errors.dependency.dataStoreError;
       }
     },
     consumer: {
@@ -117,7 +118,7 @@ const getDataStorePostgres: GetDataStorePostgres = async ({
           return result.rows[0];
         } catch (error) {
           console.error("Failed to get consumer by identifier", error);
-          throw error;
+          throw errors.dependency.dataStoreError;
         }
       },
       getAll: async () => {
@@ -126,7 +127,7 @@ const getDataStorePostgres: GetDataStorePostgres = async ({
           return result.rows;
         } catch (error) {
           console.error("Failed to get all consumers", error);
-          throw error;
+          throw errors.dependency.dataStoreError;
         }
       },
       getByApiKey: async ({ apiKey }) => {
@@ -138,7 +139,7 @@ const getDataStorePostgres: GetDataStorePostgres = async ({
           return result.rows[0] || null;
         } catch (error) {
           console.error("Failed to get consumer by API key", error);
-          throw error;
+          throw errors.dependency.dataStoreError;
         }
       },
       save: async ({ consumer }) => {
@@ -148,7 +149,7 @@ const getDataStorePostgres: GetDataStorePostgres = async ({
           return result.rows[0];
         } catch (error) {
           console.error("Failed to save consumer", error);
-          throw error;
+          throw errors.dependency.dataStoreError;
         }
       },
       update: async ({ consumer }) => {
@@ -158,7 +159,7 @@ const getDataStorePostgres: GetDataStorePostgres = async ({
           );
 
           if (existingConsumer.rows.length === 0) {
-            throw new Error(`Consumer not found`);
+            throw errors.domain.consumerNotFound;
           }
 
           const result = await pgPool.query(updateConsumerQuery({ consumer }));
@@ -166,7 +167,7 @@ const getDataStorePostgres: GetDataStorePostgres = async ({
           return result.rows[0];
         } catch (error) {
           console.error("Failed to update consumer", error);
-          throw error;
+          throw errors.dependency.dataStoreError;
         }
       },
       deleteById: async ({ consumerId }) => {
@@ -176,7 +177,7 @@ const getDataStorePostgres: GetDataStorePostgres = async ({
           );
 
           if (existingConsumer.rows.length === 0) {
-            throw new Error(`Consumer not found`);
+            throw errors.domain.consumerNotFound;
           }
 
           const result = await pgPool.query(
@@ -186,7 +187,7 @@ const getDataStorePostgres: GetDataStorePostgres = async ({
           return result.rows[0];
         } catch (error) {
           console.error("Failed to delete consumer", error);
-          throw error;
+          throw errors.dependency.dataStoreError;
         }
       },
     },

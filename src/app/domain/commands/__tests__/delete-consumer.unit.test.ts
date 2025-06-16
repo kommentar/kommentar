@@ -45,7 +45,6 @@ describe("commandDeleteConsumer", () => {
     const input = { id: "1" };
 
     const result = await deleteConsumer(input);
-    console.log(result);
 
     expect(mockDataStore.consumer.deleteById).toHaveBeenCalledWith({
       consumerId: "1",
