@@ -33,7 +33,7 @@ const commandCreateConsumer: CommandCreateConsumer = (dataStore) => {
       apiSecret: apiSecret, // Return unhashed secret
       allowedHosts: savedConsumer.allowedhosts
         ? JSON.parse(savedConsumer.allowedhosts)
-        : undefined,
+        : [],
       isActive: savedConsumer.isactive,
       rateLimit: savedConsumer.ratelimit,
     };

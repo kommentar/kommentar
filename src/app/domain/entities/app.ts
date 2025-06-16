@@ -48,7 +48,11 @@ type App = {
   }: {
     id: string;
   }) => Promise<PublicConsumer | undefined>;
-  updateConsumer: ({ consumer }: { consumer: Consumer }) => Promise<Consumer>;
+  updateConsumer: ({
+    consumer,
+  }: {
+    consumer: Consumer;
+  }) => Promise<PublicConsumer>;
 };
 
 export type { App };
