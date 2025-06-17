@@ -120,9 +120,7 @@ async function createConsumer(dataStore: DataStore, randomId: RandomId) {
 
   if (!name) {
     console.log("❌ Consumer name is required");
-    console.log(
-      "Usage: pnpm exec tsx scripts/manage-consumers.ts create <name> [options]",
-    );
+    console.log("Usage: pnpm manage create <name> [options]");
     process.exit(1);
   }
 
@@ -213,9 +211,7 @@ async function showConsumer(dataStore: DataStore) {
 
   if (!id) {
     console.log("❌ Consumer ID is required");
-    console.log(
-      "Usage: pnpm exec tsx scripts/manage-consumers.ts show <consumer-id>",
-    );
+    console.log("Usage: pnpm manage show <consumer-id>");
     process.exit(1);
   }
 
@@ -250,7 +246,7 @@ async function toggleConsumer(dataStore: DataStore, activate: boolean) {
   if (!id) {
     console.log(`❌ Consumer ID is required`);
     console.log(
-      `Usage: pnpm exec tsx scripts/manage-consumers.ts ${activate ? "activate" : "deactivate"} <consumer-id>`,
+      `Usage: pnpm manage ${activate ? "activate" : "deactivate"} <consumer-id>`,
     );
     process.exit(1);
   }
@@ -289,9 +285,7 @@ async function deleteConsumer(dataStore: DataStore) {
 
   if (!id) {
     console.log("❌ Consumer ID is required");
-    console.log(
-      "Usage: pnpm exec tsx scripts/manage-consumers.ts delete <consumer-id>",
-    );
+    console.log("Usage: pnpm manage delete <consumer-id>");
     process.exit(1);
   }
 
