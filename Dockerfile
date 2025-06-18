@@ -1,12 +1,11 @@
 FROM node:20-alpine AS base
 
+RUN npm install -g pnpm@8
+
 FROM base AS builder
 
 RUN apk add --no-cache gcompat
 WORKDIR /app
-
-# Install pnpm
-RUN npm install -g pnpm@8
 
 COPY package*json pnpm-lock.yaml tsconfig.json src ./
 

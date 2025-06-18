@@ -15,7 +15,8 @@
     "test:integration": "pnpm run test:_base --config vitest.config.integration.mjs",
     "test": "pnpm run test:unit && pnpm run test:integration && vitest run --coverage",
     "test:watch": "vitest",
-    "manage": "tsx --env-file=.env scripts/manage-consumers.ts",
+    "manage": "node dist/scripts/manage-consumers.js",
+    "manage:dev": "tsx --env-file=.env scripts/manage-consumers.ts",
     "manage:test-consumer": "tsx --env-file=.env scripts/create-test-consumer.ts",
     "manage:test-api": "tsx --env-file=.env scripts/test-api-client.ts"
   },

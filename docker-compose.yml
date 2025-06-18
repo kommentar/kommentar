@@ -6,18 +6,8 @@ services:
       dockerfile: ./Dockerfile
     ports:
       - "${PORT}:3000"
-    environment:
-      - NODE_ENV=${NODE_ENV}
-      - POSTGRES_HOST=${POSTGRES_HOST}
-      - POSTGRES_PORT=${POSTGRES_PORT}
-      - POSTGRES_DATABASE=${POSTGRES_DATABASE}
-      - POSTGRES_USER=${POSTGRES_USER}
-      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
-      - PRODUCTION_API_SERVER_URL=${PRODUCTION_API_SERVER_URL}
+    env_file:
+      - .env
     cpu_count: 2
     mem_limit: 512m
     restart: unless-stopped
-
-volumes:
-  postgres-data:
-    driver: local

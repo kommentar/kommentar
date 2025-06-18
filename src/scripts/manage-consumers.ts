@@ -1,13 +1,13 @@
-import { getConfigStaticEnv } from "../src/driven-adapters/config/static-env/index.js";
-import { getSecretStoreEnv } from "../src/driven-adapters/secrets/env/index.js";
-import { getRandomIdUuid } from "../src/driven-adapters/random-id/uuid/index.js";
-import { getDataStorePostgres } from "../src/driven-adapters/data-store/postgres/index.js";
+import { getConfigStaticEnv } from "../driven-adapters/config/static-env/index.js";
+import { getSecretStoreEnv } from "../driven-adapters/secrets/env/index.js";
+import { getRandomIdUuid } from "../driven-adapters/random-id/uuid/index.js";
+import { getDataStorePostgres } from "../driven-adapters/data-store/postgres/index.js";
 import {
   generateApiCredentials,
   hashApiSecret,
-} from "../src/app/domain/helpers/security/api-key-generator.js";
-import type { DataStore } from "../src/app/driven-ports/data-store.js";
-import type { RandomId } from "../src/app/driven-ports/random-id.js";
+} from "../app/domain/helpers/security/api-key-generator.js";
+import type { DataStore } from "../app/driven-ports/data-store.js";
+import type { RandomId } from "../app/driven-ports/random-id.js";
 
 type Command =
   | "create"
