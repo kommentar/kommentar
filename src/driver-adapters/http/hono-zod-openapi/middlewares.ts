@@ -95,8 +95,8 @@ const consumerAuthMiddleware: ConsumerAuthMiddleware = (dataStore) =>
         const allowedHosts = JSON.parse(consumer.allowedhosts) as string[];
         const requestPath = c.req.path;
 
-        // Extract hostId from the new URL structure: /hosts/{hostId}/...
-        const hostIdMatch = requestPath.match(/^\/hosts\/([^/]+)/);
+        // Extract hostId from the new URL structure: /api/hosts/{hostId}/...
+        const hostIdMatch = requestPath.match(/^\/api\/hosts\/([^/]+)/);
 
         if (hostIdMatch && allowedHosts.length > 0) {
           const requestedHostId = hostIdMatch[1];

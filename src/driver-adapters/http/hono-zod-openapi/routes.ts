@@ -14,7 +14,7 @@ const getCommentsForHostRoute = createRoute({
   description:
     "Retrieve all comments for a specific host. Requires API key and secret authentication.",
   method: "get",
-  path: "/hosts/{hostId}/comments",
+  path: "/api/hosts/{hostId}/comments",
   request: {
     params: GetCommentsByHostIdSchema.pathParams,
     headers: GetCommentsByHostIdSchema.headers,
@@ -47,7 +47,7 @@ const createCommentForHostRoute = createRoute({
   description:
     "Create a new comment for a specific host. Requires API key and secret authentication.",
   method: "post",
-  path: "/hosts/{hostId}/comments",
+  path: "/api/hosts/{hostId}/comments",
   request: {
     params: PostCommentByHostIdSchema.pathParams,
     headers: PostCommentByHostIdSchema.headers,
@@ -99,7 +99,7 @@ const updateCommentByIdRoute = createRoute({
   description:
     "Update an existing comment. Requires API key and secret authentication.",
   method: "put",
-  path: "/hosts/{hostId}/comments/{id}",
+  path: "/api/hosts/{hostId}/comments/{id}",
   request: {
     params: PutCommentByIdSchema.pathParams,
     headers: PutCommentByIdSchema.headers,
@@ -157,7 +157,7 @@ const deleteCommentByIdRoute = createRoute({
   description:
     "Delete an existing comment. Requires API key and secret authentication.",
   method: "delete",
-  path: "/hosts/{hostId}/comments/{id}",
+  path: "/api/hosts/{hostId}/comments/{id}",
   request: {
     params: DeleteCommentByIdSchema.pathParams,
     headers: DeleteCommentByIdSchema.headers,
@@ -202,7 +202,7 @@ const getConsumerByIdRoute = createRoute({
   description:
     "Retrieve consumer information by ID. Requires API key and secret authentication.",
   method: "get",
-  path: "/consumers/{id}",
+  path: "/api/consumers/{id}",
   request: {
     params: GetConsumerByIdSchema.pathParams,
     headers: GetConsumerByIdSchema.headers,
@@ -241,7 +241,7 @@ const createConsumerRoute = createRoute({
   description:
     "Create a new API consumer with generated credentials. Requires API key and secret authentication.",
   method: "post",
-  path: "/consumers",
+  path: "/api/consumers",
   request: {
     headers: PostConsumerSchema.headers,
     body: {
