@@ -4,11 +4,13 @@ import type { CustomError } from "../domain/entities/error.js";
 
 describe("getApp", () => {
   const mockDataStore = {
-    getAllCommentsByHostId: vi.fn(),
-    saveCommentByHostId: vi.fn(),
-    updateCommentById: vi.fn(),
-    deleteCommentById: vi.fn(),
-    getCommentById: vi.fn(),
+    comment: {
+      getAllCommentsByHostId: vi.fn(),
+      saveCommentByHostId: vi.fn(),
+      updateCommentById: vi.fn(),
+      deleteCommentById: vi.fn(),
+      getCommentById: vi.fn(),
+    },
     consumer: {
       getAll: vi.fn(),
       getById: vi.fn(),
@@ -82,11 +84,13 @@ describe("getApp", () => {
       },
     ];
 
-    mockDataStore.getAllCommentsByHostId.mockResolvedValue(storedComments);
+    mockDataStore.comment.getAllCommentsByHostId.mockResolvedValue(
+      storedComments,
+    );
 
     const result = await app.comment.getCommentsForHost({ hostId });
 
-    expect(mockDataStore.getAllCommentsByHostId).toHaveBeenCalledWith({
+    expect(mockDataStore.comment.getAllCommentsByHostId).toHaveBeenCalledWith({
       hostId,
     });
     expect(result).toEqual(comments);
@@ -111,7 +115,7 @@ describe("getApp", () => {
 
     const result = await app.comment.getCommentsForHost({ hostId });
 
-    expect(mockDataStore.getAllCommentsByHostId).not.toHaveBeenCalled();
+    expect(mockDataStore.comment.getAllCommentsByHostId).not.toHaveBeenCalled();
     expect(result).toEqual(cachedComments);
   });
 
@@ -136,7 +140,7 @@ describe("getApp", () => {
       },
     };
 
-    mockDataStore.saveCommentByHostId.mockResolvedValue(savedComment);
+    mockDataStore.comment.saveCommentByHostId.mockResolvedValue(savedComment);
 
     const result = await app.comment.createCommentForHost({
       hostId: "host1",
@@ -147,7 +151,7 @@ describe("getApp", () => {
       },
     });
 
-    expect(mockDataStore.saveCommentByHostId).toHaveBeenCalledWith({
+    expect(mockDataStore.comment.saveCommentByHostId).toHaveBeenCalledWith({
       hostId: "host1",
       content: "Nice place!",
       sessionId: "session1",
@@ -193,8 +197,8 @@ describe("getApp", () => {
       commenter_displayname: "John Doe",
     };
 
-    mockDataStore.updateCommentById.mockResolvedValue(updatedComment);
-    mockDataStore.getCommentById.mockResolvedValue(updatedComment);
+    mockDataStore.comment.updateCommentById.mockResolvedValue(updatedComment);
+    mockDataStore.comment.getCommentById.mockResolvedValue(updatedComment);
 
     const result = await app.comment.updateCommentById({
       id: "comment1",
@@ -202,7 +206,7 @@ describe("getApp", () => {
       sessionId: "session1",
     });
 
-    expect(mockDataStore.updateCommentById).toHaveBeenCalledWith({
+    expect(mockDataStore.comment.updateCommentById).toHaveBeenCalledWith({
       id: "comment1",
       content: "Updated content",
       sessionId: "session1",
@@ -224,8 +228,8 @@ describe("getApp", () => {
     const content = "Updated content";
     const sessionId = "session1";
     const updatedComment = { id, content, sessionid: sessionId };
-    mockDataStore.updateCommentById.mockResolvedValue(updatedComment);
-    mockDataStore.getCommentById.mockResolvedValue(updatedComment);
+    mockDataStore.comment.updateCommentById.mockResolvedValue(updatedComment);
+    mockDataStore.comment.getCommentById.mockResolvedValue(updatedComment);
 
     try {
       await app.comment.updateCommentById({
@@ -245,7 +249,7 @@ describe("getApp", () => {
     const id = "comment1";
     const content = "something bad";
     const sessionId = "session1";
-    mockDataStore.updateCommentById.mockResolvedValue({ id, content });
+    mockDataStore.comment.updateCommentById.mockResolvedValue({ id, content });
     mockProfanityClient.check.mockResolvedValue("PROFANE");
 
     try {
@@ -270,7 +274,7 @@ describe("getApp", () => {
       updatedat: new Date("2021-01-01"),
       commenter_displayname: "John Doe",
     };
-    mockDataStore.saveCommentByHostId.mockResolvedValue(savedComment);
+    mockDataStore.comment.saveCommentByHostId.mockResolvedValue(savedComment);
     await app.comment.createCommentForHost({
       hostId: "host1",
       content: "Nice place!",
@@ -280,14 +284,14 @@ describe("getApp", () => {
       },
     });
 
-    mockDataStore.deleteCommentById.mockResolvedValue(savedComment);
-    mockDataStore.getCommentById.mockResolvedValue(savedComment);
+    mockDataStore.comment.deleteCommentById.mockResolvedValue(savedComment);
+    mockDataStore.comment.getCommentById.mockResolvedValue(savedComment);
     await app.comment.deleteCommentById({
       id: "comment1",
       sessionId: "session1",
     });
 
-    expect(mockDataStore.deleteCommentById).toHaveBeenCalledWith({
+    expect(mockDataStore.comment.deleteCommentById).toHaveBeenCalledWith({
       id: "comment1",
       sessionId: "session1",
     });
@@ -298,7 +302,7 @@ describe("getApp", () => {
     const sessionId = "session1";
     const content = "Nice place!";
     const savedComment = { id, content, sessionid: sessionId };
-    mockDataStore.saveCommentByHostId.mockResolvedValue(savedComment);
+    mockDataStore.comment.saveCommentByHostId.mockResolvedValue(savedComment);
     await app.comment.createCommentForHost({
       hostId: "host1",
       content,
@@ -307,7 +311,7 @@ describe("getApp", () => {
     });
 
     try {
-      mockDataStore.getCommentById.mockResolvedValue(savedComment);
+      mockDataStore.comment.getCommentById.mockResolvedValue(savedComment);
       await app.comment.deleteCommentById({ id, sessionId: "invalid" });
     } catch (error) {
       const e = error as CustomError;

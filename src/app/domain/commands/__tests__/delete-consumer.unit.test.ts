@@ -7,11 +7,13 @@ describe("commandDeleteConsumer", () => {
     const date = new Date();
 
     const mockDataStore: DataStore = {
-      getCommentById: vi.fn(),
-      getAllCommentsByHostId: vi.fn(),
-      deleteCommentById: vi.fn(),
-      updateCommentById: vi.fn(),
-      saveCommentByHostId: vi.fn(),
+      comment: {
+        getCommentById: vi.fn(),
+        getAllCommentsByHostId: vi.fn(),
+        deleteCommentById: vi.fn(),
+        updateCommentById: vi.fn(),
+        saveCommentByHostId: vi.fn(),
+      },
       consumer: {
         save: vi.fn(),
         getById: vi.fn().mockResolvedValue({
@@ -54,12 +56,8 @@ describe("commandDeleteConsumer", () => {
       name: "Test Consumer",
       description: "This is a test consumer",
       apiKey: "c59b8f26-9f3c-42db-abf3-f265b612a2b9",
-      apiSecret: "secret",
-      allowedHosts: [],
       isActive: true,
       rateLimit: 200,
-      createdAt: date,
-      updatedAt: date,
     });
   });
 });

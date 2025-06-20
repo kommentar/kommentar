@@ -26,77 +26,79 @@ type StoredConsumer = {
 };
 
 type DataStore = {
-  /**
-   * Get all comments by host identifier
-   *
-   * @param hostId - Unique identifier of the host, where the comments are placed
-   * @returns List of comments
-   */
-  getAllCommentsByHostId: ({
-    hostId,
-  }: {
-    hostId: Comment["hostId"];
-  }) => Promise<StoredComment[]>;
+  comment: {
+    /**
+     * Get all comments by host identifier
+     *
+     * @param hostId - Unique identifier of the host, where the comments are placed
+     * @returns List of comments
+     */
+    getAllCommentsByHostId: ({
+      hostId,
+    }: {
+      hostId: Comment["hostId"];
+    }) => Promise<StoredComment[]>;
 
-  /**
-   * Save a new comment by host identifier
-   *
-   * @param hostId - Unique identifier of the host, where the comment is placed
-   * @param content - Content of the comment
-   * @param sessionId - Unique identifier of the session
-   * @param commenter - Commenter information
-   * @returns The saved comment
-   */
-  saveCommentByHostId: ({
-    hostId,
-    content,
-    sessionId,
-    commenter,
-  }: {
-    hostId: Comment["hostId"];
-    content: Comment["content"];
-    sessionId: Comment["sessionId"];
-    commenter: Comment["commenter"];
-  }) => Promise<StoredComment>;
+    /**
+     * Save a new comment by host identifier
+     *
+     * @param hostId - Unique identifier of the host, where the comment is placed
+     * @param content - Content of the comment
+     * @param sessionId - Unique identifier of the session
+     * @param commenter - Commenter information
+     * @returns The saved comment
+     */
+    saveCommentByHostId: ({
+      hostId,
+      content,
+      sessionId,
+      commenter,
+    }: {
+      hostId: Comment["hostId"];
+      content: Comment["content"];
+      sessionId: Comment["sessionId"];
+      commenter: Comment["commenter"];
+    }) => Promise<StoredComment>;
 
-  /**
-   * Update a comment by identifier
-   *
-   * @param id - Unique identifier of the comment
-   * @param content - New content of the comment
-   * @returns The updated comment
-   */
-  updateCommentById: ({
-    id,
-    content,
-    sessionId,
-  }: {
-    id: Comment["id"];
-    content: Comment["content"];
-    sessionId: Comment["sessionId"];
-  }) => Promise<StoredComment>;
+    /**
+     * Update a comment by identifier
+     *
+     * @param id - Unique identifier of the comment
+     * @param content - New content of the comment
+     * @returns The updated comment
+     */
+    updateCommentById: ({
+      id,
+      content,
+      sessionId,
+    }: {
+      id: Comment["id"];
+      content: Comment["content"];
+      sessionId: Comment["sessionId"];
+    }) => Promise<StoredComment>;
 
-  /**
-   * Delete a comment by identifier
-   *
-   * @param id - Unique identifier of the comment
-   */
-  deleteCommentById: ({
-    id,
-    sessionId,
-  }: {
-    id: Comment["id"];
-    sessionId: Comment["sessionId"];
-  }) => Promise<StoredComment>;
+    /**
+     * Delete a comment by identifier
+     *
+     * @param id - Unique identifier of the comment
+     */
+    deleteCommentById: ({
+      id,
+      sessionId,
+    }: {
+      id: Comment["id"];
+      sessionId: Comment["sessionId"];
+    }) => Promise<StoredComment>;
 
-  /**
-   * Get a comment by identifier and session identifier
-   *
-   * @param id - Unique identifier of the comment
-   * @param sessionId - Unique identifier of the session
-   * @returns The comment
-   */
-  getCommentById: ({ id }: { id: Comment["id"] }) => Promise<StoredComment>;
+    /**
+     * Get a comment by identifier and session identifier
+     *
+     * @param id - Unique identifier of the comment
+     * @param sessionId - Unique identifier of the session
+     * @returns The comment
+     */
+    getCommentById: ({ id }: { id: Comment["id"] }) => Promise<StoredComment>;
+  };
 
   consumer: {
     /**

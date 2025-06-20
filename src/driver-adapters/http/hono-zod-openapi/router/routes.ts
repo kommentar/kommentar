@@ -6,7 +6,7 @@ import {
   PostCommentByHostIdSchema,
   PutCommentByIdSchema,
   PostConsumerSchema,
-} from "./zod-schemas.js";
+} from "../zod-schemas.js";
 
 const getCommentsForHostRoute = createRoute({
   tags: ["Comments"],

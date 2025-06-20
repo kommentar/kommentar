@@ -5,11 +5,13 @@ import type { DataStore } from "../../../driven-ports/data-store.js";
 describe("commandCreateConsumer", () => {
   it("should save a consumer and return it", async () => {
     const mockDataStore: DataStore = {
-      getCommentById: vi.fn(),
-      getAllCommentsByHostId: vi.fn(),
-      deleteCommentById: vi.fn(),
-      updateCommentById: vi.fn(),
-      saveCommentByHostId: vi.fn(),
+      comment: {
+        getCommentById: vi.fn(),
+        getAllCommentsByHostId: vi.fn(),
+        deleteCommentById: vi.fn(),
+        updateCommentById: vi.fn(),
+        saveCommentByHostId: vi.fn(),
+      },
       consumer: {
         save: vi.fn().mockResolvedValue({
           id: "1",
