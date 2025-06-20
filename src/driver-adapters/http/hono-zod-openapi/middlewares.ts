@@ -1,15 +1,18 @@
-import type { MiddlewareHandler } from "hono";
+import type { Context, MiddlewareHandler } from "hono";
 import { createMiddleware } from "hono/factory";
 import type { RandomId } from "../../../app/driven-ports/random-id.js";
 import { getCookie, setCookie } from "hono/cookie";
 import { rateLimiter } from "hono-rate-limiter";
 import { getConnInfo } from "@hono/node-server/conninfo";
-import type { DataStore } from "../../../app/driven-ports/data-store.js";
+import type {
+  DataStore,
+  StoredConsumer,
+} from "../../../app/driven-ports/data-store.js";
 import { verifyApiSecret } from "../../../app/domain/helpers/security/api-key-generator.js";
+import type { CustomHonoEnv } from "./app.js";
 
 type SessionMiddleware = (randomId: RandomId) => MiddlewareHandler;
 type ConsumerAuthMiddleware = (dataStore: DataStore) => MiddlewareHandler;
-type ConsumerRateLimitMiddleware = () => MiddlewareHandler;
 
 const sessionMiddleware: SessionMiddleware = (randomId) =>
   createMiddleware(async (c, next) => {
@@ -69,7 +72,7 @@ const consumerAuthMiddleware: ConsumerAuthMiddleware = (dataStore) =>
         );
       }
 
-      if (!consumer.isactive) {
+      if (!consumer.is_active) {
         return c.json(
           {
             error: "Consumer inactive",
@@ -80,7 +83,7 @@ const consumerAuthMiddleware: ConsumerAuthMiddleware = (dataStore) =>
       }
 
       // Verify API secret
-      if (!verifyApiSecret(apiSecret, consumer.apisecret)) {
+      if (!verifyApiSecret(apiSecret, consumer.api_secret)) {
         return c.json(
           {
             error: "Invalid API secret",
@@ -91,8 +94,8 @@ const consumerAuthMiddleware: ConsumerAuthMiddleware = (dataStore) =>
       }
 
       // Check host restrictions if configured
-      if (consumer.allowedhosts) {
-        const allowedHosts = JSON.parse(consumer.allowedhosts) as string[];
+      if (consumer.allowed_hosts) {
+        const allowedHosts = JSON.parse(consumer.allowed_hosts) as string[];
         const requestPath = c.req.path;
 
         // Extract hostId from the new URL structure: /api/hosts/{hostId}/...
@@ -127,24 +130,23 @@ const consumerAuthMiddleware: ConsumerAuthMiddleware = (dataStore) =>
     }
   });
 
-const consumerRateLimitMiddleware: ConsumerRateLimitMiddleware = () =>
-  createMiddleware(async (c, next) => {
-    const consumer = c.get("consumer");
-
-    if (consumer?.ratelimit) {
-      // Create dynamic rate limiter for this consumer
-      const consumerRateLimit = rateLimiter({
-        windowMs: 60 * 1000,
-        limit: consumer.ratelimit,
-        standardHeaders: "draft-6",
-        keyGenerator: () => `consumer:${consumer.id}`,
-      });
-
-      return consumerRateLimit(c, next);
+const consumerRateLimitMiddleware = rateLimiter({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  limit: (c: Context<CustomHonoEnv>) => {
+    const consumer = c.get("consumer") as StoredConsumer | undefined;
+    if (consumer) {
+      return consumer.rate_limit === 0 ? 1000 : Number(consumer.rate_limit);
     }
 
-    await next();
-  });
+    // Default rate limit if not set
+    return 100;
+  },
+  standardHeaders: "draft-6",
+  keyGenerator: (c: Context<CustomHonoEnv>) => {
+    const consumer = c.get("consumer") as StoredConsumer | undefined;
+    return consumer ? `consumer:${consumer.id}` : "anonymous";
+  },
+});
 
 export {
   sessionMiddleware,
