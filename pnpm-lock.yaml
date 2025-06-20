@@ -7,19 +7,19 @@ settings:
 dependencies:
   "@hono/node-server":
     specifier: ^1.14.4
-    version: 1.14.4(hono@4.7.11)
+    version: 1.14.4(hono@4.8.1)
   "@hono/zod-openapi":
     specifier: ^0.16.4
-    version: 0.16.4(hono@4.7.11)(zod@3.25.64)
+    version: 0.16.4(hono@4.8.1)(zod@3.25.64)
   "@scalar/hono-api-reference":
     specifier: ^0.9.4
-    version: 0.9.4(hono@4.7.11)
+    version: 0.9.4(hono@4.8.1)
   hono:
-    specifier: ^4.7.11
-    version: 4.7.11
+    specifier: ^4.8.1
+    version: 4.8.1
   hono-rate-limiter:
     specifier: ^0.4.2
-    version: 0.4.2(hono@4.7.11)
+    version: 0.4.2(hono@4.8.1)
   pg:
     specifier: ^8.16.0
     version: 8.16.0
@@ -1066,7 +1066,7 @@ packages:
       levn: 0.4.1
     dev: true
 
-  /@hono/node-server@1.14.4(hono@4.7.11):
+  /@hono/node-server@1.14.4(hono@4.8.1):
     resolution:
       {
         integrity: sha512-DnxpshhYewr2q9ZN8ez/M5mmc3sucr8CT1sIgIy1bkeUXut9XWDkqHoFHRhWIQgkYnKpVRxunyhK7WzpJeJ6qQ==,
@@ -1075,10 +1075,10 @@ packages:
     peerDependencies:
       hono: ^4
     dependencies:
-      hono: 4.7.11
+      hono: 4.8.1
     dev: false
 
-  /@hono/zod-openapi@0.16.4(hono@4.7.11)(zod@3.25.64):
+  /@hono/zod-openapi@0.16.4(hono@4.8.1)(zod@3.25.64):
     resolution:
       {
         integrity: sha512-mnF6GthBaKex0D5PsY/4lYNtkaGJNE38bjeUI//EUqq7Ee4TNm2su35IUiFH4HcmJp5fWYMLyOJOpjnkClzEGw==,
@@ -1089,12 +1089,12 @@ packages:
       zod: 3.*
     dependencies:
       "@asteasolutions/zod-to-openapi": 7.3.4(zod@3.25.64)
-      "@hono/zod-validator": 0.3.0(hono@4.7.11)(zod@3.25.64)
-      hono: 4.7.11
+      "@hono/zod-validator": 0.3.0(hono@4.8.1)(zod@3.25.64)
+      hono: 4.8.1
       zod: 3.25.64
     dev: false
 
-  /@hono/zod-validator@0.3.0(hono@4.7.11)(zod@3.25.64):
+  /@hono/zod-validator@0.3.0(hono@4.8.1)(zod@3.25.64):
     resolution:
       {
         integrity: sha512-7XcTk3yYyk6ldrO/VuqsroE7stvDZxHJQcpATRAyha8rUxJNBPV3+6waDrARfgEqxOVlzIadm3/6sE/dPseXgQ==,
@@ -1103,7 +1103,7 @@ packages:
       hono: ">=3.9.0"
       zod: ^3.19.1
     dependencies:
-      hono: 4.7.11
+      hono: 4.8.1
       zod: 3.25.64
     dev: false
 
@@ -1496,7 +1496,7 @@ packages:
       "@scalar/types": 0.2.3
     dev: false
 
-  /@scalar/hono-api-reference@0.9.4(hono@4.7.11):
+  /@scalar/hono-api-reference@0.9.4(hono@4.8.1):
     resolution:
       {
         integrity: sha512-pAUWS8MRGcS5VjMjAVd6DrhST63NpVXGel2BbYsKPQAaONwwA3hU30fAFxSs3PUGA8M7q+e76F6w4ALBtHxLRA==,
@@ -1506,7 +1506,7 @@ packages:
       hono: ^4.0.0
     dependencies:
       "@scalar/core": 0.3.3
-      hono: 4.7.11
+      hono: 4.8.1
     dev: false
 
   /@scalar/openapi-types@0.3.3:
@@ -2910,7 +2910,7 @@ packages:
     engines: { node: ">=8" }
     dev: true
 
-  /hono-rate-limiter@0.4.2(hono@4.7.11):
+  /hono-rate-limiter@0.4.2(hono@4.8.1):
     resolution:
       {
         integrity: sha512-AAtFqgADyrmbDijcRTT/HJfwqfvhalya2Zo+MgfdrMPas3zSMD8SU03cv+ZsYwRU1swv7zgVt0shwN059yzhjw==,
@@ -2918,13 +2918,13 @@ packages:
     peerDependencies:
       hono: ^4.1.1
     dependencies:
-      hono: 4.7.11
+      hono: 4.8.1
     dev: false
 
-  /hono@4.7.11:
+  /hono@4.8.1:
     resolution:
       {
-        integrity: sha512-rv0JMwC0KALbbmwJDEnxvQCeJh+xbS3KEWW5PC9cMJ08Ur9xgatI0HmtgYZfOdOSOeYsp5LO2cOhdI8cLEbDEQ==,
+        integrity: sha512-ErA2ifywnSmcnB5XDuFqGDfXJ9xuAJR2C/8cZAk6vDaOCzofB8eNlha/wZWIiamREzWk94S9Z7wHsnKQHn7Niw==,
       }
     engines: { node: ">=16.9.0" }
     dev: false
