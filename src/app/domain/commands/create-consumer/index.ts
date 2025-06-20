@@ -29,13 +29,13 @@ const commandCreateConsumer: CommandCreateConsumer = (dataStore) => {
       id: savedConsumer.id,
       name: savedConsumer.name,
       description: savedConsumer.description,
-      apiKey: savedConsumer.apikey,
+      apiKey: savedConsumer.api_key,
       apiSecret: apiSecret, // Return unhashed secret
-      allowedHosts: savedConsumer.allowedhosts
-        ? JSON.parse(savedConsumer.allowedhosts)
+      allowedHosts: savedConsumer.allowed_hosts
+        ? JSON.parse(savedConsumer.allowed_hosts)
         : [],
-      isActive: savedConsumer.isactive,
-      rateLimit: savedConsumer.ratelimit,
+      isActive: savedConsumer.is_active,
+      rateLimit: savedConsumer.rate_limit,
     };
   };
 };

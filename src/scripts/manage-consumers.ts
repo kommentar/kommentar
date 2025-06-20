@@ -125,13 +125,13 @@ async function createConsumer(dataStore: DataStore, randomId: RandomId) {
   }
 
   // Parse options
-  const description = getArgValue("--description");
+  const description = getArgValue("--description") || "";
   const hostsArg = getArgValue("--hosts");
   const rateLimitArg = getArgValue("--rate-limit");
   const isInactive = hasArg("--inactive");
 
   const allowedHosts = hostsArg ? hostsArg.split(",").map((h) => h.trim()) : [];
-  const rateLimit = rateLimitArg ? parseInt(rateLimitArg, 10) : undefined;
+  const rateLimit = rateLimitArg ? parseInt(rateLimitArg, 10) : 0;
 
   if (rateLimitArg && isNaN(rateLimit!)) {
     console.log("❌ Rate limit must be a valid number");
@@ -161,21 +161,21 @@ async function createConsumer(dataStore: DataStore, randomId: RandomId) {
   console.log(`   ID: ${savedConsumer.id}`);
   console.log(`   Name: ${savedConsumer.name}`);
   console.log(`   Description: ${savedConsumer.description || "None"}`);
-  console.log(`   Active: ${savedConsumer.isactive}`);
+  console.log(`   Active: ${savedConsumer.is_active}`);
   console.log(
-    `   Rate Limit: ${savedConsumer.ratelimit || "Default (25/min)"}`,
+    `   Rate Limit: ${savedConsumer.rate_limit || "Default (25/min)"}`,
   );
   console.log(
-    `   Allowed Hosts: ${savedConsumer.allowedhosts ? JSON.parse(savedConsumer.allowedhosts).join(", ") : "All hosts"}`,
+    `   Allowed Hosts: ${savedConsumer.allowed_hosts ? JSON.parse(savedConsumer.allowed_hosts).join(", ") : "All hosts"}`,
   );
   console.log("");
   console.log("🔐 API Credentials (SAVE THESE - they won't be shown again):");
-  console.log(`   API Key: ${savedConsumer.apikey}`);
+  console.log(`   API Key: ${savedConsumer.api_key}`);
   console.log(`   API Secret: ${apiSecret}`);
   console.log("");
   console.log("🧪 Test with:");
   console.log(
-    `   curl -H "X-API-Key: ${savedConsumer.apikey}" -H "X-API-Secret: ${apiSecret}" http://localhost:3000/hosts/test/comments`,
+    `   curl -H "X-API-Key: ${savedConsumer.api_key}" -H "X-API-Secret: ${apiSecret}" http://localhost:3000/hosts/test/comments`,
   );
 }
 
@@ -193,10 +193,10 @@ async function listConsumers(dataStore: DataStore) {
     consumers.forEach((consumer) => {
       console.log(`- ID: ${consumer.id}`);
       console.log(`  Name: ${consumer.name}`);
-      console.log(`  Active: ${consumer.isactive}`);
-      console.log(`  Rate Limit: ${consumer.ratelimit || "Default (25/min)"}`);
+      console.log(`  Active: ${consumer.is_active}`);
+      console.log(`  Rate Limit: ${consumer.rate_limit || "Default (25/min)"}`);
       console.log(
-        `  Allowed Hosts: ${consumer.allowedhosts ? JSON.parse(consumer.allowedhosts).join(", ") : "All hosts"}`,
+        `  Allowed Hosts: ${consumer.allowed_hosts ? JSON.parse(consumer.allowed_hosts).join(", ") : "All hosts"}`,
       );
       console.log("");
     });
@@ -222,14 +222,14 @@ async function showConsumer(dataStore: DataStore) {
     console.log(`   ID: ${consumer.id}`);
     console.log(`   Name: ${consumer.name}`);
     console.log(`   Description: ${consumer.description || "None"}`);
-    console.log(`   Active: ${consumer.isactive}`);
-    console.log(`   Rate Limit: ${consumer.ratelimit || "Default (25/min)"}`);
+    console.log(`   Active: ${consumer.is_active}`);
+    console.log(`   Rate Limit: ${consumer.rate_limit || "Default (25/min)"}`);
     console.log(
-      `   Allowed Hosts: ${consumer.allowedhosts ? JSON.parse(consumer.allowedhosts).join(", ") : "All hosts"}`,
+      `   Allowed Hosts: ${consumer.allowed_hosts ? JSON.parse(consumer.allowed_hosts).join(", ") : "All hosts"}`,
     );
-    console.log(`   API Key: ${consumer.apikey}`);
-    console.log(`   Created: ${consumer.createdat}`);
-    console.log(`   Updated: ${consumer.updatedat}`);
+    console.log(`   API Key: ${consumer.api_key}`);
+    console.log(`   Created: ${consumer.created_at}`);
+    console.log(`   Updated: ${consumer.updated_at}`);
     console.log("");
     console.log(
       "⚠️  API Secret is hashed and cannot be displayed. If lost, create a new consumer.",
@@ -260,13 +260,13 @@ async function toggleConsumer(dataStore: DataStore, activate: boolean) {
       id: consumer.id,
       name: consumer.name,
       description: consumer.description,
-      apiKey: consumer.apikey,
-      apiSecret: consumer.apisecret,
-      allowedHosts: consumer.allowedhosts
-        ? JSON.parse(consumer.allowedhosts)
-        : undefined,
+      apiKey: consumer.api_key,
+      apiSecret: consumer.api_secret,
+      allowedHosts: consumer.allowed_hosts
+        ? JSON.parse(consumer.allowed_hosts)
+        : [],
       isActive: activate,
-      rateLimit: consumer.ratelimit,
+      rateLimit: consumer.rate_limit,
     };
 
     await dataStore.consumer.update({ consumer: updatedConsumer });

@@ -9,7 +9,7 @@ type Commenter = {
    * Real name of the commenter
    * @example "Safwan Parkar"
    */
-  realName?: string;
+  realName: string;
 };
 
 type Comment = {

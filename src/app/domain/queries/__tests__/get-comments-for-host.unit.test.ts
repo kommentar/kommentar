@@ -39,18 +39,20 @@ describe("queryGetCommentsForHost", () => {
       {
         id: "1",
         content: "First comment",
-        hostid: "1",
-        createdat: new Date("2021-01-01"),
-        updatedat: new Date("2021-01-01"),
-        commenter_displayname: "John Doe",
+        host_id: "1",
+        created_at: new Date("2021-01-01"),
+        updated_at: new Date("2021-01-01"),
+        commenter_display_name: "John Doe",
+        commenter_real_name: "",
       },
       {
         id: "2",
         content: "Second comment",
-        hostid: "1",
-        createdat: new Date("2021-01-02"),
-        updatedat: new Date("2021-01-02"),
-        commenter_displayname: "Jane Doe",
+        host_id: "1",
+        created_at: new Date("2021-01-02"),
+        updated_at: new Date("2021-01-02"),
+        commenter_display_name: "Jane Doe",
+        commenter_real_name: "",
       },
     ];
 
@@ -87,6 +89,7 @@ describe("queryGetCommentsForHost", () => {
         updatedAt: new Date("2021-01-01"),
         commenter: {
           displayName: "John Doe",
+          realName: "",
         },
       },
       {
@@ -97,6 +100,7 @@ describe("queryGetCommentsForHost", () => {
         updatedAt: new Date("2021-01-02"),
         commenter: {
           displayName: "Jane Doe",
+          realName: "",
         },
       },
     ]);

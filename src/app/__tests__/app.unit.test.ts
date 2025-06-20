@@ -64,11 +64,12 @@ describe("getApp", () => {
       {
         id: "comment1",
         content: "Nice place!",
-        hostid: hostId,
-        sessionid: "session1",
-        createdat: new Date("2021-01-01"),
-        updatedat: new Date("2021-01-01"),
-        commenter_displayname: "John Doe",
+        host_id: hostId,
+        session_id: "session1",
+        created_at: new Date("2021-01-01"),
+        updated_at: new Date("2021-01-01"),
+        commenter_display_name: "John Doe",
+        commenter_real_name: "",
       },
     ];
     const comments = [
@@ -80,6 +81,7 @@ describe("getApp", () => {
         updatedAt: new Date("2021-01-01"),
         commenter: {
           displayName: "John Doe",
+          realName: "",
         },
       },
     ];
@@ -123,11 +125,12 @@ describe("getApp", () => {
     const savedComment = {
       id: "comment1",
       content: "Nice place!",
-      hostid: "host1",
-      sessionid: "session1",
-      createdat: new Date("2021-01-01"),
-      updatedat: new Date("2021-01-01"),
-      commenter_displayname: "John Doe",
+      host_id: "host1",
+      session_id: "session1",
+      created_at: new Date("2021-01-01"),
+      updated_at: new Date("2021-01-01"),
+      commenter_display_name: "John Doe",
+      commenter_real_name: "",
     };
     const comment = {
       id: "comment1",
@@ -137,6 +140,7 @@ describe("getApp", () => {
       updatedAt: new Date("2021-01-01"),
       commenter: {
         displayName: "John Doe",
+        realName: "",
       },
     };
 
@@ -148,6 +152,7 @@ describe("getApp", () => {
       sessionId: "session1",
       commenter: {
         displayName: "John Doe",
+        realName: "",
       },
     });
 
@@ -157,6 +162,7 @@ describe("getApp", () => {
       sessionId: "session1",
       commenter: {
         displayName: "John Doe",
+        realName: "",
       },
     });
     expect(result).toEqual(comment);
@@ -174,6 +180,7 @@ describe("getApp", () => {
         sessionId: "session1",
         commenter: {
           displayName: "John Doe",
+          realName: "",
         },
       });
     } catch (error) {
@@ -190,11 +197,12 @@ describe("getApp", () => {
     const updatedComment = {
       id: "comment1",
       content: "Updated content",
-      hostid: "host1",
-      sessionid: "session1",
-      createdat: new Date("2021-01-01"),
-      updatedat: new Date("2021-01-01"),
-      commenter_displayname: "John Doe",
+      host_id: "host1",
+      session_id: "session1",
+      created_at: new Date("2021-01-01"),
+      updated_at: new Date("2021-01-01"),
+      commenter_display_name: "John Doe",
+      commenter_real_name: "",
     };
 
     mockDataStore.comment.updateCommentById.mockResolvedValue(updatedComment);
@@ -214,11 +222,12 @@ describe("getApp", () => {
     expect(result).toEqual({
       id: updatedComment.id,
       content: updatedComment.content,
-      hostId: updatedComment.hostid,
-      updatedAt: updatedComment.updatedat,
-      createdAt: updatedComment.createdat,
+      hostId: updatedComment.host_id,
+      updatedAt: updatedComment.updated_at,
+      createdAt: updatedComment.created_at,
       commenter: {
-        displayName: updatedComment.commenter_displayname,
+        displayName: updatedComment.commenter_display_name,
+        realName: updatedComment.commenter_real_name,
       },
     });
   });
@@ -268,11 +277,12 @@ describe("getApp", () => {
     const savedComment = {
       id: "comment1",
       content: "Nice place!",
-      hostid: "host1",
-      sessionid: "session1",
-      createdat: new Date("2021-01-01"),
-      updatedat: new Date("2021-01-01"),
-      commenter_displayname: "John Doe",
+      host_id: "host1",
+      session_id: "session1",
+      created_at: new Date("2021-01-01"),
+      updated_at: new Date("2021-01-01"),
+      commenter_display_name: "John Doe",
+      commenter_real_name: "",
     };
     mockDataStore.comment.saveCommentByHostId.mockResolvedValue(savedComment);
     await app.comment.createCommentForHost({
@@ -281,6 +291,7 @@ describe("getApp", () => {
       sessionId: "session1",
       commenter: {
         displayName: "John Doe",
+        realName: "",
       },
     });
 
@@ -307,7 +318,7 @@ describe("getApp", () => {
       hostId: "host1",
       content,
       sessionId,
-      commenter: { displayName: "John Doe" },
+      commenter: { displayName: "John Doe", realName: "" },
     });
 
     try {

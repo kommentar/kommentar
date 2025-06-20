@@ -20,7 +20,7 @@ const commandDeleteComment: CommandDeleteComment = (dataStore) => {
       throw errors.domain.commentNotFound;
     }
 
-    if (commentExists.sessionid !== sessionId) {
+    if (commentExists.session_id !== sessionId) {
       throw errors.domain.unauthorized;
     }
 
@@ -32,13 +32,13 @@ const commandDeleteComment: CommandDeleteComment = (dataStore) => {
     return {
       id: deletedComment.id,
       content: deletedComment.content,
-      hostId: deletedComment.hostid,
-      createdAt: deletedComment.createdat,
-      updatedAt: deletedComment.updatedat,
-      sessionId: deletedComment.sessionid,
+      hostId: deletedComment.host_id,
+      createdAt: deletedComment.created_at,
+      updatedAt: deletedComment.updated_at,
+      sessionId: deletedComment.session_id,
       commenter: {
-        displayName: deletedComment.commenter_displayname,
-        realName: deletedComment.commenter_realname,
+        displayName: deletedComment.commenter_display_name,
+        realName: deletedComment.commenter_real_name,
       },
     };
   };

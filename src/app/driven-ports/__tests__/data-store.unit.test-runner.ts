@@ -13,6 +13,7 @@ const mockComments: Comment[] = [
     sessionId: "session1",
     commenter: {
       displayName: "Commenter 1",
+      realName: "Real Name 1",
     },
   },
   {
@@ -24,6 +25,7 @@ const mockComments: Comment[] = [
     sessionId: "session1",
     commenter: {
       displayName: "Commenter 2",
+      realName: "Real Name 2",
     },
   },
 ];
@@ -36,110 +38,116 @@ const mockComment = {
 
 const runDataStoreTests = (dataStore: DataStore) => {
   beforeAll(async () => {
-    await dataStore.saveCommentByHostId({
+    await dataStore.comment.saveCommentByHostId({
       hostId: "host1",
       content: "First comment",
       sessionId: "session1",
       commenter: {
         displayName: "Commenter 1",
+        realName: "Real Name 1",
       },
     });
 
-    await dataStore.saveCommentByHostId({
+    await dataStore.comment.saveCommentByHostId({
       hostId: "host1",
       content: "Second comment",
       sessionId: "session1",
       commenter: {
         displayName: "Commenter 2",
+        realName: "Real Name 2",
       },
     });
   });
 
   describe("DataStore Port Tests", () => {
     it("should get all comments by host identifier", async () => {
-      const comments = await dataStore.getAllCommentsByHostId({
+      const comments = await dataStore.comment.getAllCommentsByHostId({
         hostId: "host1",
       });
 
       comments.map((comment, index) => {
         expect(comment.id).toBeTypeOf("string");
-        expect(comment.hostid).toBe(mockComments[index].hostId);
+        expect(comment.host_id).toBe(mockComments[index].hostId);
         expect(comment.content).toBe(mockComments[index].content);
       });
     });
 
     it("should save a new comment by host identifier", async () => {
-      const savedComment = await dataStore.saveCommentByHostId({
+      const savedComment = await dataStore.comment.saveCommentByHostId({
         hostId: "host2",
         content: "New comment",
         sessionId: "session1",
         commenter: {
           displayName: "Commenter 3",
+          realName: "Real Name 3",
         },
       });
 
       expect(savedComment.id).toBeTypeOf("string");
-      expect(savedComment.hostid).toBe(mockComment.hostId);
+      expect(savedComment.host_id).toBe(mockComment.hostId);
       expect(savedComment.content).toBe(mockComment.content);
     });
 
     it("should update a comment by identifier", async () => {
-      const commentToUpdate = await dataStore.saveCommentByHostId({
+      const commentToUpdate = await dataStore.comment.saveCommentByHostId({
         hostId: "host2",
         content: "New comment to update",
         sessionId: "session1",
         commenter: {
           displayName: "Commenter 4",
+          realName: "Real Name 4",
         },
       });
 
-      const updatedComment = await dataStore.updateCommentById({
+      const updatedComment = await dataStore.comment.updateCommentById({
         id: commentToUpdate.id,
         content: "Updated comment",
         sessionId: "session1",
       });
 
       expect(updatedComment.id).toBe(commentToUpdate.id);
-      expect(updatedComment.hostid).toBe(commentToUpdate.hostid);
+      expect(updatedComment.host_id).toBe(commentToUpdate.host_id);
       expect(updatedComment.content).toBe("Updated comment");
     });
 
     it("should delete a comment by identifier", async () => {
-      const commentToDelete = await dataStore.saveCommentByHostId({
+      const commentToDelete = await dataStore.comment.saveCommentByHostId({
         hostId: "host2",
         content: "New comment to delete",
         sessionId: "session1",
         commenter: {
           displayName: "Commenter 5",
+          realName: "Real Name 5",
         },
       });
 
-      const deletedComment = await dataStore.deleteCommentById({
+      const deletedComment = await dataStore.comment.deleteCommentById({
         id: commentToDelete.id,
         sessionId: "session1",
       });
 
       expect(deletedComment.id).toBe(commentToDelete.id);
-      expect(deletedComment.hostid).toBe(commentToDelete.hostid);
+      expect(deletedComment.host_id).toBe(commentToDelete.host_id);
       expect(deletedComment.content).toBe(commentToDelete.content);
     });
 
     it("should get a comment by identifier", async () => {
-      const commentToGet = await dataStore.saveCommentByHostId({
+      const commentToGet = await dataStore.comment.saveCommentByHostId({
         hostId: "host2",
         content: "New comment to get",
         sessionId: "session1",
         commenter: {
           displayName: "Commenter 6",
+          realName: "Real Name 6",
         },
       });
 
-      const gottenComment = await dataStore.getCommentById({
+      const gottenComment = await dataStore.comment.getCommentById({
         id: commentToGet.id,
       });
 
       expect(gottenComment.id).toBe(commentToGet.id);
-      expect(gottenComment.hostid).toBe(commentToGet.hostid);
+      expect(gottenComment.host_id).toBe(commentToGet.host_id);
       expect(gottenComment.content).toBe(commentToGet.content);
     });
 

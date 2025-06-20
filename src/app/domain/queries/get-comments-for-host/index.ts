@@ -14,12 +14,12 @@ const queryGetCommentsForHost: QueryGetCommentsForHost = (dataStore) => {
     return savedComments.map((comment) => ({
       id: comment.id,
       content: comment.content,
-      hostId: comment.hostid,
-      createdAt: comment.createdat,
-      updatedAt: comment.updatedat,
+      hostId: comment.host_id,
+      createdAt: comment.created_at,
+      updatedAt: comment.updated_at,
       commenter: {
-        displayName: comment.commenter_displayname,
-        realName: comment.commenter_realname,
+        displayName: comment.commenter_display_name,
+        realName: comment.commenter_real_name,
       },
     }));
   };

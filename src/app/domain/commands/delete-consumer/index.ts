@@ -22,9 +22,9 @@ const commandDeleteConsumer: CommandDeleteConsumer = (dataStore) => {
       id: deletedConsumer.id,
       name: deletedConsumer.name,
       description: deletedConsumer.description ?? "",
-      apiKey: deletedConsumer.apikey,
-      isActive: deletedConsumer.isactive,
-      rateLimit: deletedConsumer.ratelimit,
+      apiKey: deletedConsumer.api_key,
+      isActive: deletedConsumer.is_active,
+      rateLimit: deletedConsumer.rate_limit,
     };
   };
 };

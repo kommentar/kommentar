@@ -7,7 +7,7 @@ import { errors } from "../../../../app/domain/entities/error.js";
 
 const createMigrationsTableIfNotPresent = async (client: PoolClient) => {
   await client.query(`
-    CREATE TABLE IF NOT EXISTS schema_migrations (
+    CREATE TABLE IF NOT EXISTS kommentar_schema_migrations (
       id varchar(255) PRIMARY KEY,
       name varchar(255) NOT NULL,
       applied_at timestamp NOT NULL DEFAULT NOW()
@@ -17,14 +17,14 @@ const createMigrationsTableIfNotPresent = async (client: PoolClient) => {
 
 const getAppliedMigrations = async (client: PoolClient): Promise<string[]> => {
   const result = await client.query(
-    "SELECT id FROM schema_migrations ORDER BY applied_at ASC",
+    "SELECT id FROM kommentar_schema_migrations ORDER BY applied_at ASC",
   );
   return result.rows.map((row: MigrationRecord) => row.id);
 };
 
 const recordMigration = async (client: PoolClient, migration: Migration) => {
   await client.query(
-    "INSERT INTO schema_migrations (id, name) VALUES ($1, $2)",
+    "INSERT INTO kommentar_schema_migrations (id, name) VALUES ($1, $2)",
     [migration.id, migration.name],
   );
 };
@@ -33,7 +33,7 @@ const removeMigrationRecord = async (
   client: PoolClient,
   migrationId: string,
 ) => {
-  await client.query("DELETE FROM schema_migrations WHERE id = $1", [
+  await client.query("DELETE FROM kommentar_schema_migrations WHERE id = $1", [
     migrationId,
   ]);
 };
