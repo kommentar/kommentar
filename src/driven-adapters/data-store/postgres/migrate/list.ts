@@ -24,9 +24,9 @@ const migrations: Array<Migration> = [
         CREATE TABLE IF NOT EXISTS kommentar.comments (
           id uuid PRIMARY KEY,
           content text NOT NULL,
-          hostId varchar(255) NOT NULL,
-          createdAt timestamp NOT NULL,
-          updatedAt timestamp NOT NULL
+          host_id varchar(255) NOT NULL,
+          created_at timestamp NOT NULL,
+          updated_at timestamp NOT NULL
         );
       `,
     },
@@ -41,7 +41,7 @@ const migrations: Array<Migration> = [
     up: {
       name: "create-comments-index-host_id",
       text: `
-        CREATE INDEX IF NOT EXISTS comments_host_id_idx ON kommentar.comments (hostId);
+        CREATE INDEX IF NOT EXISTS comments_host_id_idx ON kommentar.comments (host_id);
       `,
     },
     down: {
@@ -57,7 +57,7 @@ const migrations: Array<Migration> = [
     up: {
       name: "create-comments-index-created_at",
       text: `
-        CREATE INDEX IF NOT EXISTS comments_created_at_idx ON kommentar.comments (createdAt);
+        CREATE INDEX IF NOT EXISTS comments_created_at_idx ON kommentar.comments (created_at);
       `,
     },
     down: {
@@ -74,13 +74,13 @@ const migrations: Array<Migration> = [
       name: "add-session-id-column",
       text: `
         ALTER TABLE kommentar.comments
-        ADD COLUMN IF NOT EXISTS sessionId uuid NOT NULL;
+        ADD COLUMN IF NOT EXISTS session_id uuid NOT NULL;
       `,
     },
     down: {
       name: "remove-session-id-column",
       text: `
-        ALTER TABLE kommentar.comments DROP COLUMN IF EXISTS sessionId;
+        ALTER TABLE kommentar.comments DROP COLUMN IF EXISTS session_id;
       `,
     },
   },
@@ -90,7 +90,7 @@ const migrations: Array<Migration> = [
     up: {
       name: "add-session-id-column-index",
       text: `
-        CREATE INDEX IF NOT EXISTS comments_session_id_idx ON kommentar.comments (sessionId);
+        CREATE INDEX IF NOT EXISTS comments_session_id_idx ON kommentar.comments (session_id);
       `,
     },
     down: {
@@ -107,16 +107,16 @@ const migrations: Array<Migration> = [
       name: "add-commenter-columns",
       text: `
         ALTER TABLE kommentar.comments
-        ADD COLUMN IF NOT EXISTS commenter_displayname text NOT NULL DEFAULT 'Anonymous',
-        ADD COLUMN IF NOT EXISTS commenter_realname text;
+        ADD COLUMN IF NOT EXISTS commenter_display_name text NOT NULL,
+        ADD COLUMN IF NOT EXISTS commenter_real_name text NOT NULL DEFAULT '';
       `,
     },
     down: {
       name: "remove-commenter-columns",
       text: `
         ALTER TABLE kommentar.comments
-        DROP COLUMN IF EXISTS commenter_displayname,
-        DROP COLUMN IF EXISTS commenter_realname;
+        DROP COLUMN IF EXISTS commenter_display_name,
+        DROP COLUMN IF EXISTS commenter_real_name;
       `,
     },
   },
@@ -129,9 +129,9 @@ const migrations: Array<Migration> = [
         CREATE TABLE IF NOT EXISTS kommentar.consumer (
           id uuid PRIMARY KEY,
           name varchar(255) NOT NULL,
-          description text,
-          createdAt timestamp NOT NULL,
-          updatedAt timestamp NOT NULL
+          description text NOT NULL,
+          created_at timestamp NOT NULL,
+          updated_at timestamp NOT NULL
         );
       `,
     },
@@ -163,22 +163,22 @@ const migrations: Array<Migration> = [
       name: "add-consumer-api-columns",
       text: `
         ALTER TABLE kommentar.consumer
-        ADD COLUMN IF NOT EXISTS apiKey varchar(255) NOT NULL DEFAULT '',
-        ADD COLUMN IF NOT EXISTS apiSecret varchar(255) NOT NULL DEFAULT '',
-        ADD COLUMN IF NOT EXISTS allowedHosts text,
-        ADD COLUMN IF NOT EXISTS isActive boolean NOT NULL DEFAULT true,
-        ADD COLUMN IF NOT EXISTS rateLimit integer;
+        ADD COLUMN IF NOT EXISTS api_key varchar(255) NOT NULL,
+        ADD COLUMN IF NOT EXISTS api_secret varchar(255) NOT NULL,
+        ADD COLUMN IF NOT EXISTS allowed_hosts text NOT NULL,
+        ADD COLUMN IF NOT EXISTS is_active boolean NOT NULL,
+        ADD COLUMN IF NOT EXISTS rate_limit integer NOT NULL;
       `,
     },
     down: {
       name: "remove-consumer-api-columns",
       text: `
         ALTER TABLE kommentar.consumer
-        DROP COLUMN IF EXISTS apiKey,
-        DROP COLUMN IF EXISTS apiSecret,
-        DROP COLUMN IF EXISTS allowedHosts,
-        DROP COLUMN IF EXISTS isActive,
-        DROP COLUMN IF EXISTS rateLimit;
+        DROP COLUMN IF EXISTS api_key,
+        DROP COLUMN IF EXISTS api_secret,
+        DROP COLUMN IF EXISTS allowed_hosts,
+        DROP COLUMN IF EXISTS is_active,
+        DROP COLUMN IF EXISTS rate_limit;
       `,
     },
   },
@@ -188,7 +188,7 @@ const migrations: Array<Migration> = [
     up: {
       name: "add-consumer-api-indexes",
       text: `
-        CREATE UNIQUE INDEX IF NOT EXISTS consumer_api_key_idx ON kommentar.consumer (apiKey);
+        CREATE UNIQUE INDEX IF NOT EXISTS consumer_api_key_idx ON kommentar.consumer (api_key);
       `,
     },
     down: {
@@ -204,7 +204,7 @@ const migrations: Array<Migration> = [
     up: {
       name: "add-consumer-active-index",
       text: `
-        CREATE INDEX IF NOT EXISTS consumer_active_idx ON kommentar.consumer (isActive);
+        CREATE INDEX IF NOT EXISTS consumer_active_idx ON kommentar.consumer (is_active);
       `,
     },
     down: {

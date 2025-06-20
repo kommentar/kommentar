@@ -44,6 +44,7 @@ describe("commandUpdateConsumer", () => {
         apiSecret: "2f5c79d8-04bd-4988-9649-3f3cd0687de3",
         isActive: true,
         allowedHosts: [],
+        rateLimit: 100,
       },
     };
 

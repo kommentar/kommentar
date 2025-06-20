@@ -34,6 +34,7 @@ describe("wheneverCommentDeletedInvalidateCache", () => {
       sessionId: "session1",
       commenter: {
         displayName: "Commenter 1",
+        realName: "Real Name 1",
       },
     };
     const event = { subject: "comment-1", data: deletedComment };
@@ -54,6 +55,7 @@ describe("wheneverCommentDeletedInvalidateCache", () => {
         sessionId: "session1",
         commenter: {
           displayName: "Commenter 1",
+          realName: "Real Name 1",
         },
       },
       {
@@ -65,6 +67,7 @@ describe("wheneverCommentDeletedInvalidateCache", () => {
         sessionId: "session1",
         commenter: {
           displayName: "Commenter 2",
+          realName: "Real Name 2",
         },
       },
     ];
@@ -97,6 +100,7 @@ describe("wheneverCommentDeletedInvalidateCache", () => {
       sessionId: "session1",
       commenter: {
         displayName: "Commenter 1",
+        realName: "Real Name 1",
       },
     };
     const event = { subject: "comment-1", data: deletedComment };
@@ -113,6 +117,7 @@ describe("wheneverCommentDeletedInvalidateCache", () => {
         sessionId: "session1",
         commenter: {
           displayName: "Commenter 2",
+          realName: "Real Name 2",
         },
       },
     ]);

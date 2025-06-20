@@ -8,11 +8,13 @@ import { queryGetConsumer } from "../get-consumer/index.js";
 describe("queryGetConsumer", () => {
   it("should return undefined when there is no consumer with the given id", async () => {
     const mockDataStore: DataStore = {
-      getAllCommentsByHostId: vi.fn(),
-      deleteCommentById: vi.fn(),
-      saveCommentByHostId: vi.fn(),
-      updateCommentById: vi.fn(),
-      getCommentById: vi.fn(),
+      comment: {
+        getAllCommentsByHostId: vi.fn(),
+        deleteCommentById: vi.fn(),
+        saveCommentByHostId: vi.fn(),
+        updateCommentById: vi.fn(),
+        getCommentById: vi.fn(),
+      },
       consumer: {
         save: vi.fn(),
         getById: vi.fn().mockResolvedValue(undefined),
@@ -40,19 +42,23 @@ describe("queryGetConsumer", () => {
       id: "1",
       name: "Test Consumer",
       description: "This is a test consumer",
-      apikey: "f2ef9606-6e10-4530-a15c-594c2e3fcd73",
-      apisecret: "b5fe46d6-1efe-4988-bf2b-d5b0a90fbaaf",
-      isactive: true,
-      createdat: new Date("2021-01-01"),
-      updatedat: new Date("2021-01-01"),
+      api_key: "f2ef9606-6e10-4530-a15c-594c2e3fcd73",
+      api_secret: "b5fe46d6-1efe-4988-bf2b-d5b0a90fbaaf",
+      is_active: true,
+      rate_limit: 100,
+      allowed_hosts: JSON.stringify(["host1", "host2"]),
+      created_at: new Date("2021-01-01"),
+      updated_at: new Date("2021-01-01"),
     };
 
     const mockDataStore: DataStore = {
-      getAllCommentsByHostId: vi.fn(),
-      deleteCommentById: vi.fn(),
-      saveCommentByHostId: vi.fn(),
-      updateCommentById: vi.fn(),
-      getCommentById: vi.fn(),
+      comment: {
+        getAllCommentsByHostId: vi.fn(),
+        deleteCommentById: vi.fn(),
+        saveCommentByHostId: vi.fn(),
+        updateCommentById: vi.fn(),
+        getCommentById: vi.fn(),
+      },
       consumer: {
         save: vi.fn(),
         getById: vi.fn().mockResolvedValue(savedConsumer),

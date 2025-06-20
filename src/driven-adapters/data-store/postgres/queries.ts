@@ -17,7 +17,7 @@ const getAllCommentsByHostIdQuery: GetAllCommentsByHostIdQuery = ({
   return {
     name: "get-all-comments-by-host-id",
     text: `
-        SELECT * FROM kommentar.comments WHERE hostId = $1;
+        SELECT * FROM kommentar.comments WHERE host_id = $1;
         `,
     values: [hostId],
   };
@@ -33,7 +33,7 @@ const saveCommentByHostIdQuery: SaveCommentByHostIdQuery = ({
   return {
     name: "save-comment-by-host-id",
     text: `
-        INSERT INTO kommentar.comments (id, content, hostId, createdAt, updatedAt, sessionId, commenter_displayname, commenter_realname)
+        INSERT INTO kommentar.comments (id, content, host_id, created_at, updated_at, session_id, commenter_display_name, commenter_real_name)
         VALUES ($1, $2, $3, NOW(), NOW(), $4, $5, $6)
         RETURNING *;
         `,
@@ -57,8 +57,8 @@ const updateCommentByIdQuery: UpdateCommentByIdQuery = ({
     name: "update-comment-by-id",
     text: `
         UPDATE kommentar.comments
-        SET content = $1, updatedAt = NOW()
-        WHERE id = $2 AND sessionId = $3
+        SET content = $1, updated_at = NOW()
+        WHERE id = $2 AND session_id = $3
         RETURNING *;
         `,
     values: [content, id, sessionId],
@@ -70,7 +70,7 @@ const deleteCommentByIdQuery: DeleteCommentByIdQuery = ({ id, sessionId }) => {
     name: "delete-comment-by-id",
     text: `
         DELETE FROM kommentar.comments
-        WHERE id = $1 AND sessionId = $2
+        WHERE id = $1 AND session_id = $2
         RETURNING *;
         `,
     values: [id, sessionId],
@@ -101,7 +101,7 @@ const getConsumerByApiKeyQuery: GetConsumerByApiKeyQuery = ({ apiKey }) => {
   return {
     name: "get-consumer-by-api-key",
     text: `
-        SELECT * FROM kommentar.consumer WHERE apiKey = $1 AND isActive = true LIMIT 1;
+        SELECT * FROM kommentar.consumer WHERE api_key = $1 AND is_active = true LIMIT 1;
         `,
     values: [apiKey],
   };
@@ -112,7 +112,7 @@ const saveConsumerQuery: SaveConsumerQuery = ({ consumer }) => {
     name: "save-consumer",
     text: `
         INSERT INTO kommentar.consumer (
-          id, name, description, apiKey, apiSecret, allowedHosts, isActive, rateLimit, createdAt, updatedAt
+          id, name, description, api_key, api_secret, allowed_hosts, is_active, rate_limit, created_at, updated_at
         )
         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, NOW(), NOW())
         RETURNING *;
@@ -123,7 +123,7 @@ const saveConsumerQuery: SaveConsumerQuery = ({ consumer }) => {
       consumer.description,
       consumer.apiKey,
       consumer.apiSecret,
-      consumer.allowedHosts ? JSON.stringify(consumer.allowedHosts) : null,
+      JSON.stringify(consumer.allowedHosts),
       consumer.isActive,
       consumer.rateLimit,
     ],
@@ -135,8 +135,8 @@ const updateConsumerQuery: UpdateConsumerQuery = ({ consumer }) => {
     name: "update-consumer",
     text: `
         UPDATE kommentar.consumer
-        SET name = $1, description = $2, apiKey = $3, apiSecret = $4,
-            allowedHosts = $5, isActive = $6, rateLimit = $7, updatedAt = NOW()
+        SET name = $1, description = $2, api_key = $3, api_secret = $4,
+            allowed_hosts = $5, is_active = $6, rate_limit = $7, updated_at = NOW()
         WHERE id = $8
         RETURNING *;
         `,
@@ -145,7 +145,7 @@ const updateConsumerQuery: UpdateConsumerQuery = ({ consumer }) => {
       consumer.description,
       consumer.apiKey,
       consumer.apiSecret,
-      consumer.allowedHosts ? JSON.stringify(consumer.allowedHosts) : null,
+      JSON.stringify(consumer.allowedHosts),
       consumer.isActive,
       consumer.rateLimit,
       consumer.id,

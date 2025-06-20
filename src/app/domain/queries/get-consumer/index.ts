@@ -14,9 +14,9 @@ const queryGetConsumer: QueryGetConsumer = (dataStore) => {
           id: savedConsumer.id,
           name: savedConsumer.name,
           description: savedConsumer.description,
-          apiKey: savedConsumer.apikey,
-          isActive: savedConsumer.isactive,
-          rateLimit: savedConsumer.ratelimit,
+          apiKey: savedConsumer.api_key,
+          isActive: savedConsumer.is_active,
+          rateLimit: savedConsumer.rate_limit,
         }
       : undefined;
   };

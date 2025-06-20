@@ -27,12 +27,12 @@ const commandCreateComment: CommandCreateComment = (dataStore) => {
     return {
       id: savedComment.id,
       content: savedComment.content,
-      hostId: savedComment.hostid,
-      createdAt: savedComment.createdat,
-      updatedAt: savedComment.updatedat,
+      hostId: savedComment.host_id,
+      createdAt: savedComment.created_at,
+      updatedAt: savedComment.updated_at,
       commenter: {
-        displayName: savedComment.commenter_displayname,
-        realName: savedComment.commenter_realname,
+        displayName: savedComment.commenter_display_name,
+        realName: savedComment.commenter_real_name,
       },
     };
   };

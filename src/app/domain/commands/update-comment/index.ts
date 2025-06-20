@@ -22,7 +22,7 @@ const commandUpdateComment: CommandUpdateComment = (dataStore) => {
       throw errors.domain.commentNotFound;
     }
 
-    if (commentExists.sessionid !== sessionId) {
+    if (commentExists.session_id !== sessionId) {
       throw errors.domain.unauthorized;
     }
 
@@ -35,12 +35,12 @@ const commandUpdateComment: CommandUpdateComment = (dataStore) => {
     return {
       id: updatedComment.id,
       content: updatedComment.content,
-      hostId: updatedComment.hostid,
-      createdAt: updatedComment.createdat,
-      updatedAt: updatedComment.updatedat,
+      hostId: updatedComment.host_id,
+      createdAt: updatedComment.created_at,
+      updatedAt: updatedComment.updated_at,
       commenter: {
-        displayName: updatedComment.commenter_displayname,
-        realName: updatedComment.commenter_realname,
+        displayName: updatedComment.commenter_display_name,
+        realName: updatedComment.commenter_real_name,
       },
     };
   };

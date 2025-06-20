@@ -14,6 +14,7 @@ describe("commandDeleteComment", () => {
       sessionId: "session1",
       commenter: {
         displayName: "John Doe",
+        realName: "",
       },
     };
 
@@ -22,20 +23,22 @@ describe("commandDeleteComment", () => {
         deleteCommentById: vi.fn().mockResolvedValue({
           id: mockComment.id,
           content: mockComment.content,
-          hostid: mockComment.hostId,
-          createdat: mockComment.createdAt,
-          updatedat: mockComment.updatedAt,
-          sessionid: mockComment.sessionId,
-          commenter_displayname: mockComment.commenter.displayName,
+          host_id: mockComment.hostId,
+          created_at: mockComment.createdAt,
+          updated_at: mockComment.updatedAt,
+          session_id: mockComment.sessionId,
+          commenter_display_name: mockComment.commenter.displayName,
+          commenter_real_name: mockComment.commenter.realName,
         }),
         getCommentById: vi.fn().mockResolvedValue({
           id: mockComment.id,
           content: mockComment.content,
-          hostid: mockComment.hostId,
-          createdat: mockComment.createdAt,
-          updatedat: mockComment.updatedAt,
-          sessionid: mockComment.sessionId,
-          commenter_displayname: mockComment.commenter.displayName,
+          host_id: mockComment.hostId,
+          created_at: mockComment.createdAt,
+          updated_at: mockComment.updatedAt,
+          session_id: mockComment.sessionId,
+          commenter_display_name: mockComment.commenter.displayName,
+          commenter_real_name: mockComment.commenter.realName,
         }),
         getAllCommentsByHostId: vi.fn(),
         saveCommentByHostId: vi.fn(),
@@ -115,6 +118,7 @@ describe("commandDeleteComment", () => {
       sessionId: "session1",
       commenter: {
         displayName: "John Doe",
+        realName: "",
       },
     };
 

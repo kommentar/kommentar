@@ -44,6 +44,7 @@ describe("commandCreateConsumer", () => {
         apiSecret: "test-api-secret",
         allowedHosts: ["host1", "host2"],
         isActive: true,
+        rateLimit: 100,
       },
     };
 

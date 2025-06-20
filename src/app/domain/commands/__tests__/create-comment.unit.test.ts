@@ -9,11 +9,12 @@ describe("commandCreateComment", () => {
         saveCommentByHostId: vi.fn().mockResolvedValue({
           id: "1",
           content: "This is a comment",
-          hostid: "host123",
-          createdat: new Date("2021-01-01").toISOString(),
-          updatedat: new Date("2021-01-01").toISOString(),
-          sessionid: "session1",
-          commenter_displayname: "John Doe",
+          host_id: "host123",
+          created_at: new Date("2021-01-01").toISOString(),
+          updated_at: new Date("2021-01-01").toISOString(),
+          session_id: "session1",
+          commenter_display_name: "John Doe",
+          commenter_real_name: "",
         }),
         deleteCommentById: vi.fn(),
         getAllCommentsByHostId: vi.fn(),
@@ -41,6 +42,7 @@ describe("commandCreateComment", () => {
       sessionId: "session1",
       commenter: {
         displayName: "John Doe",
+        realName: "",
       },
     };
 
@@ -57,6 +59,7 @@ describe("commandCreateComment", () => {
       updatedAt: "2021-01-01T00:00:00.000Z",
       commenter: {
         displayName: "John Doe",
+        realName: "",
       },
     });
   });

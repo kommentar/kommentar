@@ -4,25 +4,25 @@ import type { Consumer } from "../domain/entities/consumer.js";
 type StoredComment = {
   id: Comment["id"];
   content: Comment["content"];
-  hostid: Comment["hostId"];
-  createdat: Comment["createdAt"];
-  updatedat: Comment["updatedAt"];
-  sessionid: Comment["sessionId"];
-  commenter_displayname: Comment["commenter"]["displayName"];
-  commenter_realname?: Comment["commenter"]["realName"];
+  host_id: Comment["hostId"];
+  created_at: Comment["createdAt"];
+  updated_at: Comment["updatedAt"];
+  session_id: Comment["sessionId"];
+  commenter_display_name: Comment["commenter"]["displayName"];
+  commenter_real_name: Comment["commenter"]["realName"];
 };
 
 type StoredConsumer = {
   id: Consumer["id"];
   name: Consumer["name"];
-  description?: Consumer["description"];
-  apikey: Consumer["apiKey"];
-  apisecret: Consumer["apiSecret"];
-  allowedhosts?: string; // JSON string of array
-  isactive: Consumer["isActive"];
-  ratelimit?: Consumer["rateLimit"];
-  createdat: Date;
-  updatedat: Date;
+  description: Consumer["description"];
+  api_key: Consumer["apiKey"];
+  api_secret: Consumer["apiSecret"];
+  allowed_hosts: string; // JSON string of array
+  is_active: Consumer["isActive"];
+  rate_limit: Consumer["rateLimit"];
+  created_at: Date;
+  updated_at: Date;
 };
 
 type DataStore = {

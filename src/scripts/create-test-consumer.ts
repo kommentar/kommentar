@@ -45,16 +45,16 @@ async function createTestConsumer() {
     console.log("📋 Consumer Details:");
     console.log(`   ID: ${savedConsumer.id}`);
     console.log(`   Name: ${savedConsumer.name}`);
-    console.log(`   API Key: ${savedConsumer.apikey}`);
+    console.log(`   API Key: ${savedConsumer.api_key}`);
     console.log(`   API Secret: ${apiSecret}`); // Show the plain secret
-    console.log(`   Active: ${savedConsumer.isactive}`);
-    console.log(`   Rate Limit: ${savedConsumer.ratelimit}/min`);
+    console.log(`   Active: ${savedConsumer.is_active}`);
+    console.log(`   Rate Limit: ${savedConsumer.rate_limit}/min`);
     console.log(
-      `   Allowed Hosts: ${savedConsumer.allowedhosts || "All hosts"}`,
+      `   Allowed Hosts: ${savedConsumer.allowed_hosts || "All hosts"}`,
     );
 
     console.log("\n🧪 Use these credentials for testing:");
-    console.log(`   X-API-Key: ${savedConsumer.apikey}`);
+    console.log(`   X-API-Key: ${savedConsumer.api_key}`);
     console.log(`   X-API-Secret: ${apiSecret}`);
   } catch (error) {
     console.error("❌ Error creating test consumer:", error);
