@@ -10,7 +10,7 @@ import {
   getCommentsForHostRoute,
   getConsumerByIdRoute,
   updateCommentByIdRoute,
-} from "../routes.js";
+} from "./routes.js";
 import type { App } from "../../../../app/domain/entities/app.js";
 import { createHttpError } from "../helpers.js";
 import {

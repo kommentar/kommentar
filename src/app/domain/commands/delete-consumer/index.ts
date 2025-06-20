@@ -1,10 +1,10 @@
 import type { DataStore } from "../../../driven-ports/data-store.js";
-import type { Consumer } from "../../entities/consumer.js";
+import type { Consumer, PublicConsumer } from "../../entities/consumer.js";
 import { errors } from "../../entities/error.js";
 
 type CommandDeleteConsumer = (
   dataStore: DataStore,
-) => ({ id }: { id: string }) => Promise<Consumer>;
+) => ({ id }: { id: Consumer["id"] }) => Promise<PublicConsumer>;
 
 const commandDeleteConsumer: CommandDeleteConsumer = (dataStore) => {
   return async ({ id }) => {
@@ -21,14 +21,10 @@ const commandDeleteConsumer: CommandDeleteConsumer = (dataStore) => {
     return {
       id: deletedConsumer.id,
       name: deletedConsumer.name,
-      description: deletedConsumer.description,
+      description: deletedConsumer.description ?? "",
       apiKey: deletedConsumer.apikey,
-      apiSecret: deletedConsumer.apisecret,
       isActive: deletedConsumer.isactive,
-      allowedHosts: JSON.parse(String(deletedConsumer.allowedhosts)) || [],
       rateLimit: deletedConsumer.ratelimit,
-      createdAt: deletedConsumer.createdat,
-      updatedAt: deletedConsumer.updatedat,
     };
   };
 };

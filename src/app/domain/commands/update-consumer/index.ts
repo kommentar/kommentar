@@ -27,8 +27,6 @@ const commandUpdateConsumer: CommandUpdateConsumer = (dataStore) => {
       apiKey: updatedConsumer.apikey,
       isActive: updatedConsumer.isactive,
       rateLimit: updatedConsumer.ratelimit,
-      createdAt: updatedConsumer.createdat,
-      updatedAt: updatedConsumer.updatedat,
     };
   };
 };

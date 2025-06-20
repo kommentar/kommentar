@@ -5,11 +5,13 @@ import { queryGetCommentsForHost } from "../get-comments-for-host/index.js";
 describe("queryGetCommentsForHost", () => {
   it("should return an empty array when there are no comments for the given host ID", async () => {
     const mockDataStore: DataStore = {
-      getAllCommentsByHostId: vi.fn().mockResolvedValue([]),
-      deleteCommentById: vi.fn(),
-      saveCommentByHostId: vi.fn(),
-      updateCommentById: vi.fn(),
-      getCommentById: vi.fn(),
+      comment: {
+        getAllCommentsByHostId: vi.fn().mockResolvedValue([]),
+        deleteCommentById: vi.fn(),
+        saveCommentByHostId: vi.fn(),
+        updateCommentById: vi.fn(),
+        getCommentById: vi.fn(),
+      },
       consumer: {
         save: vi.fn(),
         getById: vi.fn(),
@@ -27,7 +29,7 @@ describe("queryGetCommentsForHost", () => {
     const comments = await getCommentsForHost({ hostId: "1" });
 
     expect(comments).toEqual([]);
-    expect(mockDataStore.getAllCommentsByHostId).toHaveBeenCalledWith({
+    expect(mockDataStore.comment.getAllCommentsByHostId).toHaveBeenCalledWith({
       hostId: "1",
     });
   });
@@ -53,11 +55,13 @@ describe("queryGetCommentsForHost", () => {
     ];
 
     const mockDataStore: DataStore = {
-      getAllCommentsByHostId: vi.fn().mockResolvedValue(savedComments),
-      deleteCommentById: vi.fn(),
-      saveCommentByHostId: vi.fn(),
-      updateCommentById: vi.fn(),
-      getCommentById: vi.fn(),
+      comment: {
+        getAllCommentsByHostId: vi.fn().mockResolvedValue(savedComments),
+        deleteCommentById: vi.fn(),
+        saveCommentByHostId: vi.fn(),
+        updateCommentById: vi.fn(),
+        getCommentById: vi.fn(),
+      },
       consumer: {
         save: vi.fn(),
         getById: vi.fn(),
@@ -96,7 +100,7 @@ describe("queryGetCommentsForHost", () => {
         },
       },
     ]);
-    expect(mockDataStore.getAllCommentsByHostId).toHaveBeenCalledWith({
+    expect(mockDataStore.comment.getAllCommentsByHostId).toHaveBeenCalledWith({
       hostId: "1",
     });
   });

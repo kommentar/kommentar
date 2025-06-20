@@ -5,27 +5,29 @@ import { commandUpdateComment } from "../update-comment/index.js";
 describe("commandUpdateComment", () => {
   it("should update a comment and return it", async () => {
     const mockDataStore: DataStore = {
-      updateCommentById: vi.fn().mockResolvedValue({
-        id: "1",
-        content: "Updated content",
-        sessionid: "session1",
-        hostid: "host1",
-        createdat: new Date("2021-01-01"),
-        updatedat: new Date("2021-01-01"),
-        commenter_displayname: "John Doe",
-      }),
-      getCommentById: vi.fn().mockResolvedValue({
-        id: "1",
-        content: "Test comment",
-        hostId: "host1",
-        createdAt: new Date("2021-01-01"),
-        updatedAt: new Date("2021-01-01"),
-        sessionid: "session1",
-        commenter_displayname: "John Doe",
-      }),
-      deleteCommentById: vi.fn(),
-      getAllCommentsByHostId: vi.fn(),
-      saveCommentByHostId: vi.fn(),
+      comment: {
+        updateCommentById: vi.fn().mockResolvedValue({
+          id: "1",
+          content: "Updated content",
+          sessionid: "session1",
+          hostid: "host1",
+          createdat: new Date("2021-01-01"),
+          updatedat: new Date("2021-01-01"),
+          commenter_displayname: "John Doe",
+        }),
+        getCommentById: vi.fn().mockResolvedValue({
+          id: "1",
+          content: "Test comment",
+          hostId: "host1",
+          createdAt: new Date("2021-01-01"),
+          updatedAt: new Date("2021-01-01"),
+          sessionid: "session1",
+          commenter_displayname: "John Doe",
+        }),
+        deleteCommentById: vi.fn(),
+        getAllCommentsByHostId: vi.fn(),
+        saveCommentByHostId: vi.fn(),
+      },
       consumer: {
         getById: vi.fn(),
         getAll: vi.fn(),
@@ -49,7 +51,7 @@ describe("commandUpdateComment", () => {
 
     const result = await updateComment(input);
 
-    expect(mockDataStore.updateCommentById).toHaveBeenCalledWith(input);
+    expect(mockDataStore.comment.updateCommentById).toHaveBeenCalledWith(input);
     expect(result).toEqual({
       id: "1",
       content: "Updated content",
@@ -64,11 +66,13 @@ describe("commandUpdateComment", () => {
 
   it("should throw an error if the comment does not exist", async () => {
     const mockDataStore: DataStore = {
-      updateCommentById: vi.fn(),
-      getCommentById: vi.fn().mockResolvedValue(null),
-      deleteCommentById: vi.fn(),
-      getAllCommentsByHostId: vi.fn(),
-      saveCommentByHostId: vi.fn(),
+      comment: {
+        updateCommentById: vi.fn(),
+        getCommentById: vi.fn().mockResolvedValue(null),
+        deleteCommentById: vi.fn(),
+        getAllCommentsByHostId: vi.fn(),
+        saveCommentByHostId: vi.fn(),
+      },
       consumer: {
         getById: vi.fn(),
         getAll: vi.fn(),
@@ -93,8 +97,10 @@ describe("commandUpdateComment", () => {
     await expect(updateComment(input)).rejects.toThrowError(
       "Comment not found",
     );
-    expect(mockDataStore.getCommentById).toHaveBeenCalledWith({ id: input.id });
-    expect(mockDataStore.updateCommentById).not.toHaveBeenCalled();
+    expect(mockDataStore.comment.getCommentById).toHaveBeenCalledWith({
+      id: input.id,
+    });
+    expect(mockDataStore.comment.updateCommentById).not.toHaveBeenCalled();
   });
 
   it("should throw an error if the sessionId is invalid", async () => {
@@ -108,11 +114,13 @@ describe("commandUpdateComment", () => {
     };
 
     const mockDataStore: DataStore = {
-      updateCommentById: vi.fn(),
-      getCommentById: vi.fn().mockResolvedValue(mockComment),
-      deleteCommentById: vi.fn(),
-      getAllCommentsByHostId: vi.fn(),
-      saveCommentByHostId: vi.fn(),
+      comment: {
+        updateCommentById: vi.fn(),
+        getCommentById: vi.fn().mockResolvedValue(mockComment),
+        deleteCommentById: vi.fn(),
+        getAllCommentsByHostId: vi.fn(),
+        saveCommentByHostId: vi.fn(),
+      },
       consumer: {
         getById: vi.fn(),
         getAll: vi.fn(),
@@ -137,7 +145,9 @@ describe("commandUpdateComment", () => {
     await expect(updateComment(input)).rejects.toThrowError(
       "Unauthorized access",
     );
-    expect(mockDataStore.getCommentById).toHaveBeenCalledWith({ id: input.id });
-    expect(mockDataStore.updateCommentById).not.toHaveBeenCalled();
+    expect(mockDataStore.comment.getCommentById).toHaveBeenCalledWith({
+      id: input.id,
+    });
+    expect(mockDataStore.comment.updateCommentById).not.toHaveBeenCalled();
   });
 });

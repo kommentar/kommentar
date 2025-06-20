@@ -7,7 +7,9 @@ type QueryGetCommentsForHost = (
 
 const queryGetCommentsForHost: QueryGetCommentsForHost = (dataStore) => {
   return async ({ hostId }) => {
-    const savedComments = await dataStore.getAllCommentsByHostId({ hostId });
+    const savedComments = await dataStore.comment.getAllCommentsByHostId({
+      hostId,
+    });
 
     return savedComments.map((comment) => ({
       id: comment.id,

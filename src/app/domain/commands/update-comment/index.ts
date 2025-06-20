@@ -16,7 +16,7 @@ type CommandUpdateComment = (
 
 const commandUpdateComment: CommandUpdateComment = (dataStore) => {
   return async ({ id, content, sessionId }) => {
-    const commentExists = await dataStore.getCommentById({ id });
+    const commentExists = await dataStore.comment.getCommentById({ id });
 
     if (!commentExists) {
       throw errors.domain.commentNotFound;
@@ -26,7 +26,7 @@ const commandUpdateComment: CommandUpdateComment = (dataStore) => {
       throw errors.domain.unauthorized;
     }
 
-    const updatedComment = await dataStore.updateCommentById({
+    const updatedComment = await dataStore.comment.updateCommentById({
       id,
       content,
       sessionId,

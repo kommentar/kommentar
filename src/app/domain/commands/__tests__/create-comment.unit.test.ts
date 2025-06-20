@@ -5,19 +5,21 @@ import { commandCreateComment } from "../create-comment/index.js";
 describe("commandCreateComment", () => {
   it("should save a comment and return it", async () => {
     const mockDataStore: DataStore = {
-      saveCommentByHostId: vi.fn().mockResolvedValue({
-        id: "1",
-        content: "This is a comment",
-        hostid: "host123",
-        createdat: new Date("2021-01-01").toISOString(),
-        updatedat: new Date("2021-01-01").toISOString(),
-        sessionid: "session1",
-        commenter_displayname: "John Doe",
-      }),
-      deleteCommentById: vi.fn(),
-      getAllCommentsByHostId: vi.fn(),
-      updateCommentById: vi.fn(),
-      getCommentById: vi.fn(),
+      comment: {
+        saveCommentByHostId: vi.fn().mockResolvedValue({
+          id: "1",
+          content: "This is a comment",
+          hostid: "host123",
+          createdat: new Date("2021-01-01").toISOString(),
+          updatedat: new Date("2021-01-01").toISOString(),
+          sessionid: "session1",
+          commenter_displayname: "John Doe",
+        }),
+        deleteCommentById: vi.fn(),
+        getAllCommentsByHostId: vi.fn(),
+        updateCommentById: vi.fn(),
+        getCommentById: vi.fn(),
+      },
       consumer: {
         getById: vi.fn(),
         getAll: vi.fn(),
@@ -44,7 +46,9 @@ describe("commandCreateComment", () => {
 
     const result = await createComment(input);
 
-    expect(mockDataStore.saveCommentByHostId).toHaveBeenCalledWith(input);
+    expect(mockDataStore.comment.saveCommentByHostId).toHaveBeenCalledWith(
+      input,
+    );
     expect(result).toEqual({
       id: "1",
       hostId: "host123",

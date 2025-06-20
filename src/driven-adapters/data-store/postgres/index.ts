@@ -43,70 +43,77 @@ const getDataStorePostgres: GetDataStorePostgres = async ({
   }
 
   return {
-    getAllCommentsByHostId: async ({ hostId }) => {
-      try {
-        const result = await pgPool.query(
-          getAllCommentsByHostIdQuery({ hostId }),
-        );
+    comment: {
+      getAllCommentsByHostId: async ({ hostId }) => {
+        try {
+          const result = await pgPool.query(
+            getAllCommentsByHostIdQuery({ hostId }),
+          );
 
-        return result.rows;
-      } catch (error) {
-        console.error("Failed to get comments by host identifier", error);
-        throw errors.dependency.dataStoreError;
-      }
-    },
-    saveCommentByHostId: async ({ hostId, content, sessionId, commenter }) => {
-      try {
-        const id = randomId.generate();
-        const result = await pgPool.query(
-          saveCommentByHostIdQuery({
-            id,
-            hostId,
-            content,
-            sessionId,
-            commenter,
-          }),
-        );
+          return result.rows;
+        } catch (error) {
+          console.error("Failed to get comments by host identifier", error);
+          throw errors.dependency.dataStoreError;
+        }
+      },
+      saveCommentByHostId: async ({
+        hostId,
+        content,
+        sessionId,
+        commenter,
+      }) => {
+        try {
+          const id = randomId.generate();
+          const result = await pgPool.query(
+            saveCommentByHostIdQuery({
+              id,
+              hostId,
+              content,
+              sessionId,
+              commenter,
+            }),
+          );
 
-        return result.rows[0];
-      } catch (error) {
-        console.error("Failed to save comment by host identifier", error);
-        throw errors.dependency.dataStoreError;
-      }
-    },
-    updateCommentById: async ({ id, content, sessionId }) => {
-      try {
-        const result = await pgPool.query(
-          updateCommentByIdQuery({ id, content, sessionId }),
-        );
+          return result.rows[0];
+        } catch (error) {
+          console.error("Failed to save comment by host identifier", error);
+          throw errors.dependency.dataStoreError;
+        }
+      },
+      updateCommentById: async ({ id, content, sessionId }) => {
+        try {
+          const result = await pgPool.query(
+            updateCommentByIdQuery({ id, content, sessionId }),
+          );
 
-        return result.rows[0];
-      } catch (error) {
-        console.error("Failed to update comment by identifier", error);
-        throw errors.dependency.dataStoreError;
-      }
-    },
-    deleteCommentById: async ({ id, sessionId }) => {
-      try {
-        const result = await pgPool.query(
-          deleteCommentByIdQuery({ id, sessionId }),
-        );
+          return result.rows[0];
+        } catch (error) {
+          console.error("Failed to update comment by identifier", error);
+          throw errors.dependency.dataStoreError;
+        }
+      },
+      deleteCommentById: async ({ id, sessionId }) => {
+        try {
+          const result = await pgPool.query(
+            deleteCommentByIdQuery({ id, sessionId }),
+          );
 
-        return result.rows[0];
-      } catch (error) {
-        console.error("Failed to delete comment by identifier", error);
-        throw errors.dependency.dataStoreError;
-      }
-    },
-    getCommentById: async ({ id }) => {
-      try {
-        const result = await pgPool.query(getCommentByIdQuery({ id }));
+          return result.rows[0];
+        } catch (error) {
+          console.error("Failed to delete comment by identifier", error);
+          throw errors.dependency.dataStoreError;
+        }
+      },
+      getCommentById: async ({ id }) => {
+        try {
+          const result = await pgPool.query(getCommentByIdQuery({ id }));
 
-        return result.rows[0];
-      } catch (error) {
-        console.error("Failed to get comment by identifier", error);
-        throw errors.dependency.dataStoreError;
-      }
+          return result.rows[0];
+        } catch (error) {
+          console.error("Failed to get comment by identifier", error);
+          throw errors.dependency.dataStoreError;
+        }
+      },
     },
     consumer: {
       getById: async ({ consumerId }) => {

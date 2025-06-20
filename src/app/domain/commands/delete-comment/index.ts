@@ -14,7 +14,7 @@ type CommandDeleteComment = (
 
 const commandDeleteComment: CommandDeleteComment = (dataStore) => {
   return async ({ id, sessionId }) => {
-    const commentExists = await dataStore.getCommentById({ id });
+    const commentExists = await dataStore.comment.getCommentById({ id });
 
     if (!commentExists) {
       throw errors.domain.commentNotFound;
@@ -24,7 +24,10 @@ const commandDeleteComment: CommandDeleteComment = (dataStore) => {
       throw errors.domain.unauthorized;
     }
 
-    const deletedComment = await dataStore.deleteCommentById({ id, sessionId });
+    const deletedComment = await dataStore.comment.deleteCommentById({
+      id,
+      sessionId,
+    });
 
     return {
       id: deletedComment.id,
