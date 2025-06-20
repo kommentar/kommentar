@@ -40,133 +40,142 @@ const getApp: GetApp = ({
   profanityClient,
 }) => {
   return {
-    getCommentsForHost: async ({ hostId }) => {
-      const cachedComments = cacheStore.get(hostId) as Comment[] | undefined;
+    comment: {
+      getCommentsForHost: async ({ hostId }) => {
+        const cachedComments = cacheStore.get(hostId) as Comment[] | undefined;
 
-      if (cachedComments) {
-        return cachedComments;
-      }
+        if (cachedComments) {
+          return cachedComments;
+        }
 
-      const query = queryGetCommentsForHost(dataStore);
+        const query = queryGetCommentsForHost(dataStore);
 
-      const comments = await query({
-        hostId,
-      });
+        const comments = await query({
+          hostId,
+        });
 
-      cacheStore.set(hostId, comments);
+        cacheStore.set(hostId, comments);
 
-      return comments;
-    },
+        return comments;
+      },
 
-    createCommentForHost: async ({ hostId, content, sessionId, commenter }) => {
-      const isProfane = await profanityClient.check(content);
-
-      if (isProfane === "PROFANE") {
-        throw errors.domain.profaneComment;
-      }
-
-      const command = commandCreateComment(dataStore);
-
-      const savedComment = await command({
+      createCommentForHost: async ({
         hostId,
         content,
         sessionId,
         commenter,
-      });
+      }) => {
+        const isProfane = await profanityClient.check(content);
 
-      const event = toCommentCreatedEvent({
-        comment: { ...savedComment, sessionId },
-        subject: hostId,
-        randomId,
-        source: "app",
-      });
+        if (isProfane === "PROFANE") {
+          throw errors.domain.profaneComment;
+        }
 
-      eventBroker.publish({ event });
+        const command = commandCreateComment(dataStore);
 
-      return savedComment;
+        const savedComment = await command({
+          hostId,
+          content,
+          sessionId,
+          commenter,
+        });
+
+        const event = toCommentCreatedEvent({
+          comment: { ...savedComment, sessionId },
+          subject: hostId,
+          randomId,
+          source: "app",
+        });
+
+        eventBroker.publish({ event });
+
+        return savedComment;
+      },
+
+      updateCommentById: async ({ id, content, sessionId }) => {
+        const isProfane = await profanityClient.check(content);
+
+        if (isProfane === "PROFANE") {
+          throw errors.domain.profaneComment;
+        }
+
+        const command = commandUpdateComment(dataStore);
+
+        const updatedComment = await command({
+          id,
+          content,
+          sessionId,
+        });
+
+        const event = toCommentUpdatedEvent({
+          updatedComment: { ...updatedComment, sessionId },
+          subject: id,
+          randomId,
+          source: "app",
+        });
+
+        eventBroker.publish({ event });
+
+        return updatedComment;
+      },
+
+      deleteCommentById: async ({ id, sessionId }) => {
+        const command = commandDeleteComment(dataStore);
+
+        const deletedComment = await command({
+          id,
+          sessionId,
+        });
+
+        const event = toCommentDeletedEvent({
+          deletedComment: { ...deletedComment, sessionId },
+          subject: id,
+          randomId,
+          source: "app",
+        });
+
+        eventBroker.publish({ event });
+
+        return;
+      },
     },
 
-    updateCommentById: async ({ id, content, sessionId }) => {
-      const isProfane = await profanityClient.check(content);
+    consumer: {
+      createConsumer: async ({ consumer }) => {
+        const command = commandCreateConsumer(dataStore);
 
-      if (isProfane === "PROFANE") {
-        throw errors.domain.profaneComment;
-      }
+        const savedConsumer = await command({ consumer });
 
-      const command = commandUpdateComment(dataStore);
+        return savedConsumer;
+      },
 
-      const updatedComment = await command({
-        id,
-        content,
-        sessionId,
-      });
+      deleteConsumer: async ({ id }) => {
+        const command = commandDeleteConsumer(dataStore);
 
-      const event = toCommentUpdatedEvent({
-        updatedComment: { ...updatedComment, sessionId },
-        subject: id,
-        randomId,
-        source: "app",
-      });
+        const deletedConsumer = await command({ id });
 
-      eventBroker.publish({ event });
+        return deletedConsumer;
+      },
 
-      return updatedComment;
-    },
+      updateConsumer: async ({ consumer }) => {
+        const command = commandUpdateConsumer(dataStore);
 
-    deleteCommentById: async ({ id, sessionId }) => {
-      const command = commandDeleteComment(dataStore);
+        const updatedConsumer = await command({ consumer });
 
-      const deletedComment = await command({
-        id,
-        sessionId,
-      });
+        return updatedConsumer;
+      },
 
-      const event = toCommentDeletedEvent({
-        deletedComment: { ...deletedComment, sessionId },
-        subject: id,
-        randomId,
-        source: "app",
-      });
+      getConsumerById: async ({ id }) => {
+        const query = queryGetConsumer(dataStore);
 
-      eventBroker.publish({ event });
+        const savedConsumer = await query({ id });
 
-      return;
-    },
+        if (!savedConsumer) {
+          return undefined;
+        }
 
-    createConsumer: async ({ consumer }) => {
-      const command = commandCreateConsumer(dataStore);
-
-      const savedConsumer = await command({ consumer });
-
-      return savedConsumer;
-    },
-
-    deleteConsumer: async ({ id }) => {
-      const command = commandDeleteConsumer(dataStore);
-
-      const deletedConsumer = await command({ id });
-
-      return deletedConsumer;
-    },
-
-    updateConsumer: async ({ consumer }) => {
-      const command = commandUpdateConsumer(dataStore);
-
-      const updatedConsumer = await command({ consumer });
-
-      return updatedConsumer;
-    },
-
-    getConsumerById: async ({ id }) => {
-      const query = queryGetConsumer(dataStore);
-
-      const savedConsumer = await query({ id });
-
-      if (!savedConsumer) {
-        return undefined;
-      }
-
-      return savedConsumer;
+        return savedConsumer;
+      },
     },
   };
 };

@@ -37,7 +37,7 @@ const getApiRouter: GetApiRouter = ({ app, dataStore }) => {
     try {
       const { hostId } = c.req.valid("param");
 
-      const comments = await app.getCommentsForHost({ hostId });
+      const comments = await app.comment.getCommentsForHost({ hostId });
 
       return c.json(comments, 200);
     } catch (err) {
@@ -51,7 +51,7 @@ const getApiRouter: GetApiRouter = ({ app, dataStore }) => {
       const { content, commenter } = c.req.valid("json");
       const sessionId = getCookie(c, "sessionId") as string;
 
-      const comment = await app.createCommentForHost({
+      const comment = await app.comment.createCommentForHost({
         hostId,
         content,
         sessionId,
@@ -70,7 +70,11 @@ const getApiRouter: GetApiRouter = ({ app, dataStore }) => {
       const { content } = c.req.valid("json");
       const sessionId = getCookie(c, "sessionId") as string;
 
-      const comment = await app.updateCommentById({ id, content, sessionId });
+      const comment = await app.comment.updateCommentById({
+        id,
+        content,
+        sessionId,
+      });
 
       return c.json(comment, 200);
     } catch (err) {
@@ -83,7 +87,7 @@ const getApiRouter: GetApiRouter = ({ app, dataStore }) => {
       const { id } = c.req.valid("param");
       const sessionId = getCookie(c, "sessionId") as string;
 
-      await app.deleteCommentById({ id, sessionId });
+      await app.comment.deleteCommentById({ id, sessionId });
 
       return c.json({ message: "Comment deleted" }, 200);
     } catch (err) {
@@ -96,7 +100,7 @@ const getApiRouter: GetApiRouter = ({ app, dataStore }) => {
     try {
       const { id } = c.req.valid("param");
 
-      const consumer = await app.getConsumerById({ id });
+      const consumer = await app.consumer.getConsumerById({ id });
 
       if (!consumer) {
         throw errors.domain.consumerNotFound;
