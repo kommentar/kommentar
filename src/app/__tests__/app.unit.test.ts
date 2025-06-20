@@ -84,7 +84,7 @@ describe("getApp", () => {
 
     mockDataStore.getAllCommentsByHostId.mockResolvedValue(storedComments);
 
-    const result = await app.getCommentsForHost({ hostId });
+    const result = await app.comment.getCommentsForHost({ hostId });
 
     expect(mockDataStore.getAllCommentsByHostId).toHaveBeenCalledWith({
       hostId,
@@ -109,7 +109,7 @@ describe("getApp", () => {
 
     mockCacheStore.get.mockReturnValue(cachedComments);
 
-    const result = await app.getCommentsForHost({ hostId });
+    const result = await app.comment.getCommentsForHost({ hostId });
 
     expect(mockDataStore.getAllCommentsByHostId).not.toHaveBeenCalled();
     expect(result).toEqual(cachedComments);
@@ -138,7 +138,7 @@ describe("getApp", () => {
 
     mockDataStore.saveCommentByHostId.mockResolvedValue(savedComment);
 
-    const result = await app.createCommentForHost({
+    const result = await app.comment.createCommentForHost({
       hostId: "host1",
       content: "Nice place!",
       sessionId: "session1",
@@ -164,7 +164,7 @@ describe("getApp", () => {
     mockProfanityClient.check.mockResolvedValue("PROFANE");
 
     try {
-      await app.createCommentForHost({
+      await app.comment.createCommentForHost({
         hostId,
         content,
         sessionId: "session1",
@@ -196,7 +196,7 @@ describe("getApp", () => {
     mockDataStore.updateCommentById.mockResolvedValue(updatedComment);
     mockDataStore.getCommentById.mockResolvedValue(updatedComment);
 
-    const result = await app.updateCommentById({
+    const result = await app.comment.updateCommentById({
       id: "comment1",
       content: "Updated content",
       sessionId: "session1",
@@ -228,7 +228,11 @@ describe("getApp", () => {
     mockDataStore.getCommentById.mockResolvedValue(updatedComment);
 
     try {
-      await app.updateCommentById({ id, content, sessionId: "invalid" });
+      await app.comment.updateCommentById({
+        id,
+        content,
+        sessionId: "invalid",
+      });
     } catch (error) {
       const e = error as CustomError;
       expect(e.message).toBe("Unauthorized access");
@@ -245,7 +249,7 @@ describe("getApp", () => {
     mockProfanityClient.check.mockResolvedValue("PROFANE");
 
     try {
-      await app.updateCommentById({ id, content, sessionId });
+      await app.comment.updateCommentById({ id, content, sessionId });
     } catch (error) {
       const e = error as CustomError;
       expect(e.message).toBe(
@@ -267,7 +271,7 @@ describe("getApp", () => {
       commenter_displayname: "John Doe",
     };
     mockDataStore.saveCommentByHostId.mockResolvedValue(savedComment);
-    await app.createCommentForHost({
+    await app.comment.createCommentForHost({
       hostId: "host1",
       content: "Nice place!",
       sessionId: "session1",
@@ -278,7 +282,10 @@ describe("getApp", () => {
 
     mockDataStore.deleteCommentById.mockResolvedValue(savedComment);
     mockDataStore.getCommentById.mockResolvedValue(savedComment);
-    await app.deleteCommentById({ id: "comment1", sessionId: "session1" });
+    await app.comment.deleteCommentById({
+      id: "comment1",
+      sessionId: "session1",
+    });
 
     expect(mockDataStore.deleteCommentById).toHaveBeenCalledWith({
       id: "comment1",
@@ -292,7 +299,7 @@ describe("getApp", () => {
     const content = "Nice place!";
     const savedComment = { id, content, sessionid: sessionId };
     mockDataStore.saveCommentByHostId.mockResolvedValue(savedComment);
-    await app.createCommentForHost({
+    await app.comment.createCommentForHost({
       hostId: "host1",
       content,
       sessionId,
@@ -301,7 +308,7 @@ describe("getApp", () => {
 
     try {
       mockDataStore.getCommentById.mockResolvedValue(savedComment);
-      await app.deleteCommentById({ id, sessionId: "invalid" });
+      await app.comment.deleteCommentById({ id, sessionId: "invalid" });
     } catch (error) {
       const e = error as CustomError;
       expect(e.message).toBe("Unauthorized access");

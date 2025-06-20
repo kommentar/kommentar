@@ -1,11 +1,11 @@
-import type { PublicComment } from "./comment.js";
+import type { Comment, PublicComment } from "./comment.js";
 import type { Consumer, PublicConsumer } from "./consumer.js";
 
-type App = {
+type CommentOperations = {
   getCommentsForHost: ({
     hostId,
   }: {
-    hostId: string;
+    hostId: Comment["hostId"];
   }) => Promise<PublicComment[]>;
 
   createCommentForHost: ({
@@ -14,13 +14,10 @@ type App = {
     sessionId,
     commenter,
   }: {
-    hostId: string;
-    content: string;
-    sessionId: string;
-    commenter: {
-      displayName: string;
-      realName?: string;
-    };
+    hostId: Comment["hostId"];
+    content: Comment["content"];
+    sessionId: Comment["sessionId"];
+    commenter: Comment["commenter"];
   }) => Promise<PublicComment>;
 
   updateCommentById: ({
@@ -28,31 +25,38 @@ type App = {
     content,
     sessionId,
   }: {
-    id: string;
-    content: string;
-    sessionId: string;
+    id: Comment["id"];
+    content: Comment["content"];
+    sessionId: Comment["sessionId"];
   }) => Promise<PublicComment>;
 
   deleteCommentById: ({
     id,
     sessionId,
   }: {
-    id: string;
-    sessionId: string;
+    id: Comment["id"];
+    sessionId: Comment["sessionId"];
   }) => Promise<undefined>;
+};
 
+type ConsumerOperations = {
   createConsumer: ({ consumer }: { consumer: Consumer }) => Promise<Consumer>;
-  deleteConsumer: ({ id }: { id: string }) => Promise<Consumer>;
+  deleteConsumer: ({ id }: { id: Consumer["id"] }) => Promise<PublicConsumer>;
   getConsumerById: ({
     id,
   }: {
-    id: string;
+    id: Consumer["id"];
   }) => Promise<PublicConsumer | undefined>;
   updateConsumer: ({
     consumer,
   }: {
     consumer: Consumer;
   }) => Promise<PublicConsumer>;
+};
+
+type App = {
+  comment: CommentOperations;
+  consumer: ConsumerOperations;
 };
 
 export type { App };
