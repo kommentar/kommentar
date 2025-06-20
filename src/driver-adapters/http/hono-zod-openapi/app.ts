@@ -1,14 +1,14 @@
-import { OpenAPIHono } from "@hono/zod-openapi";
-import type { App } from "../../../app/domain/entities/app.js";
-import { Scalar } from "@scalar/hono-api-reference";
-import { HTTPException } from "hono/http-exception";
-import type { RandomId } from "../../../app/driven-ports/random-id.js";
-import { sessionMiddleware } from "./middlewares.js";
 import type {
   DataStore,
   StoredConsumer,
 } from "../../../app/driven-ports/data-store.js";
+import type { App } from "../../../app/domain/entities/app.js";
+import { HTTPException } from "hono/http-exception";
+import { OpenAPIHono } from "@hono/zod-openapi";
+import type { RandomId } from "../../../app/driven-ports/random-id.js";
+import { Scalar } from "@scalar/hono-api-reference";
 import { getRouter } from "./router/index.js";
+import { sessionMiddleware } from "./middlewares.js";
 
 export type CustomHonoEnv = {
   Variables: {

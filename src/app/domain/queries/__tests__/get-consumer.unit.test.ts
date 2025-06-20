@@ -1,8 +1,8 @@
-import { describe, expect, it, vi } from "vitest";
 import type {
   DataStore,
   StoredConsumer,
 } from "../../../driven-ports/data-store.js";
+import { describe, expect, it, vi } from "vitest";
 import { queryGetConsumer } from "../get-consumer/index.js";
 
 describe("queryGetConsumer", () => {

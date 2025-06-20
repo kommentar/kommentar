@@ -1,9 +1,9 @@
-import type { DataStore } from "../../../driven-ports/data-store.js";
-import type { Consumer } from "../../entities/consumer.js";
 import {
   generateApiCredentials,
   hashApiSecret,
 } from "../../helpers/security/api-key-generator.js";
+import type { Consumer } from "../../entities/consumer.js";
+import type { DataStore } from "../../../driven-ports/data-store.js";
 
 type CommandCreateConsumer = (
   dataStore: DataStore,

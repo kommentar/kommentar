@@ -1,6 +1,5 @@
-// event-broker.test.ts
+import type { CloudEvent, EventBroker } from "../event-broker.js";
 import { describe, expect, it, vi } from "vitest";
-import type { EventBroker, CloudEvent } from "../event-broker.js";
 
 const mockEvent: CloudEvent = {
   specversion: "1.0",

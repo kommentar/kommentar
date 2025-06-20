@@ -1,6 +1,6 @@
-import { serve, type ServerType } from "@hono/node-server";
-import type { OpenAPIHono } from "@hono/zod-openapi";
+import { type ServerType, serve } from "@hono/node-server";
 import type { CustomHonoEnv } from "./app.js";
+import type { OpenAPIHono } from "@hono/zod-openapi";
 
 type GetHonoZodOpenApiServer = ({
   app,

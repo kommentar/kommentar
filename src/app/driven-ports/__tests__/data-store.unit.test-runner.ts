@@ -1,7 +1,7 @@
 import { beforeAll, describe, expect, it } from "vitest";
 import type { Comment } from "../../domain/entities/comment.js";
-import type { DataStore } from "../data-store.js";
 import type { Consumer } from "../../domain/entities/consumer.js";
+import type { DataStore } from "../data-store.js";
 
 const mockComments: Comment[] = [
   {

@@ -1,5 +1,5 @@
-import config from "./vitest.config.mjs";
 import { defineConfig, mergeConfig } from "vitest/config";
+import config from "./vitest.config.mjs";
 
 export default mergeConfig(
   config,

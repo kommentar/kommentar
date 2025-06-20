@@ -1,5 +1,5 @@
-import EventEmitter from "events";
 import type { EventBroker } from "../../app/driven-ports/event-broker.js";
+import EventEmitter from "events";
 
 type GetEventBrokerInMemory = () => EventBroker;
 

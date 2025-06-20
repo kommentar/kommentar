@@ -1,4 +1,4 @@
-import { describe, it, expect, vi } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import type { DataStore } from "../../../driven-ports/data-store.js";
 import { commandUpdateComment } from "../update-comment/index.js";
 

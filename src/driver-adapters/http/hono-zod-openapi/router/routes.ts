@@ -1,12 +1,12 @@
-import { createRoute } from "@hono/zod-openapi";
 import {
   DeleteCommentByIdSchema,
   GetCommentsByHostIdSchema,
   GetConsumerByIdSchema,
   PostCommentByHostIdSchema,
-  PutCommentByIdSchema,
   PostConsumerSchema,
+  PutCommentByIdSchema,
 } from "../zod-schemas.js";
+import { createRoute } from "@hono/zod-openapi";
 
 const getCommentsForHostRoute = createRoute({
   tags: ["Comments"],

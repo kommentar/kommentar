@@ -1,9 +1,11 @@
-import { OpenAPIHono } from "@hono/zod-openapi";
+import {
+  type CustomError,
+  errors,
+} from "../../../../app/domain/entities/error.js";
 import {
   consumerAuthMiddleware,
   consumerRateLimitMiddleware,
 } from "../middlewares.js";
-import type { DataStore } from "../../../../app/driven-ports/data-store.js";
 import {
   createCommentForHostRoute,
   deleteCommentByIdRoute,
@@ -12,13 +14,11 @@ import {
   updateCommentByIdRoute,
 } from "./routes.js";
 import type { App } from "../../../../app/domain/entities/app.js";
-import { createHttpError } from "../helpers.js";
-import {
-  errors,
-  type CustomError,
-} from "../../../../app/domain/entities/error.js";
-import { getCookie } from "hono/cookie";
 import type { Comment } from "../../../../app/domain/entities/comment.js";
+import type { DataStore } from "../../../../app/driven-ports/data-store.js";
+import { OpenAPIHono } from "@hono/zod-openapi";
+import { createHttpError } from "../helpers.js";
+import { getCookie } from "hono/cookie";
 
 type GetApiRouter = ({
   app,

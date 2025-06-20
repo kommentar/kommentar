@@ -1,5 +1,5 @@
-import type { DataStore } from "../../../driven-ports/data-store.js";
 import type { Consumer, PublicConsumer } from "../../entities/consumer.js";
+import type { DataStore } from "../../../driven-ports/data-store.js";
 import { errors } from "../../entities/error.js";
 
 type CommandUpdateConsumer = (

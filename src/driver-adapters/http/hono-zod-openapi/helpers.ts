@@ -1,9 +1,9 @@
-import { HTTPException } from "hono/http-exception";
-import type { ContentfulStatusCode } from "hono/utils/http-status";
 import type {
   CustomError,
   ErrorCode,
 } from "../../../app/domain/entities/error.js";
+import type { ContentfulStatusCode } from "hono/utils/http-status";
+import { HTTPException } from "hono/http-exception";
 
 type CreateHttpError = (error: CustomError) => HTTPException;
 

@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from "vitest";
-import { commandCreateConsumer } from "../create-consumer/index.js";
 import type { DataStore } from "../../../driven-ports/data-store.js";
+import { commandCreateConsumer } from "../create-consumer/index.js";
 
 describe("commandCreateConsumer", () => {
   it("should save a consumer and return it", async () => {
