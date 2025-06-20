@@ -1,15 +1,15 @@
 import type { Context, MiddlewareHandler } from "hono";
-import { createMiddleware } from "hono/factory";
-import type { RandomId } from "../../../app/driven-ports/random-id.js";
-import { getCookie, setCookie } from "hono/cookie";
-import { rateLimiter } from "hono-rate-limiter";
-import { getConnInfo } from "@hono/node-server/conninfo";
 import type {
   DataStore,
   StoredConsumer,
 } from "../../../app/driven-ports/data-store.js";
-import { verifyApiSecret } from "../../../app/domain/helpers/security/api-key-generator.js";
+import { getCookie, setCookie } from "hono/cookie";
 import type { CustomHonoEnv } from "./app.js";
+import type { RandomId } from "../../../app/driven-ports/random-id.js";
+import { createMiddleware } from "hono/factory";
+import { getConnInfo } from "@hono/node-server/conninfo";
+import { rateLimiter } from "hono-rate-limiter";
+import { verifyApiSecret } from "../../../app/domain/helpers/security/api-key-generator.js";
 
 type SessionMiddleware = (randomId: RandomId) => MiddlewareHandler;
 type ConsumerAuthMiddleware = (dataStore: DataStore) => MiddlewareHandler;

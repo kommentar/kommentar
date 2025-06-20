@@ -1,5 +1,5 @@
-import { v4 as uuidv4 } from "uuid";
 import type { RandomId } from "../../../app/driven-ports/random-id.js";
+import { v4 as uuidv4 } from "uuid";
 
 type GetRandomIdUuid = () => RandomId;
 

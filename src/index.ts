@@ -1,16 +1,16 @@
 import { getApp } from "./app/index.js";
-import { wheneverCommentCreatedInvalidateCache } from "./app/domain/policies/whenever-comment-created-invalidate-cache.js";
-import { wheneverCommentDeletedInvalidateCache } from "./app/domain/policies/whenever-comment-deleted-invalidate-cache.js";
-import { wheneverCommentUpdatedInvalidateCache } from "./app/domain/policies/whenever-comment-updated-invalidate-cache.js";
 import { getCacheStoreInMemory } from "./driven-adapters/cache-store/in-memory/index.js";
 import { getConfigStaticEnv } from "./driven-adapters/config/static-env/index.js";
 import { getDataStorePostgres } from "./driven-adapters/data-store/postgres/index.js";
 import { getEventBrokerInMemory } from "./driven-adapters/event-broker/in-memory.js";
+import { getHttpHonoZodOpenApi } from "./driver-adapters/http/hono-zod-openapi/index.js";
+import { getNodeArgv } from "./utils/node.js";
 import { getProfanityClientApi } from "./driven-adapters/profanity-client/profanity-api/index.js";
 import { getRandomIdUuid } from "./driven-adapters/random-id/uuid/index.js";
 import { getSecretStoreEnv } from "./driven-adapters/secrets/env/index.js";
-import { getHttpHonoZodOpenApi } from "./driver-adapters/http/hono-zod-openapi/index.js";
-import { getNodeArgv } from "./utils/node.js";
+import { wheneverCommentCreatedInvalidateCache } from "./app/domain/policies/whenever-comment-created-invalidate-cache.js";
+import { wheneverCommentDeletedInvalidateCache } from "./app/domain/policies/whenever-comment-deleted-invalidate-cache.js";
+import { wheneverCommentUpdatedInvalidateCache } from "./app/domain/policies/whenever-comment-updated-invalidate-cache.js";
 
 const config = getConfigStaticEnv();
 const secretStore = getSecretStoreEnv();

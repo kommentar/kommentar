@@ -1,6 +1,6 @@
-import type { PublicComment } from "../entities/comment.js";
 import type { CacheStore } from "../../driven-ports/cache-store.js";
 import type { EventBroker } from "../../driven-ports/event-broker.js";
+import type { PublicComment } from "../entities/comment.js";
 
 type WheneverCommentDeletedInvalidateCachePolicy = ({
   eventBroker,

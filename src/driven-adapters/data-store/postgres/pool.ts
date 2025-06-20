@@ -1,5 +1,5 @@
-import pg from "pg";
 import type { GetPgPool } from "./types.js";
+import pg from "pg";
 
 const { Pool } = pg;
 

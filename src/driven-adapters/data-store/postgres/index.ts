@@ -1,22 +1,22 @@
-import { errors } from "../../../app/domain/entities/error.js";
-import type { Config } from "../../../app/driven-ports/config.js";
-import type { DataStore } from "../../../app/driven-ports/data-store.js";
-import type { RandomId } from "../../../app/driven-ports/random-id.js";
-import type { SecretStore } from "../../../app/driven-ports/secret-store.js";
-import { migrate, rollback } from "./migrate/index.js";
-import { getPgPool } from "./pool.js";
 import {
   deleteCommentByIdQuery,
   deleteConsumerQuery,
   getAllCommentsByHostIdQuery,
   getCommentByIdQuery,
-  getConsumerByIdQuery,
   getConsumerByApiKeyQuery,
+  getConsumerByIdQuery,
   saveCommentByHostIdQuery,
   saveConsumerQuery,
   updateCommentByIdQuery,
   updateConsumerQuery,
 } from "./queries.js";
+import { migrate, rollback } from "./migrate/index.js";
+import type { Config } from "../../../app/driven-ports/config.js";
+import type { DataStore } from "../../../app/driven-ports/data-store.js";
+import type { RandomId } from "../../../app/driven-ports/random-id.js";
+import type { SecretStore } from "../../../app/driven-ports/secret-store.js";
+import { errors } from "../../../app/domain/entities/error.js";
+import { getPgPool } from "./pool.js";
 
 type GetDataStorePostgres = ({
   config,

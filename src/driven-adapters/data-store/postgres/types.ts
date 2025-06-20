@@ -1,8 +1,8 @@
 import type { Pool, PoolClient, QueryConfig } from "pg";
 import type { Comment } from "../../../app/domain/entities/comment.js";
 import type { Config } from "../../../app/driven-ports/config.js";
-import type { SecretStore } from "../../../app/driven-ports/secret-store.js";
 import type { Consumer } from "../../../app/domain/entities/consumer.js";
+import type { SecretStore } from "../../../app/driven-ports/secret-store.js";
 
 type InnerRunInTransaction = (
   fn: (client: PoolClient) => Promise<unknown>,

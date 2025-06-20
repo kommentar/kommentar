@@ -1,6 +1,6 @@
-import { describe, it, expect, vi } from "vitest";
-import type { DataStore } from "../../../driven-ports/data-store.js";
+import { describe, expect, it, vi } from "vitest";
 import type { Comment } from "../../entities/comment.js";
+import type { DataStore } from "../../../driven-ports/data-store.js";
 import { commandDeleteComment } from "../delete-comment/index.js";
 
 describe("commandDeleteComment", () => {

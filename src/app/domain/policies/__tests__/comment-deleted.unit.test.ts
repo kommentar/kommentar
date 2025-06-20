@@ -1,8 +1,8 @@
-import { describe, it, expect, vi, type Mock } from "vitest";
-import type { EventBroker } from "../../../driven-ports/event-broker.js";
+import { type Mock, describe, expect, it, vi } from "vitest";
 import type { CacheStore } from "../../../driven-ports/cache-store.js";
-import { wheneverCommentDeletedInvalidateCache } from "../whenever-comment-deleted-invalidate-cache.js";
 import type { Comment } from "../../entities/comment.js";
+import type { EventBroker } from "../../../driven-ports/event-broker.js";
+import { wheneverCommentDeletedInvalidateCache } from "../whenever-comment-deleted-invalidate-cache.js";
 
 describe("wheneverCommentDeletedInvalidateCache", () => {
   it("should do nothing when there are no cached comments", () => {

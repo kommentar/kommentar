@@ -1,6 +1,6 @@
-import { describe, it, expect, vi, afterEach } from "vitest";
-import { getApp } from "../index.js";
+import { afterEach, describe, expect, it, vi } from "vitest";
 import type { CustomError } from "../domain/entities/error.js";
+import { getApp } from "../index.js";
 
 describe("getApp", () => {
   const mockDataStore = {

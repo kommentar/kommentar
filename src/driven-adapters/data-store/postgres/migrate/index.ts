@@ -1,9 +1,9 @@
-import type { PoolClient } from "pg";
 import type { GetMigrationStatusFn, MigrateFn, RollbackFn } from "../types.js";
-import { runInTransaction } from "../utils.js";
 import type { Migration, MigrationRecord } from "./types.js";
-import { migrations } from "./list.js";
+import type { PoolClient } from "pg";
 import { errors } from "../../../../app/domain/entities/error.js";
+import { migrations } from "./list.js";
+import { runInTransaction } from "../utils.js";
 
 const createMigrationsTableIfNotPresent = async (client: PoolClient) => {
   await client.query(`

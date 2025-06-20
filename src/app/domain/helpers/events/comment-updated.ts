@@ -1,6 +1,6 @@
 import type { CloudEvent } from "../../../driven-ports/event-broker.js";
-import type { RandomId } from "../../../driven-ports/random-id.js";
 import type { PublicComment } from "../../entities/comment.js";
+import type { RandomId } from "../../../driven-ports/random-id.js";
 
 type ToCommentUpdatedEvent = ({
   updatedComment,
