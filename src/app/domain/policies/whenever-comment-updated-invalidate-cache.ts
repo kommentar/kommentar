@@ -1,4 +1,4 @@
-import type { Comment } from "../entities/comment.js";
+import type { PublicComment } from "../entities/comment.js";
 import type { CacheStore } from "../../driven-ports/cache-store.js";
 import type { EventBroker } from "../../driven-ports/event-broker.js";
 
@@ -15,11 +15,11 @@ const wheneverCommentUpdatedInvalidateCache: WheneverCommentUpdatedInvalidateCac
     eventBroker.subscribe({
       type: "kommentar.comment.updated",
       handler: (event) => {
-        const updatedComment = event.data as Comment;
+        const updatedComment = event.data as PublicComment;
         const { hostId: key } = updatedComment;
 
         const currentCachedComments = cacheStore.get(key) as
-          | Comment[]
+          | PublicComment[]
           | undefined;
 
         if (!currentCachedComments) {

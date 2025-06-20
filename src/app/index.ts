@@ -81,7 +81,7 @@ const getApp: GetApp = ({
         });
 
         const event = toCommentCreatedEvent({
-          comment: { ...savedComment, sessionId },
+          comment: savedComment,
           subject: hostId,
           randomId,
           source: "app",
@@ -108,7 +108,7 @@ const getApp: GetApp = ({
         });
 
         const event = toCommentUpdatedEvent({
-          updatedComment: { ...updatedComment, sessionId },
+          updatedComment: updatedComment,
           subject: id,
           randomId,
           source: "app",
@@ -128,7 +128,7 @@ const getApp: GetApp = ({
         });
 
         const event = toCommentDeletedEvent({
-          deletedComment: { ...deletedComment, sessionId },
+          deletedComment: deletedComment,
           subject: id,
           randomId,
           source: "app",
