@@ -3,9 +3,18 @@ import type { App } from "../../../app/domain/entities/app.js";
 import { Scalar } from "@scalar/hono-api-reference";
 import { HTTPException } from "hono/http-exception";
 import type { RandomId } from "../../../app/driven-ports/random-id.js";
-import { rateLimitMiddleware, sessionMiddleware } from "./middlewares.js";
-import type { DataStore } from "../../../app/driven-ports/data-store.js";
+import { sessionMiddleware } from "./middlewares.js";
+import type {
+  DataStore,
+  StoredConsumer,
+} from "../../../app/driven-ports/data-store.js";
 import { getRouter } from "./router/index.js";
+
+export type CustomHonoEnv = {
+  Variables: {
+    consumer: StoredConsumer;
+  };
+};
 
 type GetHttpAppHonoZodOpenApi = ({
   app,
@@ -15,7 +24,7 @@ type GetHttpAppHonoZodOpenApi = ({
   app: App;
   randomId: RandomId;
   dataStore: DataStore;
-}) => OpenAPIHono;
+}) => OpenAPIHono<CustomHonoEnv>;
 
 const apiClientservers = [
   {
@@ -39,12 +48,11 @@ const getHttpAppHonoZodOpenApi: GetHttpAppHonoZodOpenApi = ({
     });
   }
 
-  const hono = new OpenAPIHono();
+  const hono = new OpenAPIHono<CustomHonoEnv>();
 
   const { apiRouter } = getRouter({ app, dataStore });
 
   hono.use(sessionMiddleware(randomId));
-  hono.use(rateLimitMiddleware);
 
   // Documentation
   hono.doc("/spec", {

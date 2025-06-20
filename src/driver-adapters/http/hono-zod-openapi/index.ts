@@ -2,7 +2,7 @@ import type { OpenAPIHono } from "@hono/zod-openapi";
 import type { App } from "../../../app/domain/entities/app.js";
 import type { Config } from "../../../app/driven-ports/config.js";
 import type { ServerType } from "@hono/node-server";
-import { getHttpAppHonoZodOpenApi } from "./app.js";
+import { getHttpAppHonoZodOpenApi, type CustomHonoEnv } from "./app.js";
 import { getHonoZodOpenApiServer } from "./server.js";
 import type { RandomId } from "../../../app/driven-ports/random-id.js";
 import type { DataStore } from "../../../app/driven-ports/data-store.js";
@@ -18,7 +18,7 @@ type GetHttpHonoZodOpenApi = ({
   randomId: RandomId;
   dataStore: DataStore;
 }) => {
-  app: OpenAPIHono;
+  app: OpenAPIHono<CustomHonoEnv>;
   server: ServerType;
 };
 

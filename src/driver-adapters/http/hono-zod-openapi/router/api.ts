@@ -18,6 +18,7 @@ import {
   type CustomError,
 } from "../../../../app/domain/entities/error.js";
 import { getCookie } from "hono/cookie";
+import type { Comment } from "../../../../app/domain/entities/comment.js";
 
 type GetApiRouter = ({
   app,
@@ -31,7 +32,7 @@ const getApiRouter: GetApiRouter = ({ app, dataStore }) => {
   const apiRouter = new OpenAPIHono();
 
   apiRouter.use(consumerAuthMiddleware(dataStore));
-  apiRouter.use(consumerRateLimitMiddleware());
+  apiRouter.use(consumerRateLimitMiddleware);
 
   apiRouter.openapi(getCommentsForHostRoute, async (c) => {
     try {
@@ -51,11 +52,16 @@ const getApiRouter: GetApiRouter = ({ app, dataStore }) => {
       const { content, commenter } = c.req.valid("json");
       const sessionId = getCookie(c, "sessionId") as string;
 
+      const normalizedCommenter: Comment["commenter"] = {
+        displayName: commenter.displayName.trim(),
+        realName: commenter.realName ? commenter.realName.trim() : "",
+      };
+
       const comment = await app.comment.createCommentForHost({
         hostId,
         content,
         sessionId,
-        commenter,
+        commenter: normalizedCommenter,
       });
 
       return c.json(comment, 201);
