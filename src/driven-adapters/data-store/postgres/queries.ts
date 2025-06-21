@@ -2,6 +2,7 @@ import type {
   DeleteCommentByIdQuery,
   DeleteConsumerQuery,
   GetAllCommentsByHostIdQuery,
+  GetAllConsumersQuery,
   GetCommentByIdQuery,
   GetConsumerByApiKeyQuery,
   GetConsumerByIdQuery,
@@ -165,6 +166,18 @@ const deleteConsumerQuery: DeleteConsumerQuery = ({ consumerId }) => {
   };
 };
 
+const getAllConsumersQuery: GetAllConsumersQuery = ({ offset, limit }) => {
+  return {
+    name: "get-all-consumers",
+    text: `
+        SELECT * FROM kommentar.consumer
+        ORDER BY created_at DESC
+        LIMIT $1 OFFSET $2;
+        `,
+    values: [limit, offset],
+  };
+};
+
 export {
   getAllCommentsByHostIdQuery,
   saveCommentByHostIdQuery,
@@ -176,4 +189,5 @@ export {
   saveConsumerQuery,
   updateConsumerQuery,
   deleteConsumerQuery,
+  getAllConsumersQuery,
 };

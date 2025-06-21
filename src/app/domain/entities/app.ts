@@ -57,6 +57,13 @@ type ConsumerOperations = {
   }: {
     id: Consumer["id"];
   }) => Promise<Consumer | undefined>;
+  getAllConsumers: ({
+    offset,
+    limit,
+  }: {
+    offset: number;
+    limit: number;
+  }) => Promise<PublicConsumer[]>;
 };
 
 type App = {

@@ -2,6 +2,7 @@ import {
   deleteCommentByIdQuery,
   deleteConsumerQuery,
   getAllCommentsByHostIdQuery,
+  getAllConsumersQuery,
   getCommentByIdQuery,
   getConsumerByApiKeyQuery,
   getConsumerByIdQuery,
@@ -128,9 +129,11 @@ const getDataStorePostgres: GetDataStorePostgres = async ({
           throw errors.dependency.dataStoreError;
         }
       },
-      getAll: async () => {
+      getAll: async ({ offset, limit }) => {
         try {
-          const result = await pgPool.query("SELECT * FROM kommentar.consumer");
+          const result = await pgPool.query(
+            getAllConsumersQuery({ offset, limit }),
+          );
           return result.rows;
         } catch (error) {
           console.error("Failed to get all consumers", error);

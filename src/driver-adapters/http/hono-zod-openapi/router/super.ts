@@ -5,6 +5,7 @@ import {
 import {
   createConsumerRoute,
   deleteConsumerRoute,
+  getAllConsumersRoute,
   getConsumerByIdRoute,
   updateConsumerByIdRoute,
 } from "./routes.js";
@@ -127,6 +128,21 @@ const getSuperRouter: GetSuperRouter = ({ app, secretStore }) => {
       });
 
       return c.json(updatedConsumer, 200);
+    } catch (err) {
+      throw createHttpError(err as unknown as CustomError);
+    }
+  });
+
+  superRouter.openapi(getAllConsumersRoute, async (c) => {
+    try {
+      const { offset, limit } = c.req.valid("query");
+
+      const consumers = await app.consumer.getAllConsumers({
+        offset: offset ?? 0,
+        limit: limit ?? 100,
+      });
+
+      return c.json(consumers, 200);
     } catch (err) {
       throw createHttpError(err as unknown as CustomError);
     }
