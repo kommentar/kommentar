@@ -56,6 +56,18 @@ const consumerSchema = z
       description: "Description of the consumer",
       example: "A consumer of the comment system",
     }),
+    apiKey: z.string().openapi({
+      description: "API key for authentication",
+      example: "km_1234567890abcdef1234567890abcdef",
+    }),
+    isActive: z.boolean().openapi({
+      description: "Whether the consumer is active",
+      example: true,
+    }),
+    rateLimit: z.number().optional().openapi({
+      description: "Custom rate limit per minute for this consumer",
+      example: 100,
+    }),
   })
   .openapi("Consumer");
 
@@ -115,6 +127,18 @@ const authHeaders = z.object({
   }),
 });
 
+const superAuthHeaders = z.object({
+  "x-admin-key": z.string().openapi({
+    description: "Admin Key for superuser authentication",
+    example: "admin_1234567890abcdef1234567890abcdef",
+  }),
+  "x-admin-secret": z.string().openapi({
+    description: "Admin Secret for superuser authentication",
+    example:
+      "abcdef1234567890abcdef1234567890abcdef1234567890abcdef1234567890ab",
+  }),
+});
+
 // Error schemas
 const authErrorSchema = z.object({
   error: z.string().openapi({
@@ -155,6 +179,24 @@ const commentNotFoundErrorSchema = z.object({
 const consumerNotFoundErrorSchema = z.object({
   message: z.string().openapi({
     example: "Consumer not found",
+  }),
+});
+
+const superCredentialsErrorSchema = z.object({
+  error: z.string().openapi({
+    example: "Admin credentials required",
+  }),
+  message: z.string().openapi({
+    example: "Both X-Admin-Key and X-Admin-Secret headers are required",
+  }),
+});
+
+const superAuthNotConfiguredErrorSchema = z.object({
+  error: z.string().openapi({
+    example: "Admin authentication not configured",
+  }),
+  message: z.string().openapi({
+    example: "Admin authentication is not properly set up",
   }),
 });
 
@@ -339,23 +381,21 @@ const GetConsumerByIdSchema = {
         }),
     })
     .required(),
-  headers: authHeaders,
+  headers: superAuthHeaders,
   response: consumerSchema,
   errors: {
-    401: authErrorSchema,
+    400: genericErrorSchema,
+    401: superCredentialsErrorSchema,
     404: consumerNotFoundErrorSchema,
     500: genericErrorSchema,
+    503: superAuthNotConfiguredErrorSchema,
   },
 };
 
 const PostConsumerSchema = {
-  headers: authHeaders,
+  headers: superAuthHeaders,
   body: z
     .object({
-      id: z.string().openapi({
-        description: "Unique identifier for the consumer",
-        example: "e3251fe5-9401-4ee0-a15e-9b3a72ef4904",
-      }),
       name: z.string().openapi({
         description: "Name of the consumer",
         example: "My Blog Application",
@@ -384,8 +424,94 @@ const PostConsumerSchema = {
   response: consumerWithCredentialsSchema,
   errors: {
     400: genericErrorSchema,
-    401: authErrorSchema,
+    401: superCredentialsErrorSchema,
     500: genericErrorSchema,
+    503: superAuthNotConfiguredErrorSchema,
+  },
+};
+
+const DeleteConsumerByIdSchema = {
+  headers: superAuthHeaders,
+  pathParams: z
+    .object({
+      id: z
+        .string()
+        .uuid()
+        .openapi({
+          param: {
+            name: "id",
+            in: "path",
+            required: true,
+            description: "Unique identifier of the consumer",
+          },
+          example: "e3251fe5-9401-4ee0-a15e-9b3a72ef4904",
+        }),
+    })
+    .required(),
+  response: z.object({
+    message: z.string().openapi({
+      example: "Consumer deleted",
+    }),
+  }),
+  errors: {
+    400: genericErrorSchema,
+    401: superCredentialsErrorSchema,
+    404: consumerNotFoundErrorSchema,
+    500: genericErrorSchema,
+    503: superAuthNotConfiguredErrorSchema,
+  },
+};
+
+const PutConsumerSchema = {
+  headers: superAuthHeaders,
+  pathParams: z
+    .object({
+      id: z
+        .string()
+        .uuid()
+        .openapi({
+          param: {
+            name: "id",
+            in: "path",
+            required: true,
+            description: "Unique identifier of the consumer",
+          },
+          example: "e3251fe5-9401-4ee0-a15e-9b3a72ef4904",
+        }),
+    })
+    .required(),
+  body: z.object({
+    name: z.string().openapi({
+      description: "Name of the consumer",
+      example: "My Blog Application",
+    }),
+    description: z.string().optional().openapi({
+      description: "Description of the consumer",
+      example: "Comment system for my personal blog",
+    }),
+    allowedHosts: z
+      .array(z.string())
+      .optional()
+      .openapi({
+        description: "List of host IDs this consumer can access",
+        example: ["host1", "host2"],
+      }),
+    isActive: z.boolean().optional().openapi({
+      description: "Whether the consumer should be active",
+      example: true,
+    }),
+    rateLimit: z.number().optional().openapi({
+      description: "Custom rate limit per minute for this consumer",
+      example: 100,
+    }),
+  }),
+  response: consumerSchema,
+  errors: {
+    400: genericErrorSchema,
+    401: superCredentialsErrorSchema,
+    404: consumerNotFoundErrorSchema,
+    500: genericErrorSchema,
+    503: superAuthNotConfiguredErrorSchema,
   },
 };
 
@@ -396,4 +522,6 @@ export {
   DeleteCommentByIdSchema,
   GetConsumerByIdSchema,
   PostConsumerSchema,
+  DeleteConsumerByIdSchema,
+  PutConsumerSchema,
 };

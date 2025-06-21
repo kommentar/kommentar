@@ -52,6 +52,11 @@ type ConsumerOperations = {
   }: {
     consumer: Consumer;
   }) => Promise<PublicConsumer>;
+  getFullConsumerById: ({
+    id,
+  }: {
+    id: Consumer["id"];
+  }) => Promise<Consumer | undefined>;
 };
 
 type App = {

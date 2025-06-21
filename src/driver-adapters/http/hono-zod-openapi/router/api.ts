@@ -1,8 +1,4 @@
 import {
-  type CustomError,
-  errors,
-} from "../../../../app/domain/entities/error.js";
-import {
   consumerAuthMiddleware,
   consumerRateLimitMiddleware,
 } from "../middlewares.js";
@@ -10,11 +6,11 @@ import {
   createCommentForHostRoute,
   deleteCommentByIdRoute,
   getCommentsForHostRoute,
-  getConsumerByIdRoute,
   updateCommentByIdRoute,
 } from "./routes.js";
 import type { App } from "../../../../app/domain/entities/app.js";
 import type { Comment } from "../../../../app/domain/entities/comment.js";
+import { type CustomError } from "../../../../app/domain/entities/error.js";
 import type { DataStore } from "../../../../app/driven-ports/data-store.js";
 import { OpenAPIHono } from "@hono/zod-openapi";
 import { createHttpError } from "../helpers.js";
@@ -96,23 +92,6 @@ const getApiRouter: GetApiRouter = ({ app, dataStore }) => {
       await app.comment.deleteCommentById({ id, sessionId });
 
       return c.json({ message: "Comment deleted" }, 200);
-    } catch (err) {
-      throw createHttpError(err as unknown as CustomError);
-    }
-  });
-
-  // Consumer info route (read-only for self-inspection)
-  apiRouter.openapi(getConsumerByIdRoute, async (c) => {
-    try {
-      const { id } = c.req.valid("param");
-
-      const consumer = await app.consumer.getConsumerById({ id });
-
-      if (!consumer) {
-        throw errors.domain.consumerNotFound;
-      }
-
-      return c.json(consumer, 200);
     } catch (err) {
       throw createHttpError(err as unknown as CustomError);
     }

@@ -17,8 +17,10 @@
     "test:watch": "vitest",
     "manage": "node dist/scripts/manage-consumers.js",
     "manage:dev": "tsx --env-file=.env src/scripts/manage-consumers.ts",
-    "manage:test-consumer": "tsx --env-file=.env scripts/create-test-consumer.ts",
-    "manage:test-api": "tsx --env-file=.env scripts/test-api-client.ts"
+    "manage:test-consumer": "tsx --env-file=.env src/scripts/create-test-consumer.ts",
+    "manage:test-api": "tsx --env-file=.env src/scripts/test-api-client.ts",
+    "setup:admin": "node dist/scripts/setup-admin-dev.ts",
+    "setup:admin:dev": "tsx --env-file=.env src/scripts/setup-admin.ts"
   },
   "dependencies": {
     "@hono/node-server": "^1.14.4",

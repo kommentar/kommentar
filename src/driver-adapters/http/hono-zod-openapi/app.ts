@@ -7,6 +7,7 @@ import { HTTPException } from "hono/http-exception";
 import { OpenAPIHono } from "@hono/zod-openapi";
 import type { RandomId } from "../../../app/driven-ports/random-id.js";
 import { Scalar } from "@scalar/hono-api-reference";
+import type { SecretStore } from "../../../app/driven-ports/secret-store.js";
 import { getRouter } from "./router/index.js";
 import { sessionMiddleware } from "./middlewares.js";
 
@@ -20,10 +21,12 @@ type GetHttpAppHonoZodOpenApi = ({
   app,
   randomId,
   dataStore,
+  secretStore,
 }: {
   app: App;
   randomId: RandomId;
   dataStore: DataStore;
+  secretStore: SecretStore;
 }) => OpenAPIHono<CustomHonoEnv>;
 
 const apiClientservers = [
@@ -37,6 +40,7 @@ const getHttpAppHonoZodOpenApi: GetHttpAppHonoZodOpenApi = ({
   app,
   randomId,
   dataStore,
+  secretStore,
 }) => {
   if (
     process.env.NODE_ENV === "production" &&
@@ -50,7 +54,7 @@ const getHttpAppHonoZodOpenApi: GetHttpAppHonoZodOpenApi = ({
 
   const hono = new OpenAPIHono<CustomHonoEnv>();
 
-  const { apiRouter } = getRouter({ app, dataStore });
+  const { apiRouter, superRouter } = getRouter({ app, dataStore, secretStore });
 
   hono.use(sessionMiddleware(randomId));
 
@@ -73,6 +77,7 @@ const getHttpAppHonoZodOpenApi: GetHttpAppHonoZodOpenApi = ({
     }),
   );
 
+  hono.route("/", superRouter);
   hono.route("/", apiRouter);
 
   hono.onError((err, c) => {

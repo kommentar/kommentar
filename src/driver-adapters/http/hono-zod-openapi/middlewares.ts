@@ -6,6 +6,7 @@ import type {
 import { getCookie, setCookie } from "hono/cookie";
 import type { CustomHonoEnv } from "./app.js";
 import type { RandomId } from "../../../app/driven-ports/random-id.js";
+import type { SecretStore } from "../../../app/driven-ports/secret-store.js";
 import { createMiddleware } from "hono/factory";
 import { getConnInfo } from "@hono/node-server/conninfo";
 import { rateLimiter } from "hono-rate-limiter";
@@ -13,6 +14,7 @@ import { verifyApiSecret } from "../../../app/domain/helpers/security/api-key-ge
 
 type SessionMiddleware = (randomId: RandomId) => MiddlewareHandler;
 type ConsumerAuthMiddleware = (dataStore: DataStore) => MiddlewareHandler;
+type AdminAuthMiddleware = (secretStore: SecretStore) => MiddlewareHandler;
 
 const sessionMiddleware: SessionMiddleware = (randomId) =>
   createMiddleware(async (c, next) => {
@@ -148,9 +150,76 @@ const consumerRateLimitMiddleware = rateLimiter({
   },
 });
 
+const adminAuthMiddleware: AdminAuthMiddleware = (secretStore) =>
+  createMiddleware(async (c, next) => {
+    const adminKey = c.req.header("X-Admin-Key");
+    const adminSecret = c.req.header("X-Admin-Secret");
+
+    if (!adminKey || !adminSecret) {
+      return c.json(
+        {
+          error: "Admin credentials required",
+          message: "Both X-Admin-Key and X-Admin-Secret headers are required",
+        },
+        401,
+      );
+    }
+
+    try {
+      const expectedAdminKey = secretStore.get({ key: "ADMIN_KEY" });
+      const expectedAdminSecret = secretStore.get({
+        key: "ADMIN_SECRET_HASH",
+      });
+
+      if (!expectedAdminKey || !expectedAdminSecret) {
+        console.error("Admin credentials not configured");
+        return c.json(
+          {
+            error: "Admin authentication not configured",
+            message: "Admin authentication is not properly set up",
+          },
+          503,
+        );
+      }
+
+      if (adminKey !== expectedAdminKey) {
+        return c.json(
+          {
+            error: "Invalid admin key",
+            message: "The provided admin key is not valid",
+          },
+          401,
+        );
+      }
+
+      if (!verifyApiSecret(adminSecret, expectedAdminSecret)) {
+        return c.json(
+          {
+            error: "Invalid admin secret",
+            message: "The provided admin secret is not valid",
+          },
+          401,
+        );
+      }
+
+      c.set("isAdmin", true);
+      await next();
+    } catch (error) {
+      console.error("Admin authentication error:", error);
+      return c.json(
+        {
+          error: "Authentication error",
+          message: "An error occurred during admin authentication",
+        },
+        500,
+      );
+    }
+  });
+
 export {
   sessionMiddleware,
   rateLimitMiddleware,
   consumerAuthMiddleware,
   consumerRateLimitMiddleware,
+  adminAuthMiddleware,
 };
