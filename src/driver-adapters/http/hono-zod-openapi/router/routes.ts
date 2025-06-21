@@ -17,7 +17,7 @@ const getCommentsForHostRoute = createRoute({
   description:
     "Retrieve all comments for a specific host. Requires API key and secret authentication.",
   method: "get",
-  path: "/api/hosts/{hostId}/comments",
+  path: "/hosts/{hostId}/comments",
   request: {
     params: GetCommentsByHostIdSchema.pathParams,
     headers: GetCommentsByHostIdSchema.headers,
@@ -50,7 +50,7 @@ const createCommentForHostRoute = createRoute({
   description:
     "Create a new comment for a specific host. Requires API key and secret authentication.",
   method: "post",
-  path: "/api/hosts/{hostId}/comments",
+  path: "/hosts/{hostId}/comments",
   request: {
     params: PostCommentByHostIdSchema.pathParams,
     headers: PostCommentByHostIdSchema.headers,
@@ -102,7 +102,7 @@ const updateCommentByIdRoute = createRoute({
   description:
     "Update an existing comment. Requires API key and secret authentication.",
   method: "put",
-  path: "/api/hosts/{hostId}/comments/{id}",
+  path: "/hosts/{hostId}/comments/{id}",
   request: {
     params: PutCommentByIdSchema.pathParams,
     headers: PutCommentByIdSchema.headers,
@@ -160,7 +160,7 @@ const deleteCommentByIdRoute = createRoute({
   description:
     "Delete an existing comment. Requires API key and secret authentication.",
   method: "delete",
-  path: "/api/hosts/{hostId}/comments/{id}",
+  path: "/hosts/{hostId}/comments/{id}",
   request: {
     params: DeleteCommentByIdSchema.pathParams,
     headers: DeleteCommentByIdSchema.headers,
@@ -205,7 +205,7 @@ const getConsumerByIdRoute = createRoute({
   description:
     "Retrieve consumer information by ID. Requires API key and secret authentication.",
   method: "get",
-  path: "/super/consumer/{id}",
+  path: "/consumer/{id}",
   request: {
     params: GetConsumerByIdSchema.pathParams,
     headers: GetConsumerByIdSchema.headers,
@@ -257,7 +257,7 @@ const createConsumerRoute = createRoute({
   description:
     "Create a new API consumer with generated credentials. Requires superuser authentication.",
   method: "post",
-  path: "/super/consumer",
+  path: "/consumer",
   request: {
     headers: PostConsumerSchema.headers,
     body: {
@@ -309,7 +309,7 @@ const deleteConsumerRoute = createRoute({
   description:
     "Delete an existing API consumer by ID. Requires superuser authentication.",
   method: "delete",
-  path: "/super/consumer/{id}",
+  path: "/consumer/{id}",
   request: {
     headers: DeleteConsumerByIdSchema.headers,
     params: DeleteConsumerByIdSchema.pathParams,
@@ -361,7 +361,7 @@ const updateConsumerByIdRoute = createRoute({
   description:
     "Update an existing API consumer's information. Requires superuser authentication.",
   method: "put",
-  path: "/super/consumer/{id}",
+  path: "/consumer/{id}",
   request: {
     params: PutConsumerSchema.pathParams,
     headers: PutConsumerSchema.headers,
@@ -420,7 +420,7 @@ const getAllConsumersRoute = createRoute({
   description:
     "Retrieve a list of all API consumers. Requires superuser authentication.",
   method: "get",
-  path: "/super/consumers",
+  path: "/consumers",
   request: {
     headers: GetAllConsumersSchema.headers,
     query: GetAllConsumersSchema.query,

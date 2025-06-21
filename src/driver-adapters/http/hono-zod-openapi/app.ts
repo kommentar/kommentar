@@ -77,8 +77,8 @@ const getHttpAppHonoZodOpenApi: GetHttpAppHonoZodOpenApi = ({
     }),
   );
 
-  hono.route("/", superRouter);
-  hono.route("/", apiRouter);
+  hono.route("/super", superRouter);
+  hono.route("/api", apiRouter);
 
   hono.onError((err, c) => {
     if (err instanceof HTTPException) {
