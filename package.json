@@ -19,7 +19,7 @@
     "manage:dev": "tsx --env-file=.env src/scripts/manage-consumers.ts",
     "manage:test-consumer": "tsx --env-file=.env src/scripts/create-test-consumer.ts",
     "manage:test-api": "tsx --env-file=.env src/scripts/test-api-client.ts",
-    "setup:admin": "node dist/scripts/setup-admin-dev.ts",
+    "setup:admin": "node dist/scripts/setup-admin.js",
     "setup:admin:dev": "tsx --env-file=.env src/scripts/setup-admin.ts"
   },
   "dependencies": {
