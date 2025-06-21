@@ -26,6 +26,13 @@ describe("commandUpdateConsumer", () => {
           id: "1",
           name: "Test Consumer Updated",
           description: "This is a test consumer updated",
+          api_key: "c5334937-d951-4885-af08-46b4a63c5f6d",
+          api_secret: "2f5c79d8-04bd-4988-9649-3f3cd0687de3",
+          allowed_hosts: JSON.stringify([]),
+          is_active: true,
+          rate_limit: 100,
+          created_at: new Date("2023-01-01T00:00:00Z"),
+          updated_at: new Date("2023-01-01T00:00:00Z"),
         }),
       },
       stop: vi.fn(),
@@ -55,6 +62,10 @@ describe("commandUpdateConsumer", () => {
       id: "1",
       name: "Test Consumer Updated",
       description: "This is a test consumer updated",
+      apiKey: "c5334937-d951-4885-af08-46b4a63c5f6d",
+      allowedHosts: [],
+      isActive: true,
+      rateLimit: 100,
     });
   });
 });

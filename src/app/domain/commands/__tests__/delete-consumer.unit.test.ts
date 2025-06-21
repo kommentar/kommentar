@@ -56,6 +56,7 @@ describe("commandDeleteConsumer", () => {
       name: "Test Consumer",
       description: "This is a test consumer",
       apiKey: "c59b8f26-9f3c-42db-abf3-f265b612a2b9",
+      allowedHosts: expect.any(Array),
       isActive: true,
       rateLimit: 200,
     });
