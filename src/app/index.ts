@@ -14,6 +14,7 @@ import { commandUpdateConsumer } from "./domain/commands/update-consumer/index.j
 import { errors } from "./domain/entities/error.js";
 import { queryGetCommentsForHost } from "./domain/queries/get-comments-for-host/index.js";
 import { queryGetConsumer } from "./domain/queries/get-consumer/index.js";
+import { queryGetFullConsumer } from "./domain/queries/get-full-consumer/index.js";
 import { toCommentCreatedEvent } from "./domain/helpers/events/comment-created.js";
 import { toCommentDeletedEvent } from "./domain/helpers/events/comment-deleted.js";
 import { toCommentUpdatedEvent } from "./domain/helpers/events/comment-updated.js";
@@ -142,7 +143,7 @@ const getApp: GetApp = ({
 
     consumer: {
       createConsumer: async ({ consumer }) => {
-        const command = commandCreateConsumer(dataStore);
+        const command = commandCreateConsumer(dataStore, randomId);
 
         const savedConsumer = await command({ consumer });
 
@@ -167,6 +168,18 @@ const getApp: GetApp = ({
 
       getConsumerById: async ({ id }) => {
         const query = queryGetConsumer(dataStore);
+
+        const savedConsumer = await query({ id });
+
+        if (!savedConsumer) {
+          return undefined;
+        }
+
+        return savedConsumer;
+      },
+
+      getFullConsumerById: async ({ id }) => {
+        const query = queryGetFullConsumer(dataStore);
 
         const savedConsumer = await query({ id });
 

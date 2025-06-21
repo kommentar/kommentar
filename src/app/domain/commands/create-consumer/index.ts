@@ -4,18 +4,21 @@ import {
 } from "../../helpers/security/api-key-generator.js";
 import type { Consumer } from "../../entities/consumer.js";
 import type { DataStore } from "../../../driven-ports/data-store.js";
+import type { RandomId } from "../../../driven-ports/random-id.js";
 
 type CommandCreateConsumer = (
   dataStore: DataStore,
+  randomId: RandomId,
 ) => ({ consumer }: { consumer: Consumer }) => Promise<Consumer>;
 
-const commandCreateConsumer: CommandCreateConsumer = (dataStore) => {
+const commandCreateConsumer: CommandCreateConsumer = (dataStore, randomId) => {
   return async ({ consumer }) => {
     const { apiKey, apiSecret } = generateApiCredentials();
     const hashedSecret = hashApiSecret(apiSecret);
 
     const fullConsumer: Consumer = {
       ...consumer,
+      id: randomId.generate(),
       apiKey,
       apiSecret: hashedSecret,
       isActive: consumer.isActive ?? true,

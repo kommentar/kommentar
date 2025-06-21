@@ -54,6 +54,7 @@ const hono = getHttpHonoZodOpenApi({
   config: config.http,
   randomId,
   dataStore,
+  secretStore,
 });
 
 // * when running a dev server, tsx will force kill the process. (https://github.com/privatenumber/tsx/issues/586)

@@ -1,10 +1,12 @@
 import {
   DeleteCommentByIdSchema,
+  DeleteConsumerByIdSchema,
   GetCommentsByHostIdSchema,
   GetConsumerByIdSchema,
   PostCommentByHostIdSchema,
   PostConsumerSchema,
   PutCommentByIdSchema,
+  PutConsumerSchema,
 } from "../zod-schemas.js";
 import { createRoute } from "@hono/zod-openapi";
 
@@ -197,12 +199,12 @@ const deleteCommentByIdRoute = createRoute({
 });
 
 const getConsumerByIdRoute = createRoute({
-  tags: ["Consumers"],
-  summary: "Get a consumer by id",
+  tags: ["Super"],
+  summary: "Get a consumer",
   description:
     "Retrieve consumer information by ID. Requires API key and secret authentication.",
   method: "get",
-  path: "/api/consumers/{id}",
+  path: "/super/consumer/{id}",
   request: {
     params: GetConsumerByIdSchema.pathParams,
     headers: GetConsumerByIdSchema.headers,
@@ -214,6 +216,12 @@ const getConsumerByIdRoute = createRoute({
       },
       description: "Get a consumer by id",
     },
+    400: {
+      content: {
+        "application/json": { schema: GetConsumerByIdSchema.errors[400] },
+      },
+      description: "Bad request - Invalid input",
+    },
     401: {
       content: {
         "application/json": { schema: GetConsumerByIdSchema.errors[401] },
@@ -224,7 +232,7 @@ const getConsumerByIdRoute = createRoute({
       content: {
         "application/json": { schema: GetConsumerByIdSchema.errors[404] },
       },
-      description: "Not found",
+      description: "Consumer Not found",
     },
     500: {
       content: {
@@ -232,16 +240,23 @@ const getConsumerByIdRoute = createRoute({
       },
       description: "Internal server error",
     },
+    503: {
+      content: {
+        "application/json": { schema: GetConsumerByIdSchema.errors[503] },
+      },
+      description:
+        "Service Unavailable - Admin authentication is not properly set up",
+    },
   },
 });
 
 const createConsumerRoute = createRoute({
-  tags: ["Consumers"],
+  tags: ["Super"],
   summary: "Create a new consumer",
   description:
-    "Create a new API consumer with generated credentials. Requires API key and secret authentication.",
+    "Create a new API consumer with generated credentials. Requires superuser authentication.",
   method: "post",
-  path: "/api/consumers",
+  path: "/super/consumer",
   request: {
     headers: PostConsumerSchema.headers,
     body: {
@@ -277,6 +292,124 @@ const createConsumerRoute = createRoute({
       },
       description: "Internal server error",
     },
+    503: {
+      content: {
+        "application/json": { schema: PostConsumerSchema.errors[503] },
+      },
+      description:
+        "Service Unavailable - Admin authentication is not properly set up",
+    },
+  },
+});
+
+const deleteConsumerRoute = createRoute({
+  tags: ["Super"],
+  summary: "Delete a consumer",
+  description:
+    "Delete an existing API consumer by ID. Requires superuser authentication.",
+  method: "delete",
+  path: "/super/consumer/{id}",
+  request: {
+    headers: DeleteConsumerByIdSchema.headers,
+    params: DeleteConsumerByIdSchema.pathParams,
+  },
+  responses: {
+    200: {
+      content: {
+        "application/json": { schema: DeleteConsumerByIdSchema.response },
+      },
+      description: "Consumer deleted successfully",
+    },
+    400: {
+      content: {
+        "application/json": { schema: DeleteConsumerByIdSchema.errors[400] },
+      },
+      description: "Bad request - Invalid input",
+    },
+    401: {
+      content: {
+        "application/json": { schema: DeleteConsumerByIdSchema.errors[401] },
+      },
+      description: "Unauthorized - Invalid or missing API credentials",
+    },
+    404: {
+      content: {
+        "application/json": { schema: DeleteConsumerByIdSchema.errors[404] },
+      },
+      description: "Not found",
+    },
+    500: {
+      content: {
+        "application/json": { schema: DeleteConsumerByIdSchema.errors[500] },
+      },
+      description: "Internal server error",
+    },
+    503: {
+      content: {
+        "application/json": { schema: DeleteConsumerByIdSchema.errors[503] },
+      },
+      description:
+        "Service Unavailable - Admin authentication is not properly set up",
+    },
+  },
+});
+
+const updateConsumerByIdRoute = createRoute({
+  tags: ["Super"],
+  summary: "Update a consumer",
+  description:
+    "Update an existing API consumer's information. Requires superuser authentication.",
+  method: "put",
+  path: "/super/consumer/{id}",
+  request: {
+    params: PutConsumerSchema.pathParams,
+    headers: PutConsumerSchema.headers,
+    body: {
+      content: {
+        "application/json": {
+          schema: PutConsumerSchema.body,
+        },
+      },
+    },
+  },
+  responses: {
+    200: {
+      content: {
+        "application/json": { schema: PutConsumerSchema.response },
+      },
+      description: "Consumer updated successfully",
+    },
+    400: {
+      content: {
+        "application/json": { schema: PutConsumerSchema.errors[400] },
+      },
+      description: "Bad request - Invalid input",
+    },
+    401: {
+      content: {
+        "application/json": { schema: PutConsumerSchema.errors[401] },
+      },
+      description: "Unauthorized - Invalid or missing API credentials",
+    },
+    404: {
+      content: {
+        "application/json": { schema: PutConsumerSchema.errors[404] },
+      },
+      description: "Not found",
+    },
+    500: {
+      content: {
+        "application/json": { schema: PutConsumerSchema.errors[500] },
+      },
+      description: "Internal server error",
+    },
+    503: {
+      content: {
+        "application/json": { schema: PutConsumerSchema.errors[503] },
+      },
+      description:
+        "Service Unavailable - Admin authentication is not properly set up",
+    },
   },
 });
 
@@ -287,4 +420,6 @@ export {
   deleteCommentByIdRoute,
   getConsumerByIdRoute,
   createConsumerRoute,
+  deleteConsumerRoute,
+  updateConsumerByIdRoute,
 };
