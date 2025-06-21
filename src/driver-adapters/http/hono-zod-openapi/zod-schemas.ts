@@ -515,6 +515,29 @@ const PutConsumerSchema = {
   },
 };
 
+const GetAllConsumersSchema = {
+  headers: superAuthHeaders,
+  query: z.object({
+    offset: z.number().optional().openapi({
+      description: "Offset for pagination",
+      example: 0,
+    }),
+    limit: z.number().optional().openapi({
+      description: "Limit for number of consumers to return",
+      example: 20,
+    }),
+  }),
+  response: z.array(consumerSchema).openapi("ConsumersList", {
+    description: "List of all consumers",
+  }),
+  errors: {
+    400: genericErrorSchema,
+    401: superCredentialsErrorSchema,
+    500: genericErrorSchema,
+    503: superAuthNotConfiguredErrorSchema,
+  },
+};
+
 export {
   GetCommentsByHostIdSchema,
   PostCommentByHostIdSchema,
@@ -524,4 +547,5 @@ export {
   PostConsumerSchema,
   DeleteConsumerByIdSchema,
   PutConsumerSchema,
+  GetAllConsumersSchema,
 };

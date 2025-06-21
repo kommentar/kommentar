@@ -1,6 +1,7 @@
 import {
   DeleteCommentByIdSchema,
   DeleteConsumerByIdSchema,
+  GetAllConsumersSchema,
   GetCommentsByHostIdSchema,
   GetConsumerByIdSchema,
   PostCommentByHostIdSchema,
@@ -413,6 +414,52 @@ const updateConsumerByIdRoute = createRoute({
   },
 });
 
+const getAllConsumersRoute = createRoute({
+  tags: ["Super"],
+  summary: "Get all consumers",
+  description:
+    "Retrieve a list of all API consumers. Requires superuser authentication.",
+  method: "get",
+  path: "/super/consumers",
+  request: {
+    headers: GetAllConsumersSchema.headers,
+    query: GetAllConsumersSchema.query,
+  },
+  responses: {
+    200: {
+      content: {
+        "application/json": { schema: GetAllConsumersSchema.response },
+      },
+      description: "List of all consumers",
+    },
+    400: {
+      content: {
+        "application/json": { schema: GetAllConsumersSchema.errors[400] },
+      },
+      description: "Bad request - Invalid input",
+    },
+    401: {
+      content: {
+        "application/json": { schema: GetAllConsumersSchema.errors[401] },
+      },
+      description: "Unauthorized - Invalid or missing API credentials",
+    },
+    500: {
+      content: {
+        "application/json": { schema: GetAllConsumersSchema.errors[500] },
+      },
+      description: "Internal server error",
+    },
+    503: {
+      content: {
+        "application/json": { schema: GetAllConsumersSchema.errors[503] },
+      },
+      description:
+        "Service Unavailable - Admin authentication is not properly set up",
+    },
+  },
+});
+
 export {
   getCommentsForHostRoute,
   createCommentForHostRoute,
@@ -422,4 +469,5 @@ export {
   createConsumerRoute,
   deleteConsumerRoute,
   updateConsumerByIdRoute,
+  getAllConsumersRoute,
 };

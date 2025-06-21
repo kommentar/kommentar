@@ -181,7 +181,10 @@ async function createConsumer(dataStore: DataStore, randomId: RandomId) {
 
 async function listConsumers(dataStore: DataStore) {
   try {
-    const consumers = await dataStore.consumer.getAll();
+    const consumers = await dataStore.consumer.getAll({
+      offset: 0,
+      limit: 100_000_000,
+    });
 
     if (consumers.length === 0) {
       console.log("📋 No consumers found");

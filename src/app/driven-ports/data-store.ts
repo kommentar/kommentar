@@ -118,7 +118,13 @@ type DataStore = {
      *
      * @returns List of all consumers
      */
-    getAll: () => Promise<StoredConsumer[]>;
+    getAll: ({
+      offset,
+      limit,
+    }: {
+      offset: number;
+      limit: number;
+    }) => Promise<StoredConsumer[]>;
 
     /**
      * Get consumer by API key

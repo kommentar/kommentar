@@ -105,6 +105,14 @@ type DeleteConsumerQuery = ({
   consumerId: string;
 }) => QueryConfig;
 
+type GetAllConsumersQuery = ({
+  offset,
+  limit,
+}: {
+  offset: number;
+  limit: number;
+}) => QueryConfig;
+
 export type {
   RunInTransaction,
   MigrateFn,
@@ -121,4 +129,5 @@ export type {
   SaveConsumerQuery,
   UpdateConsumerQuery,
   DeleteConsumerQuery,
+  GetAllConsumersQuery,
 };

@@ -12,6 +12,7 @@ import { commandDeleteConsumer } from "./domain/commands/delete-consumer/index.j
 import { commandUpdateComment } from "./domain/commands/update-comment/index.js";
 import { commandUpdateConsumer } from "./domain/commands/update-consumer/index.js";
 import { errors } from "./domain/entities/error.js";
+import { queryGetAllConsumers } from "./domain/queries/get-all-consumers/index.js";
 import { queryGetCommentsForHost } from "./domain/queries/get-comments-for-host/index.js";
 import { queryGetConsumer } from "./domain/queries/get-consumer/index.js";
 import { queryGetFullConsumer } from "./domain/queries/get-full-consumer/index.js";
@@ -188,6 +189,14 @@ const getApp: GetApp = ({
         }
 
         return savedConsumer;
+      },
+
+      getAllConsumers: async ({ offset = 0, limit = 20 }) => {
+        const query = queryGetAllConsumers(dataStore);
+
+        const consumers = await query({ offset, limit });
+
+        return consumers;
       },
     },
   };
