@@ -10,8 +10,8 @@ async function setupAdmin() {
   console.log("🔐 Admin credentials generated!");
   console.log("");
   console.log("Add these to your environment variables:");
-  console.log(`ADMIN_API_KEY=${apiKey}`);
-  console.log(`ADMIN_API_SECRET_HASH=${hashedSecret}`);
+  console.log(`ADMIN_KEY=${apiKey}`);
+  console.log(`ADMIN_SECRET_HASH=${hashedSecret}`);
   console.log("");
   console.log(
     "⚠️  IMPORTANT: Save the plain secret below - it won't be shown again!",
