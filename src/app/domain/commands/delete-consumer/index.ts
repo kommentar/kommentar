@@ -23,6 +23,7 @@ const commandDeleteConsumer: CommandDeleteConsumer = (dataStore) => {
       name: deletedConsumer.name,
       description: deletedConsumer.description ?? "",
       apiKey: deletedConsumer.api_key,
+      allowedHosts: JSON.parse(deletedConsumer.allowed_hosts) ?? [],
       isActive: deletedConsumer.is_active,
       rateLimit: deletedConsumer.rate_limit,
     };

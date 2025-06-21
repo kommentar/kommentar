@@ -25,6 +25,7 @@ const commandUpdateConsumer: CommandUpdateConsumer = (dataStore) => {
       name: updatedConsumer.name,
       description: updatedConsumer.description,
       apiKey: updatedConsumer.api_key,
+      allowedHosts: JSON.parse(updatedConsumer.allowed_hosts) ?? [],
       isActive: updatedConsumer.is_active,
       rateLimit: updatedConsumer.rate_limit,
     };

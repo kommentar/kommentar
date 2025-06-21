@@ -15,6 +15,7 @@ const queryGetConsumer: QueryGetConsumer = (dataStore) => {
           name: savedConsumer.name,
           description: savedConsumer.description,
           apiKey: savedConsumer.api_key,
+          allowedHosts: JSON.parse(savedConsumer.allowed_hosts) ?? [],
           isActive: savedConsumer.is_active,
           rateLimit: savedConsumer.rate_limit,
         }

@@ -1,5 +1,6 @@
 import { describe, expect, it, vi } from "vitest";
 import type { DataStore } from "../../../driven-ports/data-store.js";
+import type { RandomId } from "../../../driven-ports/random-id.js";
 import { commandCreateConsumer } from "../create-consumer/index.js";
 
 describe("commandCreateConsumer", () => {
@@ -33,15 +34,19 @@ describe("commandCreateConsumer", () => {
       rollbackAll: vi.fn(),
     };
 
-    const createConsumer = commandCreateConsumer(mockDataStore);
+    const mockRandomId: RandomId = {
+      generate: vi.fn().mockReturnValue("test-random-id"),
+    };
+
+    const createConsumer = commandCreateConsumer(mockDataStore, mockRandomId);
 
     const input = {
       consumer: {
-        id: "1",
+        id: "TEMPORARY_ID",
         name: "Test Consumer",
         description: "This is a test consumer",
-        apiKey: "test-api-key",
-        apiSecret: "test-api-secret",
+        apiKey: "TEMPORARY_API_KEY",
+        apiSecret: "TEMPORARY_API_SECRET",
         allowedHosts: ["host1", "host2"],
         isActive: true,
         rateLimit: 100,
@@ -53,6 +58,7 @@ describe("commandCreateConsumer", () => {
     expect(mockDataStore.consumer.save).toHaveBeenCalledWith({
       consumer: {
         ...input.consumer,
+        id: expect.any(String),
         apiKey: expect.any(String),
         apiSecret: expect.any(String), // Should be hashed in the actual implementation
       },
