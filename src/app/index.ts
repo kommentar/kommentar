@@ -1,21 +1,21 @@
+import {
+  generateApiCredentials,
+  hashApiSecret,
+} from "./domain/helpers/security/api-key-generator.js";
+import {
+  toConsumer,
+  toPublicComment,
+  toPublicConsumer,
+} from "./domain/helpers/mappers/from-data-store.js";
 import type { App } from "./domain/entities/app.js";
 import type { CacheStore } from "./driven-ports/cache-store.js";
 import type { Comment } from "./domain/entities/comment.js";
+import type { Consumer } from "./domain/entities/consumer.js";
 import type { DataStore } from "./driven-ports/data-store.js";
 import type { EventBroker } from "./driven-ports/event-broker.js";
 import type { ProfanityClient } from "./driven-ports/profanity-client.js";
 import type { RandomId } from "./driven-ports/random-id.js";
-import { commandCreateComment } from "./domain/commands/create-comment/index.js";
-import { commandCreateConsumer } from "./domain/commands/create-consumer/index.js";
-import { commandDeleteComment } from "./domain/commands/delete-comment/index.js";
-import { commandDeleteConsumer } from "./domain/commands/delete-consumer/index.js";
-import { commandUpdateComment } from "./domain/commands/update-comment/index.js";
-import { commandUpdateConsumer } from "./domain/commands/update-consumer/index.js";
 import { errors } from "./domain/entities/error.js";
-import { queryGetAllConsumers } from "./domain/queries/get-all-consumers/index.js";
-import { queryGetCommentsForHost } from "./domain/queries/get-comments-for-host/index.js";
-import { queryGetConsumer } from "./domain/queries/get-consumer/index.js";
-import { queryGetFullConsumer } from "./domain/queries/get-full-consumer/index.js";
 import { toCommentCreatedEvent } from "./domain/helpers/events/comment-created.js";
 import { toCommentDeletedEvent } from "./domain/helpers/events/comment-deleted.js";
 import { toCommentUpdatedEvent } from "./domain/helpers/events/comment-updated.js";
@@ -50,11 +50,11 @@ const getApp: GetApp = ({
           return cachedComments;
         }
 
-        const query = queryGetCommentsForHost(dataStore);
-
-        const comments = await query({
+        const savedComments = await dataStore.comment.getAllCommentsByHostId({
           hostId,
         });
+
+        const comments = savedComments.map(toPublicComment);
 
         cacheStore.set(hostId, comments);
 
@@ -73,17 +73,17 @@ const getApp: GetApp = ({
           throw errors.domain.profaneComment;
         }
 
-        const command = commandCreateComment(dataStore);
-
-        const savedComment = await command({
+        const savedComment = await dataStore.comment.saveCommentByHostId({
           hostId,
           content,
           sessionId,
           commenter,
         });
 
+        const comment = toPublicComment(savedComment);
+
         const event = toCommentCreatedEvent({
-          comment: savedComment,
+          comment,
           subject: hostId,
           randomId,
           source: "app",
@@ -91,26 +91,36 @@ const getApp: GetApp = ({
 
         eventBroker.publish({ event });
 
-        return savedComment;
+        return comment;
       },
 
       updateCommentById: async ({ id, content, sessionId }) => {
+        const commentExists = await dataStore.comment.getCommentById({ id });
+
+        if (!commentExists) {
+          throw errors.domain.commentNotFound;
+        }
+
+        if (commentExists.session_id !== sessionId) {
+          throw errors.domain.unauthorized;
+        }
+
         const isProfane = await profanityClient.check(content);
 
         if (isProfane === "PROFANE") {
           throw errors.domain.profaneComment;
         }
 
-        const command = commandUpdateComment(dataStore);
-
-        const updatedComment = await command({
+        const updatedComment = await dataStore.comment.updateCommentById({
           id,
           content,
           sessionId,
         });
 
+        const comment = toPublicComment(updatedComment);
+
         const event = toCommentUpdatedEvent({
-          updatedComment: updatedComment,
+          updatedComment: comment,
           subject: id,
           randomId,
           source: "app",
@@ -118,19 +128,29 @@ const getApp: GetApp = ({
 
         eventBroker.publish({ event });
 
-        return updatedComment;
+        return comment;
       },
 
       deleteCommentById: async ({ id, sessionId }) => {
-        const command = commandDeleteComment(dataStore);
+        const commentExists = await dataStore.comment.getCommentById({ id });
 
-        const deletedComment = await command({
+        if (!commentExists) {
+          throw errors.domain.commentNotFound;
+        }
+
+        if (commentExists.session_id !== sessionId) {
+          throw errors.domain.unauthorized;
+        }
+
+        const deletedComment = await dataStore.comment.deleteCommentById({
           id,
           sessionId,
         });
 
+        const comment = toPublicComment(deletedComment);
+
         const event = toCommentDeletedEvent({
-          deletedComment: deletedComment,
+          deletedComment: comment,
           subject: id,
           randomId,
           source: "app",
@@ -144,59 +164,103 @@ const getApp: GetApp = ({
 
     consumer: {
       createConsumer: async ({ consumer }) => {
-        const command = commandCreateConsumer(dataStore, randomId);
+        const { apiKey, apiSecret } = generateApiCredentials();
+        const hashedSecret = hashApiSecret(apiSecret);
 
-        const savedConsumer = await command({ consumer });
+        const fullConsumer: Consumer = {
+          ...consumer,
+          id: randomId.generate(),
+          apiKey,
+          apiSecret: hashedSecret,
+          isActive: consumer.isActive ?? true,
+        };
 
-        return savedConsumer;
+        const savedConsumer = await dataStore.consumer.save({
+          consumer: fullConsumer,
+        });
+
+        const mappedConsumer = toConsumer(savedConsumer);
+
+        return mappedConsumer;
       },
 
       deleteConsumer: async ({ id }) => {
-        const command = commandDeleteConsumer(dataStore);
+        const consumerExists = await dataStore.consumer.getById({
+          consumerId: id,
+        });
 
-        const deletedConsumer = await command({ id });
+        if (!consumerExists) {
+          throw errors.domain.consumerNotFound;
+        }
 
-        return deletedConsumer;
+        const deletedConsumer = await dataStore.consumer.deleteById({
+          consumerId: id,
+        });
+
+        const mappedConsumer = toPublicConsumer(deletedConsumer);
+
+        return mappedConsumer;
       },
 
       updateConsumer: async ({ consumer }) => {
-        const command = commandUpdateConsumer(dataStore);
+        const consumerExists = await dataStore.consumer.getById({
+          consumerId: consumer.id,
+        });
 
-        const updatedConsumer = await command({ consumer });
+        if (!consumerExists) {
+          throw errors.domain.consumerNotFound;
+        }
 
-        return updatedConsumer;
+        const updatedConsumer = await dataStore.consumer.update({
+          consumer,
+        });
+
+        const mappedConsumer = toPublicConsumer(updatedConsumer);
+
+        return mappedConsumer;
       },
 
       getConsumerById: async ({ id }) => {
-        const query = queryGetConsumer(dataStore);
-
-        const savedConsumer = await query({ id });
+        const savedConsumer = await dataStore.consumer.getById({
+          consumerId: id,
+        });
 
         if (!savedConsumer) {
           return undefined;
         }
 
-        return savedConsumer;
+        const mappedConsumer = toPublicConsumer(savedConsumer);
+
+        return mappedConsumer;
       },
 
       getFullConsumerById: async ({ id }) => {
-        const query = queryGetFullConsumer(dataStore);
-
-        const savedConsumer = await query({ id });
+        const savedConsumer = await dataStore.consumer.getById({
+          consumerId: id,
+        });
 
         if (!savedConsumer) {
           return undefined;
         }
 
-        return savedConsumer;
+        const mappedConsumer = toConsumer(savedConsumer);
+
+        return mappedConsumer;
       },
 
       getAllConsumers: async ({ offset = 0, limit = 20 }) => {
-        const query = queryGetAllConsumers(dataStore);
+        const consumers = await dataStore.consumer.getAll({
+          offset,
+          limit,
+        });
 
-        const consumers = await query({ offset, limit });
+        if (!consumers || consumers.length === 0) {
+          return [];
+        }
 
-        return consumers;
+        const mappedConsumers = consumers.map(toPublicConsumer);
+
+        return mappedConsumers;
       },
     },
   };

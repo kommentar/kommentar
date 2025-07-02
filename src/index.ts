@@ -8,9 +8,8 @@ import { getNodeArgv } from "./utils/node.js";
 import { getProfanityClientApi } from "./driven-adapters/profanity-client/profanity-api/index.js";
 import { getRandomIdUuid } from "./driven-adapters/random-id/uuid/index.js";
 import { getSecretStoreEnv } from "./driven-adapters/secrets/env/index.js";
-import { wheneverCommentCreatedInvalidateCache } from "./app/domain/policies/whenever-comment-created-invalidate-cache.js";
-import { wheneverCommentDeletedInvalidateCache } from "./app/domain/policies/whenever-comment-deleted-invalidate-cache.js";
-import { wheneverCommentUpdatedInvalidateCache } from "./app/domain/policies/whenever-comment-updated-invalidate-cache.js";
+
+const shouldMigrate = getNodeArgv("--migrate") ? false : true;
 
 const config = getConfigStaticEnv();
 const secretStore = getSecretStoreEnv();
@@ -18,8 +17,6 @@ const eventBroker = getEventBrokerInMemory();
 const randomId = getRandomIdUuid();
 const cacheStore = getCacheStoreInMemory();
 const profanityClient = getProfanityClientApi();
-
-const shouldMigrate = getNodeArgv("--migrate") ? false : true;
 const dataStore = await getDataStorePostgres({
   config: config.dataStore,
   secretStore,
@@ -36,10 +33,6 @@ if (getNodeArgv("--migrate") === "up") {
   await dataStore.rollbackAll();
   process.exit(0);
 }
-
-wheneverCommentCreatedInvalidateCache({ eventBroker, cacheStore });
-wheneverCommentUpdatedInvalidateCache({ eventBroker, cacheStore });
-wheneverCommentDeletedInvalidateCache({ eventBroker, cacheStore });
 
 const app = getApp({
   dataStore,
