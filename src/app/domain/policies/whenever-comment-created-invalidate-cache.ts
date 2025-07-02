@@ -23,9 +23,7 @@ const wheneverCommentCreatedInvalidateCache: WheneverCommentCreatedInvalidateCac
 
         const newComment = event.data as PublicComment;
 
-        if (!currentCachedComments) {
-          cacheStore.set(key, [newComment]);
-        } else {
+        if (currentCachedComments) {
           cacheStore.set(key, [...currentCachedComments, newComment]);
         }
       },
