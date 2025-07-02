@@ -22,9 +22,7 @@ const wheneverCommentUpdatedInvalidateCache: WheneverCommentUpdatedInvalidateCac
           | PublicComment[]
           | undefined;
 
-        if (!currentCachedComments) {
-          cacheStore.set(key, [updatedComment]);
-        } else {
+        if (currentCachedComments) {
           const updatedCachedComments = currentCachedComments.map((comment) =>
             comment.id === updatedComment.id ? updatedComment : comment,
           );

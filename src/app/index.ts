@@ -19,6 +19,9 @@ import { errors } from "./domain/entities/error.js";
 import { toCommentCreatedEvent } from "./domain/helpers/events/comment-created.js";
 import { toCommentDeletedEvent } from "./domain/helpers/events/comment-deleted.js";
 import { toCommentUpdatedEvent } from "./domain/helpers/events/comment-updated.js";
+import { wheneverCommentCreatedInvalidateCache } from "./domain/policies/whenever-comment-created-invalidate-cache.js";
+import { wheneverCommentDeletedInvalidateCache } from "./domain/policies/whenever-comment-deleted-invalidate-cache.js";
+import { wheneverCommentUpdatedInvalidateCache } from "./domain/policies/whenever-comment-updated-invalidate-cache.js";
 
 type GetApp = ({
   dataStore,
@@ -41,6 +44,11 @@ const getApp: GetApp = ({
   cacheStore,
   profanityClient,
 }) => {
+  // Initialize policies
+  wheneverCommentCreatedInvalidateCache({ eventBroker, cacheStore });
+  wheneverCommentUpdatedInvalidateCache({ eventBroker, cacheStore });
+  wheneverCommentDeletedInvalidateCache({ eventBroker, cacheStore });
+
   return {
     comment: {
       getCommentsForHost: async ({ hostId }) => {
