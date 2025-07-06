@@ -205,7 +205,7 @@ const getApp: GetApp = ({
           consumerId: id,
         });
 
-        const mappedConsumer = toPublicConsumer(deletedConsumer);
+        const mappedConsumer = toConsumer(deletedConsumer);
 
         return mappedConsumer;
       },
@@ -223,7 +223,7 @@ const getApp: GetApp = ({
           consumer,
         });
 
-        const mappedConsumer = toPublicConsumer(updatedConsumer);
+        const mappedConsumer = toConsumer(updatedConsumer);
 
         return mappedConsumer;
       },
@@ -266,7 +266,7 @@ const getApp: GetApp = ({
           return [];
         }
 
-        const mappedConsumers = consumers.map(toPublicConsumer);
+        const mappedConsumers = consumers.map(toConsumer);
 
         return mappedConsumers;
       },

@@ -42,6 +42,7 @@ const commentSchema = z
   })
   .openapi("Comment");
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const consumerSchema = z
   .object({
     id: z.string().openapi({
@@ -382,7 +383,7 @@ const GetConsumerByIdSchema = {
     })
     .required(),
   headers: superAuthHeaders,
-  response: consumerSchema,
+  response: consumerWithCredentialsSchema,
   errors: {
     400: genericErrorSchema,
     401: superCredentialsErrorSchema,
@@ -505,7 +506,7 @@ const PutConsumerSchema = {
       example: 100,
     }),
   }),
-  response: consumerSchema,
+  response: consumerWithCredentialsSchema,
   errors: {
     400: genericErrorSchema,
     401: superCredentialsErrorSchema,
@@ -527,7 +528,7 @@ const GetAllConsumersSchema = {
       example: 20,
     }),
   }),
-  response: z.array(consumerSchema).openapi("ConsumersList", {
+  response: z.array(consumerWithCredentialsSchema).openapi({
     description: "List of all consumers",
   }),
   errors: {
