@@ -33,7 +33,7 @@ const getSuperRouter: GetSuperRouter = ({ app, secretStore }) => {
     try {
       const { id } = c.req.valid("param");
 
-      const consumer = await app.consumer.getConsumerById({ id });
+      const consumer = await app.consumer.getFullConsumerById({ id });
 
       if (!consumer) {
         throw errors.domain.consumerNotFound;

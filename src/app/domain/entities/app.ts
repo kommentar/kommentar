@@ -40,18 +40,11 @@ type CommentOperations = {
 };
 
 type ConsumerOperations = {
-  createConsumer: ({ consumer }: { consumer: Consumer }) => Promise<Consumer>;
-  deleteConsumer: ({ id }: { id: Consumer["id"] }) => Promise<PublicConsumer>;
   getConsumerById: ({
     id,
   }: {
     id: Consumer["id"];
   }) => Promise<PublicConsumer | undefined>;
-  updateConsumer: ({
-    consumer,
-  }: {
-    consumer: Consumer;
-  }) => Promise<PublicConsumer>;
   getFullConsumerById: ({
     id,
   }: {
@@ -63,7 +56,10 @@ type ConsumerOperations = {
   }: {
     offset: number;
     limit: number;
-  }) => Promise<PublicConsumer[]>;
+  }) => Promise<Consumer[]>;
+  createConsumer: ({ consumer }: { consumer: Consumer }) => Promise<Consumer>;
+  deleteConsumer: ({ id }: { id: Consumer["id"] }) => Promise<Consumer>;
+  updateConsumer: ({ consumer }: { consumer: Consumer }) => Promise<Consumer>;
 };
 
 type App = {
