@@ -138,8 +138,8 @@ const getSuperRouter: GetSuperRouter = ({ app, secretStore }) => {
       const { offset, limit } = c.req.valid("query");
 
       const consumers = await app.consumer.getAllConsumers({
-        offset: offset ?? 0,
-        limit: limit ?? 100,
+        offset: !isNaN(Number(offset)) ? Number(offset) : 0,
+        limit: !isNaN(Number(limit)) ? Number(limit) : 100,
       });
 
       return c.json(consumers, 200);
