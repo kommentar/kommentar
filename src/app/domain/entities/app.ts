@@ -56,7 +56,10 @@ type ConsumerOperations = {
   }: {
     offset: number;
     limit: number;
-  }) => Promise<Consumer[]>;
+  }) => Promise<{
+    consumers: Consumer[];
+    total: number;
+  }>;
   createConsumer: ({ consumer }: { consumer: Consumer }) => Promise<Consumer>;
   deleteConsumer: ({ id }: { id: Consumer["id"] }) => Promise<Consumer>;
   updateConsumer: ({ consumer }: { consumer: Consumer }) => Promise<Consumer>;

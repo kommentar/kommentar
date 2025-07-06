@@ -6,6 +6,7 @@ import {
   getCommentByIdQuery,
   getConsumerByApiKeyQuery,
   getConsumerByIdQuery,
+  getConsumerCountQuery,
   saveCommentByHostIdQuery,
   saveConsumerQuery,
   updateCommentByIdQuery,
@@ -117,6 +118,15 @@ const getDataStorePostgres: GetDataStorePostgres = async ({
       },
     },
     consumer: {
+      getCount: async () => {
+        try {
+          const result = await pgPool.query(getConsumerCountQuery());
+          return parseInt(result.rows[0].total, 10);
+        } catch (error) {
+          console.error("Failed to get consumer count", error);
+          throw errors.dependency.dataStoreError;
+        }
+      },
       getById: async ({ consumerId }) => {
         try {
           const result = await pgPool.query(

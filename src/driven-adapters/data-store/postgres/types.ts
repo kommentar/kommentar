@@ -113,6 +113,8 @@ type GetAllConsumersQuery = ({
   limit: number;
 }) => QueryConfig;
 
+type GetConsumerCountQuery = () => QueryConfig;
+
 export type {
   RunInTransaction,
   MigrateFn,
@@ -130,4 +132,5 @@ export type {
   UpdateConsumerQuery,
   DeleteConsumerQuery,
   GetAllConsumersQuery,
+  GetConsumerCountQuery,
 };

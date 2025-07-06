@@ -102,6 +102,12 @@ type DataStore = {
 
   consumer: {
     /**
+     * Get total count of consumers
+     *
+     * @returns Total number of consumers
+     */
+    getCount: () => Promise<number>;
+    /**
      * Get consumer details by consumer identifier
      *
      * @param consumerId - Unique identifier of the consumer

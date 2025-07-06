@@ -137,12 +137,25 @@ const getSuperRouter: GetSuperRouter = ({ app, secretStore }) => {
     try {
       const { offset, limit } = c.req.valid("query");
 
-      const consumers = await app.consumer.getAllConsumers({
-        offset: !isNaN(Number(offset)) ? Number(offset) : 0,
-        limit: !isNaN(Number(limit)) ? Number(limit) : 100,
+      const offsetNum = !isNaN(Number(offset)) ? Number(offset) : 0;
+      const limitNum = !isNaN(Number(limit)) ? Number(limit) : 20;
+
+      const result = await app.consumer.getAllConsumers({
+        offset: offsetNum,
+        limit: limitNum,
       });
 
-      return c.json(consumers, 200);
+      const response = {
+        consumers: result.consumers,
+        total: result.total,
+        pagination: {
+          offset: offsetNum,
+          limit: limitNum,
+          hasMore: offsetNum + limitNum < result.total,
+        },
+      };
+
+      return c.json(response, 200);
     } catch (err) {
       throw createHttpError(err as unknown as CustomError);
     }

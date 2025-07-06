@@ -6,6 +6,7 @@ import type {
   GetCommentByIdQuery,
   GetConsumerByApiKeyQuery,
   GetConsumerByIdQuery,
+  GetConsumerCountQuery,
   SaveCommentByHostIdQuery,
   SaveConsumerQuery,
   UpdateCommentByIdQuery,
@@ -178,6 +179,16 @@ const getAllConsumersQuery: GetAllConsumersQuery = ({ offset, limit }) => {
   };
 };
 
+const getConsumerCountQuery: GetConsumerCountQuery = () => {
+  return {
+    name: "get-consumer-count",
+    text: `
+        SELECT COUNT(*) as total FROM kommentar.consumer;
+        `,
+    values: [],
+  };
+};
+
 export {
   getAllCommentsByHostIdQuery,
   saveCommentByHostIdQuery,
@@ -190,4 +201,5 @@ export {
   updateConsumerQuery,
   deleteConsumerQuery,
   getAllConsumersQuery,
+  getConsumerCountQuery,
 };

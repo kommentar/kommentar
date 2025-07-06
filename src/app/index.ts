@@ -257,18 +257,37 @@ const getApp: GetApp = ({
       },
 
       getAllConsumers: async ({ offset = 0, limit = 20 }) => {
-        const consumers = await dataStore.consumer.getAll({
-          offset,
-          limit,
-        });
+        const [consumersResult, totalResult] = await Promise.allSettled([
+          dataStore.consumer.getAll({ offset, limit }),
+          dataStore.consumer.getCount(),
+        ]);
+
+        if (consumersResult.status === "rejected") {
+          console.error("Failed to fetch consumers:", consumersResult.reason);
+          throw consumersResult.reason;
+        }
+
+        if (totalResult.status === "rejected") {
+          console.error("Failed to fetch consumer count:", totalResult.reason);
+          throw totalResult.reason;
+        }
+
+        const consumers = consumersResult.value;
+        const total = totalResult.value;
 
         if (!consumers || consumers.length === 0) {
-          return [];
+          return {
+            consumers: [],
+            total,
+          };
         }
 
         const mappedConsumers = consumers.map(toConsumer);
 
-        return mappedConsumers;
+        return {
+          consumers: mappedConsumers,
+          total,
+        };
       },
     },
   };

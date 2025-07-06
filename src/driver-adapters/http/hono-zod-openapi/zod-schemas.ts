@@ -528,9 +528,37 @@ const GetAllConsumersSchema = {
       example: "20",
     }),
   }),
-  response: z.array(consumerWithCredentialsSchema).openapi({
-    description: "List of all consumers",
-  }),
+  response: z
+    .object({
+      consumers: z.array(consumerWithCredentialsSchema).openapi({
+        description: "List of consumers",
+      }),
+      total: z.number().openapi({
+        description: "Total number of consumers available",
+        example: 42,
+      }),
+      pagination: z
+        .object({
+          offset: z.number().openapi({
+            description: "Current offset",
+            example: 0,
+          }),
+          limit: z.number().openapi({
+            description: "Current limit",
+            example: 20,
+          }),
+          hasMore: z.boolean().openapi({
+            description: "Whether there are more results available",
+            example: true,
+          }),
+        })
+        .openapi({
+          description: "Pagination information",
+        }),
+    })
+    .openapi({
+      description: "Paginated list of consumers with total count",
+    }),
   errors: {
     400: genericErrorSchema,
     401: superCredentialsErrorSchema,
