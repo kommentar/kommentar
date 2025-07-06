@@ -18,6 +18,7 @@ describe("getApp", () => {
       save: vi.fn(),
       update: vi.fn(),
       deleteById: vi.fn(),
+      getCount: vi.fn(),
     },
     stop: vi.fn(),
     migrateAll: vi.fn(),
