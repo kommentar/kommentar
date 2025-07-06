@@ -519,13 +519,13 @@ const PutConsumerSchema = {
 const GetAllConsumersSchema = {
   headers: superAuthHeaders,
   query: z.object({
-    offset: z.number().optional().openapi({
+    offset: z.string().optional().openapi({
       description: "Offset for pagination",
-      example: 0,
+      example: "0",
     }),
-    limit: z.number().optional().openapi({
+    limit: z.string().optional().openapi({
       description: "Limit for number of consumers to return",
-      example: 20,
+      example: "20",
     }),
   }),
   response: z.array(consumerWithCredentialsSchema).openapi({
