@@ -3,11 +3,9 @@ version: "3.8"
 services:
   app:
     build:
-      dockerfile: ./Dockerfile
+      dockerfile: ghcr.io/kommentar/kommetnar:latest
     ports:
-      - "${PORT}:3000"
+      - "3000"
     env_file:
       - .env
-    cpu_count: 2
-    mem_limit: 512m
     restart: unless-stopped
