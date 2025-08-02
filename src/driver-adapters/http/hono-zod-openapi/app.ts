@@ -9,6 +9,7 @@ import type { RandomId } from "../../../app/driven-ports/random-id.js";
 import { Scalar } from "@scalar/hono-api-reference";
 import type { SecretStore } from "../../../app/driven-ports/secret-store.js";
 import { getRouter } from "./router/index.js";
+import { serveStatic } from "@hono/node-server/serve-static";
 import { sessionMiddleware } from "./middlewares.js";
 
 export type CustomHonoEnv = {
@@ -46,10 +47,10 @@ const getHttpAppHonoZodOpenApi: GetHttpAppHonoZodOpenApi = ({
     process.env.NODE_ENV === "production" &&
     process.env.PRODUCTION_API_SERVER_URL
   ) {
-    apiClientservers.push({
+    apiClientservers[0] = {
       url: String(process.env.PRODUCTION_API_SERVER_URL),
       description: "Production server",
-    });
+    };
   }
 
   const hono = new OpenAPIHono<CustomHonoEnv>();
@@ -74,6 +75,15 @@ const getHttpAppHonoZodOpenApi: GetHttpAppHonoZodOpenApi = ({
       servers: apiClientservers,
       url: "/spec",
       defaultOpenAllTags: true,
+      favicon: "/favicon.ico",
+    }),
+  );
+
+  hono.use(
+    "/favicon.ico",
+    serveStatic({
+      root: "./src/driver-adapters/http/hono-zod-openapi",
+      path: "./favicon.ico",
     }),
   );
 
