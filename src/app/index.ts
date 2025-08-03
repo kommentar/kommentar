@@ -187,7 +187,10 @@ const getApp: GetApp = ({
           consumer: fullConsumer,
         });
 
-        const mappedConsumer = toConsumer(savedConsumer);
+        const mappedConsumer = toConsumer({
+          ...savedConsumer,
+          api_secret: apiSecret,
+        });
 
         return mappedConsumer;
       },
