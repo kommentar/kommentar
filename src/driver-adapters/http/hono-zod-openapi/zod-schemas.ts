@@ -204,18 +204,15 @@ const superAuthNotConfiguredErrorSchema = z.object({
 const GetCommentsByHostIdSchema = {
   pathParams: z
     .object({
-      hostId: z
-        .string()
-        .uuid()
-        .openapi({
-          param: {
-            name: "hostId",
-            in: "path",
-            required: true,
-            description: "Unique identifier of the host",
-          },
-          example: "e3251fe5-9401-4ee0-a15e-9b3a72ef4904",
-        }),
+      hostId: z.string().openapi({
+        param: {
+          name: "hostId",
+          in: "path",
+          required: true,
+          description: "Unique identifier of the host",
+        },
+        example: "e3251fe5-9401-4ee0-a15e-9b3a72ef4904",
+      }),
     })
     .required(),
   headers: authHeaders,
@@ -229,18 +226,15 @@ const GetCommentsByHostIdSchema = {
 const PostCommentByHostIdSchema = {
   pathParams: z
     .object({
-      hostId: z
-        .string()
-        .uuid()
-        .openapi({
-          param: {
-            name: "hostId",
-            in: "path",
-            required: true,
-            description: "Unique identifier of the host",
-          },
-          example: "e3251fe5-9401-4ee0-a15e-9b3a72ef4904",
-        }),
+      hostId: z.string().openapi({
+        param: {
+          name: "hostId",
+          in: "path",
+          required: true,
+          description: "Unique identifier of the host",
+        },
+        example: "e3251fe5-9401-4ee0-a15e-9b3a72ef4904",
+      }),
     })
     .required(),
   headers: authHeaders,
@@ -278,18 +272,15 @@ const PostCommentByHostIdSchema = {
 const PutCommentByIdSchema = {
   pathParams: z
     .object({
-      hostId: z
-        .string()
-        .uuid()
-        .openapi({
-          param: {
-            name: "hostId",
-            in: "path",
-            required: true,
-            description: "Unique identifier of the host",
-          },
-          example: "e3251fe5-9401-4ee0-a15e-9b3a72ef4904",
-        }),
+      hostId: z.string().openapi({
+        param: {
+          name: "hostId",
+          in: "path",
+          required: true,
+          description: "Unique identifier of the host",
+        },
+        example: "e3251fe5-9401-4ee0-a15e-9b3a72ef4904",
+      }),
       id: z
         .string()
         .uuid()
@@ -325,18 +316,15 @@ const PutCommentByIdSchema = {
 const DeleteCommentByIdSchema = {
   pathParams: z
     .object({
-      hostId: z
-        .string()
-        .uuid()
-        .openapi({
-          param: {
-            name: "hostId",
-            in: "path",
-            required: true,
-            description: "Unique identifier of the host",
-          },
-          example: "e3251fe5-9401-4ee0-a15e-9b3a72ef4904",
-        }),
+      hostId: z.string().openapi({
+        param: {
+          name: "hostId",
+          in: "path",
+          required: true,
+          description: "Unique identifier of the host",
+        },
+        example: "e3251fe5-9401-4ee0-a15e-9b3a72ef4904",
+      }),
       id: z
         .string()
         .uuid()
