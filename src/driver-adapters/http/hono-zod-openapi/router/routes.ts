@@ -4,6 +4,7 @@ import {
   GetAllConsumersSchema,
   GetCommentsByHostIdSchema,
   GetConsumerByIdSchema,
+  HealthCheckSchema,
   PostCommentByHostIdSchema,
   PostConsumerSchema,
   PutCommentByIdSchema,
@@ -460,6 +461,32 @@ const getAllConsumersRoute = createRoute({
   },
 });
 
+const healthCheckRoute = createRoute({
+  method: "get",
+  path: "/health",
+  tags: ["System"],
+  summary: "System health check",
+  description: "Checks the health of the API",
+  responses: {
+    200: {
+      content: {
+        "application/json": {
+          schema: HealthCheckSchema.response,
+        },
+      },
+      description: "Health check results",
+    },
+    503: {
+      content: {
+        "application/json": {
+          schema: HealthCheckSchema.response,
+        },
+      },
+      description: "Health check results",
+    },
+  },
+});
+
 export {
   getCommentsForHostRoute,
   createCommentForHostRoute,
@@ -470,4 +497,5 @@ export {
   deleteConsumerRoute,
   updateConsumerByIdRoute,
   getAllConsumersRoute,
+  healthCheckRoute,
 };
