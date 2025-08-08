@@ -555,6 +555,39 @@ const GetAllConsumersSchema = {
   },
 };
 
+const HealthCheckSchema = {
+  response: z
+    .object({
+      status: z.enum(["healthy", "unhealthy"]).openapi({
+        description: "Overall health status",
+        example: "healthy",
+      }),
+      timestamp: z.string().openapi({
+        description: "ISO timestamp of the health check",
+        example: "2024-11-01T12:00:00.000Z",
+      }),
+      dependencies: z
+        .object({
+          dataStore: z.object({
+            status: z.enum(["healthy", "unhealthy"]),
+            error: z.string().optional(),
+          }),
+          secretStore: z.object({
+            status: z.enum(["healthy", "unhealthy"]),
+            error: z.string().optional(),
+          }),
+          profanityClient: z.object({
+            status: z.enum(["healthy", "unhealthy"]),
+            error: z.string().optional(),
+          }),
+        })
+        .openapi({
+          description: "Health status of each adapter",
+        }),
+    })
+    .openapi("HealthCheckResponse"),
+};
+
 export {
   GetCommentsByHostIdSchema,
   PostCommentByHostIdSchema,
@@ -565,4 +598,5 @@ export {
   DeleteConsumerByIdSchema,
   PutConsumerSchema,
   GetAllConsumersSchema,
+  HealthCheckSchema,
 };
